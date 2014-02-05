@@ -193,6 +193,9 @@ CFLAGS += $(LIBPNG_CFLAGS)
 LDLIBS += $(LIBPNG_LDLIBS)
 
 # search for OpenGL libraries
+ifeq ($(USE_GLES), 1)
+  GL_LDLIBS = -lGLESv2
+endif
 ifeq ($(OS), OSX)
   GL_LDLIBS = -framework OpenGL
 endif
@@ -319,7 +322,6 @@ SOURCE = \
 	$(SRCDIR)/OGLExtCombiner.cpp \
 	$(SRCDIR)/OGLExtensions.cpp \
 	$(SRCDIR)/OGLExtRender.cpp \
-	$(SRCDIR)/OGLFragmentShaders.cpp \
 	$(SRCDIR)/OGLGraphicsContext.cpp \
 	$(SRCDIR)/OGLRender.cpp \
 	$(SRCDIR)/OGLRenderExt.cpp \
@@ -338,6 +340,14 @@ SOURCE = \
 	$(SRCDIR)/TextureManager.cpp \
 	$(SRCDIR)/VectorMath.cpp \
 	$(SRCDIR)/Video.cpp
+
+ifeq ($(USE_GLES), 1)
+	SOURCE += \
+		$(SRCDIR)/OGLES2FragmentShaders.cpp
+else
+	SOURCE += \
+		$(SRCDIR)/OGLFragmentShaders.cpp
+endif
 
 ifeq ($(OS),MINGW)
 SOURCE += \
@@ -369,6 +379,7 @@ targets:
 	@echo "  Options:"
 	@echo "    BITS=32       == build 32-bit binaries on 64-bit machine"
 	@echo "    NO_ASM=1      == build without inline assembly code (x86 MMX/SSE)"
+	@echo "    USE_GLES=1    == build against GLESv2 instead of OpenGL"
 	@echo "    APIDIR=path   == path to find Mupen64Plus Core headers"
 	@echo "    OPTFLAGS=flag == compiler optimization (default: -O3 -flto)"
 	@echo "    WARNFLAGS=flag == compiler warning levels (default: -Wall)"
