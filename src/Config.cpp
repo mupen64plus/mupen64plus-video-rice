@@ -188,7 +188,6 @@ RenderEngineSetting OpenGLRenderSettings[] =
 {"OpenGL 1.2/1.3", OGL_1_2_DEVICE},
 {"OpenGL 1.4", OGL_1_4_DEVICE},
 //{"OpenGL 1.4, the 2nd combiner",  OGL_1_4_V2_DEVICE},
-{"OpenGL for Nvidia TNT or better", OGL_TNT2_DEVICE},
 {"OpenGL for Nvidia GeForce or better ", NVIDIA_OGL_DEVICE},
 {"OpenGL Fragment Program Extension", OGL_FRAGMENT_PROGRAM},
 };
@@ -354,7 +353,7 @@ BOOL InitConfiguration(void)
     ConfigSetDefaultInt(l_ConfigVideoRice, "OpenGLDepthBufferSetting", 16, "Z-buffer depth (only 16 or 32)");
     ConfigSetDefaultInt(l_ConfigVideoRice, "MultiSampling", 0, "Enable/Disable MultiSampling (0=off, 2,4,8,16=quality)");
     ConfigSetDefaultInt(l_ConfigVideoRice, "ColorQuality", TEXTURE_FMT_A8R8G8B8, "Color bit depth for rendering window (0=32 bits, 1=16 bits)");
-    ConfigSetDefaultInt(l_ConfigVideoRice, "OpenGLRenderSetting", OGL_DEVICE, "OpenGL level to support (0=auto, 1=OGL_1.1, 2=OGL_1.2, 3=OGL_1.3, 4=OGL_1.4, 5=OGL_1.4_V2, 6=OGL_TNT2, 7=NVIDIA_OGL, 8=OGL_FRAGMENT_PROGRAM)");
+    ConfigSetDefaultInt(l_ConfigVideoRice, "OpenGLRenderSetting", OGL_DEVICE, "OpenGL level to support (0=auto, 1=OGL_1.1, 2=OGL_1.2, 3=OGL_1.3, 4=OGL_1.4, 5=OGL_1.4_V2, 6=NVIDIA_OGL, 7=OGL_FRAGMENT_PROGRAM)");
     ConfigSetDefaultInt(l_ConfigVideoRice, "AnisotropicFiltering", 0, "Enable/Disable Anisotropic Filtering for Mipmapping (0=no filtering, 2-16=quality). This is uneffective if Mipmapping is 0. If the given value is to high to be supported by your graphic card, the value will be the highest value your graphic card can support. Better result with Trilinear filtering");
     return TRUE;
 }
