@@ -103,7 +103,6 @@ protected:
 
     bool m_bSupportFogCoordExt;
     bool m_bMultiTexture;
-    bool m_bSupportClampToEdge;
 
     GLuint  m_curBoundTex[8];
     BOOL    m_texUnitEnabled[8];
