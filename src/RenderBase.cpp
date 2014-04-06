@@ -2341,20 +2341,10 @@ void HackZ(std::vector<XVECTOR3>& points)
 
 void HackZAll()
 {
-    if( CDeviceBuilder::m_deviceGeneralType == DIRECTX_DEVICE )
+    for( uint32 i=0; i<gRSP.numVertices; i++)
     {
-        for( uint32 i=0; i<gRSP.numVertices; i++)
-        {
-            g_vtxBuffer[i].z = HackZ(g_vtxBuffer[i].z);
-        }
-    }
-    else
-    {
-        for( uint32 i=0; i<gRSP.numVertices; i++)
-        {
-            float w = g_vtxProjected5[i][3];
-            g_vtxProjected5[i][2] = HackZ(g_vtxProjected5[i][2]/w)*w;
-        }
+        float w = g_vtxProjected5[i][3];
+        g_vtxProjected5[i][2] = HackZ(g_vtxProjected5[i][2]/w)*w;
     }
 }
 

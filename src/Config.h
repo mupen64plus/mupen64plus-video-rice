@@ -34,24 +34,7 @@ typedef enum
     OGL_1_4_V2_DEVICE,
     NVIDIA_OGL_DEVICE,
     OGL_FRAGMENT_PROGRAM,
-
-    DIRECTX_DEVICE,
 } SupportedDeviceType;
-
-enum DirectXCombinerType
-{
-    DX_DISABLE_COMBINER,
-    DX_BEST_FIT,
-    DX_LOW_END,
-    DX_HIGH_END,
-    DX_NVIDIA_TNT,
-    DX_2_STAGES,
-    DX_3_STAGES,
-    DX_4_STAGES,
-    DX_PIXEL_SHADER,
-    DX_SEMI_PIXEL_SHADER,
-};
-
 
 typedef struct
 {
