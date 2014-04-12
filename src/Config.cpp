@@ -328,7 +328,8 @@ BOOL InitConfiguration(void)
                 if ( oldOglDevice == 6 ) /* OGL_TNT2_DEVICE was 6 but doesnt exist anymore: Put to auto*/
                 {
                     oldOglDevice = 0;
-                } else if ( oldOglDevice > 6 ) /* Offset the others */
+                }
+                else if ( oldOglDevice > 6 ) /* Offset the others */
                 {
                     oldOglDevice -= 1;
                 }
