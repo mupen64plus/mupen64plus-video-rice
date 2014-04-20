@@ -188,7 +188,6 @@ RenderEngineSetting OpenGLRenderSettings[] =
 {"OpenGL 1.2/1.3", OGL_1_2_DEVICE},
 {"OpenGL 1.4", OGL_1_4_DEVICE},
 //{"OpenGL 1.4, the 2nd combiner",  OGL_1_4_V2_DEVICE},
-{"OpenGL for Nvidia TNT or better", OGL_TNT2_DEVICE},
 {"OpenGL for Nvidia GeForce or better ", NVIDIA_OGL_DEVICE},
 {"OpenGL Fragment Program Extension", OGL_FRAGMENT_PROGRAM},
 };
@@ -309,12 +308,43 @@ BOOL InitConfiguration(void)
         DebugMessage(M64MSG_ERROR, "Unable to open Video-Rice configuration section");
         return FALSE;
     }
+    
+    /* Ensure versionning is present */
+    int ConfigParamsVersion;
+    if (ConfigGetParameter(l_ConfigVideoRice, "Version", M64TYPE_INT, &ConfigParamsVersion, sizeof(int)) != M64ERR_SUCCESS)
+    {
+        DebugMessage(M64MSG_WARNING, "No version number in 'Rice-Video' config section. Setting defaults.");
+        ConfigParamsVersion = 0; // zero to ensure updates will be applied
+    }
+    /* Update config parameters */
+    if (ConfigParamsVersion < CONFIG_PARAM_VERSION)
+    {
+        DebugMessage(M64MSG_WARNING, "Old parameter config version detected : %d, updating to %d;", ConfigParamsVersion, CONFIG_PARAM_VERSION);
+        if ( ConfigParamsVersion == 0 ) /* From v0 to v1: Remove OGL_TNT2_DEVICE device */
+        {
+            int oldOglDevice;
+            if (ConfigGetParameter(l_ConfigVideoRice, "OpenGLRenderSetting", M64TYPE_INT, &oldOglDevice, sizeof(int)) == M64ERR_SUCCESS)
+            {
+                if ( oldOglDevice == 6 ) /* OGL_TNT2_DEVICE was 6 but doesnt exist anymore: Put to auto*/
+                {
+                    oldOglDevice = 0;
+                }
+                else if ( oldOglDevice > 6 ) /* Offset the others */
+                {
+                    oldOglDevice -= 1;
+                }
+                ConfigSetParameter(l_ConfigVideoRice, "OpenGLRenderSetting", M64TYPE_INT, &oldOglDevice);
+            }
+            ConfigParamsVersion = 1;
+        } // place others update stuff here and update "ConfigParamsVersion" each time.
+    }
 
     ConfigSetDefaultBool(l_ConfigVideoGeneral, "Fullscreen", 0, "Use fullscreen mode if True, or windowed mode if False ");
     ConfigSetDefaultInt(l_ConfigVideoGeneral, "ScreenWidth", 640, "Width of output window or fullscreen width");
     ConfigSetDefaultInt(l_ConfigVideoGeneral, "ScreenHeight", 480, "Height of output window or fullscreen height");
     ConfigSetDefaultBool(l_ConfigVideoGeneral, "VerticalSync", 0, "If true, activate the SDL_GL_SWAP_CONTROL attribute");
 
+    ConfigSetDefaultInt(l_ConfigVideoRice, "Version", CONFIG_PARAM_VERSION, "Mupen64Plus Rice Video Plugin config parameter version number");
     ConfigSetDefaultInt(l_ConfigVideoRice, "FrameBufferSetting", FRM_BUF_NONE, "Frame Buffer Emulation (0=ROM default, 1=disable)");
     ConfigSetDefaultInt(l_ConfigVideoRice, "FrameBufferWriteBackControl", FRM_BUF_WRITEBACK_NORMAL, "Frequency to write back the frame buffer (0=every frame, 1=every other frame, etc)");
     ConfigSetDefaultInt(l_ConfigVideoRice, "RenderToTexture", TXT_BUF_NONE, "Render-to-texture emulation (0=none, 1=ignore, 2=normal, 3=write back, 4=write back and reload)");
@@ -354,7 +384,7 @@ BOOL InitConfiguration(void)
     ConfigSetDefaultInt(l_ConfigVideoRice, "OpenGLDepthBufferSetting", 16, "Z-buffer depth (only 16 or 32)");
     ConfigSetDefaultInt(l_ConfigVideoRice, "MultiSampling", 0, "Enable/Disable MultiSampling (0=off, 2,4,8,16=quality)");
     ConfigSetDefaultInt(l_ConfigVideoRice, "ColorQuality", TEXTURE_FMT_A8R8G8B8, "Color bit depth for rendering window (0=32 bits, 1=16 bits)");
-    ConfigSetDefaultInt(l_ConfigVideoRice, "OpenGLRenderSetting", OGL_DEVICE, "OpenGL level to support (0=auto, 1=OGL_1.1, 2=OGL_1.2, 3=OGL_1.3, 4=OGL_1.4, 5=OGL_1.4_V2, 6=OGL_TNT2, 7=NVIDIA_OGL, 8=OGL_FRAGMENT_PROGRAM)");
+    ConfigSetDefaultInt(l_ConfigVideoRice, "OpenGLRenderSetting", OGL_DEVICE, "OpenGL level to support (0=auto, 1=OGL_1.1, 2=OGL_1.2, 3=OGL_1.3, 4=OGL_1.4, 5=OGL_1.4_V2, 6=NVIDIA_OGL, 7=OGL_FRAGMENT_PROGRAM)");
     ConfigSetDefaultInt(l_ConfigVideoRice, "AnisotropicFiltering", 0, "Enable/Disable Anisotropic Filtering for Mipmapping (0=no filtering, 2-16=quality). This is uneffective if Mipmapping is 0. If the given value is to high to be supported by your graphic card, the value will be the highest value your graphic card can support. Better result with Trilinear filtering");
     return TRUE;
 }

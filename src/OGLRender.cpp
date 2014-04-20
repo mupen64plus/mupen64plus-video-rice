@@ -46,7 +46,6 @@ OGLRender::OGLRender()
     COGLGraphicsContext *pcontext = (COGLGraphicsContext *)(CGraphicsContext::g_pGraphicsContext);
     m_bSupportFogCoordExt = pcontext->m_bSupportFogCoord;
     m_bMultiTexture = pcontext->m_bSupportMultiTexture;
-    m_bSupportClampToEdge = false;
     for( int i=0; i<8; i++ )
     {
         m_curBoundTex[i]=0;
@@ -81,32 +80,11 @@ void OGLRender::Initialize(void)
 
     glViewportWrapper(0, windowSetting.statusBarHeightToUse, windowSetting.uDisplayWidth, windowSetting.uDisplayHeight);
     OPENGL_CHECK_ERRORS;
+    
+    OGLXUVFlagMaps[TEXTURE_UV_FLAG_MIRROR].realFlag = GL_MIRRORED_REPEAT;
+    OGLXUVFlagMaps[TEXTURE_UV_FLAG_CLAMP].realFlag = GL_CLAMP_TO_EDGE;
 
 #if SDL_VIDEO_OPENGL
-    COGLGraphicsContext *pcontext = (COGLGraphicsContext *)(CGraphicsContext::g_pGraphicsContext);
-    if( pcontext->IsExtensionSupported("GL_IBM_texture_mirrored_repeat") )
-    {
-        OGLXUVFlagMaps[TEXTURE_UV_FLAG_MIRROR].realFlag = GL_MIRRORED_REPEAT_IBM;
-    }
-    else if( pcontext->IsExtensionSupported("ARB_texture_mirrored_repeat") )
-    {
-        OGLXUVFlagMaps[TEXTURE_UV_FLAG_MIRROR].realFlag = GL_MIRRORED_REPEAT_ARB;
-    }
-    else
-    {
-        OGLXUVFlagMaps[TEXTURE_UV_FLAG_MIRROR].realFlag = GL_REPEAT;
-    }
-
-    if( pcontext->IsExtensionSupported("GL_ARB_texture_border_clamp") || pcontext->IsExtensionSupported("GL_EXT_texture_edge_clamp") )
-    {
-        m_bSupportClampToEdge = true;
-        OGLXUVFlagMaps[TEXTURE_UV_FLAG_CLAMP].realFlag = GL_CLAMP_TO_EDGE;
-    }
-    else
-    {
-        m_bSupportClampToEdge = false;
-        OGLXUVFlagMaps[TEXTURE_UV_FLAG_CLAMP].realFlag = GL_CLAMP;
-    }
 
     glVertexPointer( 4, GL_FLOAT, sizeof(float)*5, &(g_vtxProjected5[0][0]) );
     OPENGL_CHECK_ERRORS;
@@ -165,6 +143,7 @@ void OGLRender::Initialize(void)
     glEnableClientState( GL_COLOR_ARRAY );
     OPENGL_CHECK_ERRORS;
 
+    COGLGraphicsContext *pcontext = (COGLGraphicsContext *)(CGraphicsContext::g_pGraphicsContext);
     if( pcontext->IsExtensionSupported("GL_NV_depth_clamp") )
     {
         glEnable(GL_DEPTH_CLAMP_NV);
@@ -172,9 +151,6 @@ void OGLRender::Initialize(void)
     }
 
 #elif SDL_VIDEO_OPENGL_ES2
-    OGLXUVFlagMaps[TEXTURE_UV_FLAG_MIRROR].realFlag = GL_MIRRORED_REPEAT;
-    m_bSupportClampToEdge = true;
-    OGLXUVFlagMaps[TEXTURE_UV_FLAG_CLAMP].realFlag = GL_CLAMP_TO_EDGE;
 
     glVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][0]));
     OPENGL_CHECK_ERRORS;

@@ -256,10 +256,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\OGLCombinerTNT2.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\OGLDecodedMux.cpp"
 				>
 			</File>
@@ -471,10 +467,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\OGLCombinerNV.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\OGLCombinerTNT2.h"
 				>
 			</File>
 			<File
