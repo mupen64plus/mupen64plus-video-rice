@@ -187,8 +187,6 @@ RenderEngineSetting OpenGLRenderSettings[] =
 {"OpenGL 1.1 (Lowest)",  OGL_1_1_DEVICE},
 {"OpenGL 1.2/1.3", OGL_1_2_DEVICE},
 {"OpenGL 1.4", OGL_1_4_DEVICE},
-//{"OpenGL 1.4, the 2nd combiner",  OGL_1_4_V2_DEVICE},
-{"OpenGL for Nvidia GeForce or better ", NVIDIA_OGL_DEVICE},
 {"OpenGL Fragment Program Extension", OGL_FRAGMENT_PROGRAM},
 };
 
@@ -336,6 +334,25 @@ BOOL InitConfiguration(void)
                 ConfigSetParameter(l_ConfigVideoRice, "OpenGLRenderSetting", M64TYPE_INT, &oldOglDevice);
             }
             ConfigParamsVersion = 1;
+            ConfigSetParameter(l_ConfigVideoRice, "Version", M64TYPE_INT, &ConfigParamsVersion);
+        }
+        if ( ConfigParamsVersion == 1 ) /* From v1 to v2: Remove NVIDIA_OGL_DEVICE device */
+        {
+            int oldOglDevice;
+            if (ConfigGetParameter(l_ConfigVideoRice, "OpenGLRenderSetting", M64TYPE_INT, &oldOglDevice, sizeof(int)) == M64ERR_SUCCESS)
+            {
+                if ( oldOglDevice == 6 ) /* NVIDIA_OGL_DEVICE was 6 but doesnt exist anymore: Put to auto*/
+                {
+                    oldOglDevice = 0;
+                }
+                else if ( oldOglDevice > 6) /* Offset the others */
+                {
+                    oldOglDevice -= 1;
+                }
+                ConfigSetParameter(l_ConfigVideoRice, "OpenGLRenderSetting", M64TYPE_INT, &oldOglDevice);
+            }
+            ConfigParamsVersion = 2;
+            ConfigSetParameter(l_ConfigVideoRice, "Version", M64TYPE_INT, &ConfigParamsVersion);
         } // place others update stuff here and update "ConfigParamsVersion" each time.
     }
 
@@ -384,7 +401,7 @@ BOOL InitConfiguration(void)
     ConfigSetDefaultInt(l_ConfigVideoRice, "OpenGLDepthBufferSetting", 16, "Z-buffer depth (only 16 or 32)");
     ConfigSetDefaultInt(l_ConfigVideoRice, "MultiSampling", 0, "Enable/Disable MultiSampling (0=off, 2,4,8,16=quality)");
     ConfigSetDefaultInt(l_ConfigVideoRice, "ColorQuality", TEXTURE_FMT_A8R8G8B8, "Color bit depth for rendering window (0=32 bits, 1=16 bits)");
-    ConfigSetDefaultInt(l_ConfigVideoRice, "OpenGLRenderSetting", OGL_DEVICE, "OpenGL level to support (0=auto, 1=OGL_1.1, 2=OGL_1.2, 3=OGL_1.3, 4=OGL_1.4, 5=OGL_1.4_V2, 6=NVIDIA_OGL, 7=OGL_FRAGMENT_PROGRAM)");
+    ConfigSetDefaultInt(l_ConfigVideoRice, "OpenGLRenderSetting", OGL_DEVICE, "OpenGL level to support (0=auto, 1=OGL_1.1, 2=OGL_1.2, 3=OGL_1.3, 4=OGL_1.4, 5=OGL_1.4_V2, 6=OGL_FRAGMENT_PROGRAM)");
     ConfigSetDefaultInt(l_ConfigVideoRice, "AnisotropicFiltering", 0, "Enable/Disable Anisotropic Filtering for Mipmapping (0=no filtering, 2-16=quality). This is uneffective if Mipmapping is 0. If the given value is to high to be supported by your graphic card, the value will be the highest value your graphic card can support. Better result with Trilinear filtering");
     return TRUE;
 }

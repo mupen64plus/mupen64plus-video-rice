@@ -111,7 +111,6 @@
     <ClCompile Include="..\..\src\GeneralCombiner.cpp" />
     <ClCompile Include="..\..\src\GraphicsContext.cpp" />
     <ClCompile Include="..\..\src\OGLCombiner.cpp" />
-    <ClCompile Include="..\..\src\OGLCombinerNV.cpp" />
     <ClCompile Include="..\..\src\OGLDecodedMux.cpp" />
     <ClCompile Include="..\..\src\OGLExtCombiner.cpp" />
     <ClCompile Include="..\..\src\OGLExtensions.cpp" />
@@ -165,7 +164,6 @@
     <ClInclude Include="..\..\src\liblinux\inffixed.h" />
     <ClInclude Include="..\..\src\liblinux\jpegrw.h" />
     <ClInclude Include="..\..\src\OGLCombiner.h" />
-    <ClInclude Include="..\..\src\OGLCombinerNV.h" />
     <ClInclude Include="..\..\src\OGLDebug.h" />
     <ClInclude Include="..\..\src\OGLDecodedMux.h" />
     <ClInclude Include="..\..\src\OGLExtCombiner.h" />

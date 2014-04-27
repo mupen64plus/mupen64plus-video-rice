@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "typedefs.h"
 
-#define CONFIG_PARAM_VERSION 1
+#define CONFIG_PARAM_VERSION 2
 
 typedef enum
 {
@@ -34,7 +34,6 @@ typedef enum
     OGL_1_3_DEVICE,
     OGL_1_4_DEVICE,
     OGL_1_4_V2_DEVICE,
-    NVIDIA_OGL_DEVICE,
     OGL_FRAGMENT_PROGRAM,
 } SupportedDeviceType;
 

@@ -27,7 +27,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "OGLGraphicsContext.h"
 #include "OGLTexture.h"
 #if SDL_VIDEO_OPENGL
-#include "OGLCombinerNV.h"
 #include "OGLExtensions.h"
 #include "OGLFragmentShaders.h"
 #elif SDL_VIDEO_OPENGL_ES2
@@ -63,7 +62,6 @@ void CDeviceBuilder::SelectDeviceType(SupportedDeviceType type)
     case OGL_1_3_DEVICE:
     case OGL_1_4_DEVICE:
     case OGL_1_4_V2_DEVICE:
-    case NVIDIA_OGL_DEVICE:
     case OGL_FRAGMENT_PROGRAM:
         CDeviceBuilder::m_deviceGeneralType = OGL_DEVICE;
         break;
@@ -94,7 +92,6 @@ CDeviceBuilder* CDeviceBuilder::CreateBuilder(SupportedDeviceType type)
         case    OGL_1_3_DEVICE:
         case    OGL_1_4_DEVICE:
         case    OGL_1_4_V2_DEVICE:
-        case    NVIDIA_OGL_DEVICE:
         case OGL_FRAGMENT_PROGRAM:
             m_pInstance = new OGLDeviceBuilder();
             break;
@@ -243,11 +240,6 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
 
 #if SDL_VIDEO_OPENGL
 
-            if (m_deviceType == NVIDIA_OGL_DEVICE && !bNvidiaExtensionsSupported)
-            {
-                DebugMessage(M64MSG_WARNING, "Your video card does not support Nvidia OpenGL extensions.  Falling back to auto device.");
-                m_deviceType = OGL_DEVICE;
-            }
             if( m_deviceType == OGL_DEVICE )    // Best fit
             {
                 GLint maxUnit = 2;
@@ -259,12 +251,6 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
                 {
                     m_pColorCombiner = new COGL_FragmentProgramCombiner(pRender);
                     DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: Fragment Program");
-                }
-                else if( pcontext->IsExtensionSupported("GL_NV_texture_env_combine4") || 
-                    pcontext->IsExtensionSupported("GL_NV_register_combiners") )
-                {
-                    m_pColorCombiner = new COGLColorCombinerNvidia(pRender);
-                    DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: NVidia");
                 }
                 else if( pcontext->IsExtensionSupported("GL_EXT_texture_env_combine") ||
                          pcontext->IsExtensionSupported("GL_ARB_texture_env_combine") )
@@ -322,10 +308,6 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
                 case OGL_1_4_V2_DEVICE:
                     m_pColorCombiner = new COGLColorCombiner4v2(pRender);
                     DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: OGL 1.4 Version 2");
-                    break;
-                case NVIDIA_OGL_DEVICE:
-                    m_pColorCombiner = new COGLColorCombinerNvidia(pRender);
-                    DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: Nvidia");
                     break;
                 case OGL_FRAGMENT_PROGRAM:
                     m_pColorCombiner = new COGL_FragmentProgramCombiner(pRender);
