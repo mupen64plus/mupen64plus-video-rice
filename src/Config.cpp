@@ -318,44 +318,27 @@ BOOL InitConfiguration(void)
     if (ConfigParamsVersion < CONFIG_PARAM_VERSION)
     {
         DebugMessage(M64MSG_WARNING, "Old parameter config version detected : %d, updating to %d;", ConfigParamsVersion, CONFIG_PARAM_VERSION);
-        if ( ConfigParamsVersion == 0 ) /* From v0 to v1: Remove OGL_TNT2_DEVICE device */
+        if (ConfigParamsVersion == 0) /* From v0 to v1: Remove OGL_TNT2_DEVICE and NVIDIA_OGL device */
         {
             int oldOglDevice;
             if (ConfigGetParameter(l_ConfigVideoRice, "OpenGLRenderSetting", M64TYPE_INT, &oldOglDevice, sizeof(int)) == M64ERR_SUCCESS)
             {
-                if ( oldOglDevice == 6 ) /* OGL_TNT2_DEVICE was 6 but doesnt exist anymore: Put to auto*/
+                if ((oldOglDevice == 6) || (oldOglDevice == 7)) /* OGL_TNT2_DEVICE was 6, NVIDIA_OGL was 7 but doesnt exist anymore: Put to auto*/
                 {
-                    oldOglDevice = 0;
+                    oldOglDevice = 0; // auto
                 }
-                else if ( oldOglDevice > 6 ) /* Offset the others */
+                else if (oldOglDevice >= 8) /* OGL_FRAGMENT_PROGRAM (was 8+) is now 6*/
                 {
-                    oldOglDevice -= 1;
+                    oldOglDevice = 6;
                 }
                 ConfigSetParameter(l_ConfigVideoRice, "OpenGLRenderSetting", M64TYPE_INT, &oldOglDevice);
+                ConfigSetParameterHelp(l_ConfigVideoRice, "OpenGLRenderSetting", "OpenGL level to support (0=auto, 1=OGL_1.1, 2=OGL_1.2, 3=OGL_1.3, 4=OGL_1.4, 5=OGL_1.4_V2, 6=OGL_FRAGMENT_PROGRAM)");
             }
             ConfigParamsVersion = 1;
-            ConfigSetParameter(l_ConfigVideoRice, "Version", M64TYPE_INT, &ConfigParamsVersion);
-        }
-        if ( ConfigParamsVersion == 1 ) /* From v1 to v2: Remove NVIDIA_OGL_DEVICE device */
-        {
-            int oldOglDevice;
-            if (ConfigGetParameter(l_ConfigVideoRice, "OpenGLRenderSetting", M64TYPE_INT, &oldOglDevice, sizeof(int)) == M64ERR_SUCCESS)
-            {
-                if ( oldOglDevice == 6 ) /* NVIDIA_OGL_DEVICE was 6 but doesnt exist anymore: Put to auto*/
-                {
-                    oldOglDevice = 0;
-                }
-                else if ( oldOglDevice > 6) /* Offset the others */
-                {
-                    oldOglDevice -= 1;
-                }
-                ConfigSetParameter(l_ConfigVideoRice, "OpenGLRenderSetting", M64TYPE_INT, &oldOglDevice);
-            }
-            ConfigParamsVersion = 2;
-            ConfigSetParameter(l_ConfigVideoRice, "Version", M64TYPE_INT, &ConfigParamsVersion);
-        } // place others update stuff here and update "ConfigParamsVersion" each time.
+        } // place others update stuff here and increment "ConfigParamsVersion" and CONFIG_PARAM_VERSION each time.
     }
 
+    /* Set default config parameters */
     ConfigSetDefaultBool(l_ConfigVideoGeneral, "Fullscreen", 0, "Use fullscreen mode if True, or windowed mode if False ");
     ConfigSetDefaultInt(l_ConfigVideoGeneral, "ScreenWidth", 640, "Width of output window or fullscreen width");
     ConfigSetDefaultInt(l_ConfigVideoGeneral, "ScreenHeight", 480, "Height of output window or fullscreen height");

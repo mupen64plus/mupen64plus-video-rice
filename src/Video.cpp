@@ -72,6 +72,7 @@ void (*renderCallback)(int) = NULL;
 /* definitions of pointers to Core config functions */
 ptr_ConfigOpenSection      ConfigOpenSection = NULL;
 ptr_ConfigSetParameter     ConfigSetParameter = NULL;
+ptr_ConfigSetParameterHelp ConfigSetParameterHelp = NULL;
 ptr_ConfigGetParameter     ConfigGetParameter = NULL;
 ptr_ConfigGetParameterHelp ConfigGetParameterHelp = NULL;
 ptr_ConfigSetDefaultInt    ConfigSetDefaultInt = NULL;
@@ -585,7 +586,7 @@ EXPORT m64p_error CALL PluginStartup(m64p_dynlib_handle CoreLibHandle, void *Con
     }
     int ConfigAPIVersion, DebugAPIVersion, VidextAPIVersion;
     (*CoreAPIVersionFunc)(&ConfigAPIVersion, &DebugAPIVersion, &VidextAPIVersion, NULL);
-    if ((ConfigAPIVersion & 0xffff0000) != (CONFIG_API_VERSION & 0xffff0000))
+    if ((ConfigAPIVersion & 0xffffff00) < (CONFIG_API_VERSION & 0xffffff00))
     {
         DebugMessage(M64MSG_ERROR, "Emulator core Config API (v%i.%i.%i) incompatible with plugin (v%i.%i.%i)",
                 VERSION_PRINTF_SPLIT(ConfigAPIVersion), VERSION_PRINTF_SPLIT(CONFIG_API_VERSION));
@@ -601,6 +602,7 @@ EXPORT m64p_error CALL PluginStartup(m64p_dynlib_handle CoreLibHandle, void *Con
     /* Get the core config function pointers from the library handle */
     ConfigOpenSection = (ptr_ConfigOpenSection) osal_dynlib_getproc(CoreLibHandle, "ConfigOpenSection");
     ConfigSetParameter = (ptr_ConfigSetParameter) osal_dynlib_getproc(CoreLibHandle, "ConfigSetParameter");
+    ConfigSetParameterHelp = (ptr_ConfigSetParameterHelp) osal_dynlib_getproc(CoreLibHandle, "ConfigSetParameterHelp");
     ConfigGetParameter = (ptr_ConfigGetParameter) osal_dynlib_getproc(CoreLibHandle, "ConfigGetParameter");
     ConfigSetDefaultInt = (ptr_ConfigSetDefaultInt) osal_dynlib_getproc(CoreLibHandle, "ConfigSetDefaultInt");
     ConfigSetDefaultFloat = (ptr_ConfigSetDefaultFloat) osal_dynlib_getproc(CoreLibHandle, "ConfigSetDefaultFloat");
@@ -616,7 +618,7 @@ EXPORT m64p_error CALL PluginStartup(m64p_dynlib_handle CoreLibHandle, void *Con
     ConfigGetUserDataPath = (ptr_ConfigGetUserDataPath) osal_dynlib_getproc(CoreLibHandle, "ConfigGetUserDataPath");
     ConfigGetUserCachePath = (ptr_ConfigGetUserCachePath) osal_dynlib_getproc(CoreLibHandle, "ConfigGetUserCachePath");
 
-    if (!ConfigOpenSection || !ConfigSetParameter || !ConfigGetParameter ||
+    if (!ConfigOpenSection || !ConfigSetParameter || !ConfigSetParameterHelp || !ConfigGetParameter ||
         !ConfigSetDefaultInt || !ConfigSetDefaultFloat || !ConfigSetDefaultBool || !ConfigSetDefaultString ||
         !ConfigGetParamInt   || !ConfigGetParamFloat   || !ConfigGetParamBool   || !ConfigGetParamString ||
         !ConfigGetSharedDataFilepath || !ConfigGetUserConfigPath || !ConfigGetUserDataPath || !ConfigGetUserCachePath)
