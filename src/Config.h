@@ -34,7 +34,6 @@ typedef enum
     OGL_1_3_DEVICE,
     OGL_1_4_DEVICE,
     OGL_1_4_V2_DEVICE,
-    NVIDIA_OGL_DEVICE,
     OGL_FRAGMENT_PROGRAM,
 } SupportedDeviceType;
 

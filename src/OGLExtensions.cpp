@@ -25,13 +25,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 static void APIENTRY EmptyFunc(void) { return; }
 
-bool                                 bNvidiaExtensionsSupported = false;
-PFUNCGLCOMBINERPARAMETERFVNVPROC     pglCombinerParameterfvNV = (PFUNCGLCOMBINERPARAMETERFVNVPROC) EmptyFunc;
-PFUNCGLFINALCOMBINERINPUTNVPROC      pglFinalCombinerInputNV = (PFUNCGLFINALCOMBINERINPUTNVPROC) EmptyFunc;
-PFUNCGLCOMBINEROUTPUTNVPROC          pglCombinerOutputNV = (PFUNCGLCOMBINEROUTPUTNVPROC) EmptyFunc;
-PFUNCGLCOMBINERINPUTNVPROC           pglCombinerInputNV = (PFUNCGLCOMBINERINPUTNVPROC) EmptyFunc;
-PFUNCGLCOMBINERPARAMETERINVPROC      pglCombinerParameteriNV = (PFUNCGLCOMBINERPARAMETERINVPROC) EmptyFunc;
-
 PFUNCGLACTIVETEXTUREPROC             pglActiveTexture = (PFUNCGLACTIVETEXTUREPROC) EmptyFunc;
 PFUNCGLACTIVETEXTUREARBPROC          pglActiveTextureARB = (PFUNCGLACTIVETEXTUREARBPROC) EmptyFunc;
 PFUNCGLMULTITEXCOORD2FPROC           pglMultiTexCoord2f = (PFUNCGLMULTITEXCOORD2FPROC) EmptyFunc;
@@ -51,19 +44,6 @@ PFUNCGLCLIENTACTIVETEXTUREARBPROC    pglClientActiveTextureARB = (PFUNCGLCLIENTA
 
 void OGLExtensions_Init(void)
 {
-    /* nvidia extensions are a special case */
-    bNvidiaExtensionsSupported = true;
-    pglCombinerParameterfvNV = (PFUNCGLCOMBINERPARAMETERFVNVPROC) CoreVideo_GL_GetProcAddress("glCombinerParameterfvNV");
-    if (pglCombinerParameterfvNV == NULL) bNvidiaExtensionsSupported = false;
-    pglFinalCombinerInputNV = (PFUNCGLFINALCOMBINERINPUTNVPROC) CoreVideo_GL_GetProcAddress("glFinalCombinerInputNV");
-    if (pglFinalCombinerInputNV == NULL) bNvidiaExtensionsSupported = false;
-    pglCombinerOutputNV = (PFUNCGLCOMBINEROUTPUTNVPROC) CoreVideo_GL_GetProcAddress("glCombinerOutputNV");
-    if (pglCombinerOutputNV == NULL) bNvidiaExtensionsSupported = false;
-    pglCombinerInputNV = (PFUNCGLCOMBINERINPUTNVPROC) CoreVideo_GL_GetProcAddress("glCombinerInputNV");
-    if (pglCombinerInputNV == NULL) bNvidiaExtensionsSupported = false;
-    pglCombinerParameteriNV = (PFUNCGLCOMBINERPARAMETERINVPROC) CoreVideo_GL_GetProcAddress("glCombinerParameteriNV");
-    if (pglCombinerParameteriNV == NULL) bNvidiaExtensionsSupported = false;
-
     INIT_ENTRY_POINT(PFUNCGLACTIVETEXTUREPROC,             glActiveTexture);
     INIT_ENTRY_POINT(PFUNCGLACTIVETEXTUREARBPROC,          glActiveTextureARB);
     INIT_ENTRY_POINT(PFUNCGLMULTITEXCOORD2FPROC,           glMultiTexCoord2f);

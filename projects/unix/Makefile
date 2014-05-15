@@ -321,7 +321,6 @@ SOURCE = \
 	$(SRCDIR)/GeneralCombiner.cpp \
 	$(SRCDIR)/GraphicsContext.cpp \
 	$(SRCDIR)/OGLCombiner.cpp \
-	$(SRCDIR)/OGLCombinerNV.cpp \
 	$(SRCDIR)/OGLDecodedMux.cpp \
 	$(SRCDIR)/OGLExtCombiner.cpp \
 	$(SRCDIR)/OGLExtensions.cpp \

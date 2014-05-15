@@ -30,12 +30,6 @@ void OGLExtensions_Init(void);
 /* The function pointer types are defined here because as of 2009 some OpenGL drivers under Linux do 'incorrect' things which
    mess up the SDL_opengl.h header, resulting in no function pointer typedefs at all, and thus compilation errors.
 */
-typedef void (APIENTRYP PFUNCGLCOMBINERPARAMETERFVNVPROC) (GLenum pname, const GLfloat *params);
-typedef void (APIENTRYP PFUNCGLFINALCOMBINERINPUTNVPROC) (GLenum variable, GLenum input, GLenum mapping, GLenum componentUsage);
-typedef void (APIENTRYP PFUNCGLCOMBINEROUTPUTNVPROC) (GLenum stage, GLenum portion, GLenum abOutput, GLenum cdOutput, GLenum sumOutput, GLenum scale, GLenum bias, GLboolean abDotProduct, GLboolean cdDotProduct, GLboolean muxSum);
-typedef void (APIENTRYP PFUNCGLCOMBINERINPUTNVPROC) (GLenum stage, GLenum portion, GLenum variable, GLenum input, GLenum mapping, GLenum componentUsage);
-typedef void (APIENTRYP PFUNCGLCOMBINERPARAMETERINVPROC) (GLenum pname, GLint param);
-
 typedef void (APIENTRYP PFUNCGLACTIVETEXTUREPROC) (GLenum texture);
 typedef void (APIENTRYP PFUNCGLACTIVETEXTUREARBPROC) (GLenum texture);
 typedef void (APIENTRYP PFUNCGLMULTITEXCOORD2FPROC) (GLenum target, GLfloat s, GLfloat t);
@@ -47,13 +41,6 @@ typedef void (APIENTRYP PFUNCGLGENPROGRAMSARBPROC) (GLsizei n, GLuint *programs)
 typedef void (APIENTRYP PFUNCGLPROGRAMENVPARAMETER4FVARBPROC) (GLenum target, GLuint index, const GLfloat *params);
 typedef void (APIENTRYP PFUNCGLFOGCOORDPOINTEREXTPROC) (GLenum type, GLsizei stride, const GLvoid *pointer);
 typedef void (APIENTRYP PFUNCGLCLIENTACTIVETEXTUREARBPROC) (GLenum texture);
-
-extern bool                                 bNvidiaExtensionsSupported;
-extern PFUNCGLCOMBINERPARAMETERFVNVPROC     pglCombinerParameterfvNV;
-extern PFUNCGLFINALCOMBINERINPUTNVPROC      pglFinalCombinerInputNV;
-extern PFUNCGLCOMBINEROUTPUTNVPROC          pglCombinerOutputNV;
-extern PFUNCGLCOMBINERINPUTNVPROC           pglCombinerInputNV;
-extern PFUNCGLCOMBINERPARAMETERINVPROC      pglCombinerParameteriNV;
 
 extern PFUNCGLACTIVETEXTUREPROC             pglActiveTexture;
 extern PFUNCGLACTIVETEXTUREARBPROC          pglActiveTextureARB;
