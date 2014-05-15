@@ -586,7 +586,7 @@ EXPORT m64p_error CALL PluginStartup(m64p_dynlib_handle CoreLibHandle, void *Con
     }
     int ConfigAPIVersion, DebugAPIVersion, VidextAPIVersion;
     (*CoreAPIVersionFunc)(&ConfigAPIVersion, &DebugAPIVersion, &VidextAPIVersion, NULL);
-    if ((ConfigAPIVersion & 0xffffff00) < (CONFIG_API_VERSION & 0xffffff00))
+    if ((ConfigAPIVersion & 0xffff0000) != (CONFIG_API_VERSION & 0xffff0000))
     {
         DebugMessage(M64MSG_ERROR, "Emulator core Config API (v%i.%i.%i) incompatible with plugin (v%i.%i.%i)",
                 VERSION_PRINTF_SPLIT(ConfigAPIVersion), VERSION_PRINTF_SPLIT(CONFIG_API_VERSION));
@@ -596,6 +596,14 @@ EXPORT m64p_error CALL PluginStartup(m64p_dynlib_handle CoreLibHandle, void *Con
     {
         DebugMessage(M64MSG_ERROR, "Emulator core Video Extension API (v%i.%i.%i) incompatible with plugin (v%i.%i.%i)",
                 VERSION_PRINTF_SPLIT(VidextAPIVersion), VERSION_PRINTF_SPLIT(VIDEXT_API_VERSION));
+        return M64ERR_INCOMPATIBLE;
+    }
+
+    /* check Config API version to make sure ConfigSetParameterHelp is supported */
+    if (ConfigAPIVersion < 0x00020300)
+    {
+        DebugMessage(M64MSG_ERROR, "Emulator core Config API (v%i.%i.%i) is too old.  This plugin requires at least 2.3.0",
+                VERSION_PRINTF_SPLIT(ConfigAPIVersion));
         return M64ERR_INCOMPATIBLE;
     }
 
