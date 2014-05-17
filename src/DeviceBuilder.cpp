@@ -58,7 +58,6 @@ void CDeviceBuilder::SelectDeviceType(SupportedDeviceType type)
     {
     case OGL_DEVICE:
     case OGL_1_1_DEVICE:
-    case OGL_1_2_DEVICE:
     case OGL_1_3_DEVICE:
     case OGL_1_4_DEVICE:
     case OGL_1_4_V2_DEVICE:
@@ -88,7 +87,6 @@ CDeviceBuilder* CDeviceBuilder::CreateBuilder(SupportedDeviceType type)
         {
         case    OGL_DEVICE:
         case    OGL_1_1_DEVICE:
-        case    OGL_1_2_DEVICE:
         case    OGL_1_3_DEVICE:
         case    OGL_1_4_DEVICE:
         case    OGL_1_4_V2_DEVICE:
@@ -296,7 +294,6 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
                     m_pColorCombiner = new COGLColorCombiner(pRender);
                     DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: Basic OGL");
                     break;
-                case OGL_1_2_DEVICE:
                 case OGL_1_3_DEVICE:
                     m_pColorCombiner = new COGLColorCombiner2(pRender);
                     DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: OGL 1.2/1.3");
