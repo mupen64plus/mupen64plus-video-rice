@@ -58,7 +58,6 @@ void CDeviceBuilder::SelectDeviceType(SupportedDeviceType type)
     {
     case OGL_DEVICE:
     case OGL_1_1_DEVICE:
-    case OGL_1_3_DEVICE:
     case OGL_1_4_DEVICE:
     case OGL_1_4_V2_DEVICE:
     case OGL_FRAGMENT_PROGRAM:
@@ -87,7 +86,6 @@ CDeviceBuilder* CDeviceBuilder::CreateBuilder(SupportedDeviceType type)
         {
         case    OGL_DEVICE:
         case    OGL_1_1_DEVICE:
-        case    OGL_1_3_DEVICE:
         case    OGL_1_4_DEVICE:
         case    OGL_1_4_V2_DEVICE:
         case OGL_FRAGMENT_PROGRAM:
@@ -226,6 +224,8 @@ CTexture * OGLDeviceBuilder::CreateTexture(uint32 dwWidth, uint32 dwHeight, Text
 
 CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
 {
+    bool bColorCombinerFound = false;
+
     if( m_pColorCombiner == NULL )
     {
         if( CGraphicsContext::g_pGraphicsContext == NULL && CGraphicsContext::g_pGraphicsContext->Ready() )
@@ -248,6 +248,7 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
                 if( pcontext->IsExtensionSupported("GL_ARB_fragment_program") )
                 {
                     m_pColorCombiner = new COGL_FragmentProgramCombiner(pRender);
+                    bColorCombinerFound = true;
                     DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: Fragment Program");
                 }
                 else if( pcontext->IsExtensionSupported("GL_EXT_texture_env_combine") ||
@@ -258,11 +259,13 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
                         if( maxUnit > 2 )
                         {
                             m_pColorCombiner = new COGLColorCombiner4v2(pRender);
+                            bColorCombinerFound = true;
                             DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: OGL 1.4 version 2");
                         }
                         else
                         {
                             m_pColorCombiner = new COGLColorCombiner4(pRender);
+                            bColorCombinerFound = true;
                             DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: OGL 1.4");
                         }
                     }
@@ -271,18 +274,15 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
                         if( maxUnit > 2 )
                         {
                             m_pColorCombiner = new COGLColorCombiner4v2(pRender);
+                            bColorCombinerFound = true;
                             DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: OGL 1.4 version 2 (w/o env crossbar)");
-                        }
-                        else
-                        {
-                            m_pColorCombiner = new COGLColorCombiner2(pRender);
-                            DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: OGL 1.2/1.3");
                         }
                     }
                 }
                 else
                 {
                     m_pColorCombiner = new COGLColorCombiner(pRender);
+                    bColorCombinerFound = true;
                     DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: Basic OGL");
                 }
             }
@@ -292,22 +292,22 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
                 {
                 case OGL_1_1_DEVICE:
                     m_pColorCombiner = new COGLColorCombiner(pRender);
+                    bColorCombinerFound = true;
                     DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: Basic OGL");
-                    break;
-                case OGL_1_3_DEVICE:
-                    m_pColorCombiner = new COGLColorCombiner2(pRender);
-                    DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: OGL 1.2/1.3");
                     break;
                 case OGL_1_4_DEVICE:
                     m_pColorCombiner = new COGLColorCombiner4(pRender);
+                    bColorCombinerFound = true;
                     DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: OGL 1.4");
                     break;
                 case OGL_1_4_V2_DEVICE:
                     m_pColorCombiner = new COGLColorCombiner4v2(pRender);
+                    bColorCombinerFound = true;
                     DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: OGL 1.4 Version 2");
                     break;
                 case OGL_FRAGMENT_PROGRAM:
                     m_pColorCombiner = new COGL_FragmentProgramCombiner(pRender);
+                    bColorCombinerFound = true;
                     DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: Fragment Program");
                     break;
                  default:
@@ -317,8 +317,15 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
 
 #elif SDL_VIDEO_OPENGL_ES2
             m_pColorCombiner = new COGL_FragmentProgramCombiner(pRender);
+            bColorCombinerFound = true;
             DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: Fragment Program");
 #endif
+        }
+
+        if (!bColorCombinerFound)
+        {
+            DebugMessage(M64MSG_ERROR, "OpenGL Combiner: Can't find a valid OpenGL Combiner");
+            exit(1);
         }
 
         SAFE_CHECK(m_pColorCombiner);
