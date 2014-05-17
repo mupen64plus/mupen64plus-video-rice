@@ -315,7 +315,6 @@ SOURCE = \
 	$(SRCDIR)/CNvTNTCombiner.cpp \
 	$(SRCDIR)/Debugger.cpp \
 	$(SRCDIR)/DecodedMux.cpp \
-	$(SRCDIR)/DirectXDecodedMux.cpp \
 	$(SRCDIR)/DeviceBuilder.cpp \
 	$(SRCDIR)/FrameBuffer.cpp \
 	$(SRCDIR)/GeneralCombiner.cpp \

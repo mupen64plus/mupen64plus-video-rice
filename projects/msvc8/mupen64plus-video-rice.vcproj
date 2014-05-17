@@ -232,10 +232,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\DirectXDecodedMux.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\FrameBuffer.cpp"
 				>
 			</File>
@@ -423,10 +419,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\DeviceBuilder.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\DirectXDecodedMux.h"
 				>
 			</File>
 			<File

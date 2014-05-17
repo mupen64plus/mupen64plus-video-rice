@@ -106,7 +106,6 @@
     <ClCompile Include="..\..\src\Debugger.cpp" />
     <ClCompile Include="..\..\src\DecodedMux.cpp" />
     <ClCompile Include="..\..\src\DeviceBuilder.cpp" />
-    <ClCompile Include="..\..\src\DirectXDecodedMux.cpp" />
     <ClCompile Include="..\..\src\FrameBuffer.cpp" />
     <ClCompile Include="..\..\src\GeneralCombiner.cpp" />
     <ClCompile Include="..\..\src\GraphicsContext.cpp" />
@@ -155,7 +154,6 @@
     <ClInclude Include="..\..\src\Debugger.h" />
     <ClInclude Include="..\..\src\DecodedMux.h" />
     <ClInclude Include="..\..\src\DeviceBuilder.h" />
-    <ClInclude Include="..\..\src\DirectXDecodedMux.h" />
     <ClInclude Include="..\..\src\ExtendedRender.h" />
     <ClInclude Include="..\..\src\FrameBuffer.h" />
     <ClInclude Include="..\..\src\GeneralCombiner.h" />
