@@ -97,7 +97,6 @@
     <ClCompile Include="..\..\src\liblinux\BMGImage.c" />
     <ClCompile Include="..\..\src\liblinux\BMGUtils.c" />
     <ClCompile Include="..\..\src\liblinux\bmp.c" />
-    <ClCompile Include="..\..\src\CNvTNTCombiner.cpp" />
     <ClCompile Include="..\..\src\Combiner.cpp" />
     <ClCompile Include="..\..\src\CombinerTable.cpp" />
     <ClCompile Include="..\..\src\Config.cpp" />
@@ -143,7 +142,6 @@
     <ClInclude Include="..\..\src\liblinux\BMGImage.h" />
     <ClInclude Include="..\..\src\liblinux\BMGLibPNG.h" />
     <ClInclude Include="..\..\src\liblinux\BMGUtils.h" />
-    <ClInclude Include="..\..\src\CNvTNTCombiner.h" />
     <ClInclude Include="..\..\src\COLOR.h" />
     <ClInclude Include="..\..\src\Combiner.h" />
     <ClInclude Include="..\..\src\CombinerDefs.h" />

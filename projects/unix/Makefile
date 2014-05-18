@@ -312,7 +312,6 @@ SOURCE = \
 	$(SRCDIR)/Config.cpp \
 	$(SRCDIR)/ConvertImage.cpp \
 	$(SRCDIR)/ConvertImage16.cpp \
-	$(SRCDIR)/CNvTNTCombiner.cpp \
 	$(SRCDIR)/Debugger.cpp \
 	$(SRCDIR)/DecodedMux.cpp \
 	$(SRCDIR)/DeviceBuilder.cpp \

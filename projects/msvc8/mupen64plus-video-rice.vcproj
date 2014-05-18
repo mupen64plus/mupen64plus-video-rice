@@ -196,10 +196,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\CNvTNTCombiner.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\Combiner.cpp"
 				>
 			</File>
@@ -375,10 +371,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\liblinux\BMGUtils.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\CNvTNTCombiner.h"
 				>
 			</File>
 			<File
