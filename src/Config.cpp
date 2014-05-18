@@ -329,11 +329,11 @@ BOOL InitConfiguration(void)
                 }
                 if (oldOglDevice == 4) /* OGL_1.4 (was 4) is now 2*/
                 {
-                    oldOglDevice = 3;
+                    oldOglDevice = 2;
                 }
                 if (oldOglDevice == 5) /* OGL_1.4_V2 (was 5) is now 3*/
                 {
-                    oldOglDevice = 4;
+                    oldOglDevice = 3;
                 }
                 else if (oldOglDevice >= 8) /* OGL_FRAGMENT_PROGRAM (was 8+) is now 4*/
                 {
