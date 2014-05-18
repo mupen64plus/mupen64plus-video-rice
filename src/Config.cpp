@@ -214,76 +214,76 @@ void GenerateFrameBufferOptions(void)
             currentRomOptions.N64RenderToTextureEmuType = TXT_BUF_IGNORE;
     }
 
-    frameBufferOptions.bUpdateCIInfo            = false;
+    frameBufferOptions.bUpdateCIInfo                       = false;
 
-    frameBufferOptions.bCheckBackBufs           = false;
-    frameBufferOptions.bWriteBackBufToRDRAM     = false;
-    frameBufferOptions.bLoadBackBufFromRDRAM    = false;
+    frameBufferOptions.bCheckBackBufs                      = false;
+    frameBufferOptions.bWriteBackBufToRDRAM                = false;
+    frameBufferOptions.bLoadBackBufFromRDRAM               = false;
 
-    frameBufferOptions.bIgnore                  = true;
+    frameBufferOptions.bIgnore                             = true;
 
-    frameBufferOptions.bSupportRenderTextures           = false;
-    frameBufferOptions.bCheckRenderTextures         = false;
-    frameBufferOptions.bRenderTextureWriteBack          = false;
-    frameBufferOptions.bLoadRDRAMIntoRenderTexture      = false;
+    frameBufferOptions.bSupportRenderTextures              = false;
+    frameBufferOptions.bCheckRenderTextures                = false;
+    frameBufferOptions.bRenderTextureWriteBack             = false;
+    frameBufferOptions.bLoadRDRAMIntoRenderTexture         = false;
 
-    frameBufferOptions.bProcessCPUWrite         = false;
-    frameBufferOptions.bProcessCPURead          = false;
-    frameBufferOptions.bAtEachFrameUpdate       = false;
-    frameBufferOptions.bIgnoreRenderTextureIfHeightUnknown      = false;
+    frameBufferOptions.bProcessCPUWrite                    = false;
+    frameBufferOptions.bProcessCPURead                     = false;
+    frameBufferOptions.bAtEachFrameUpdate                  = false;
+    frameBufferOptions.bIgnoreRenderTextureIfHeightUnknown = false;
 
     switch( currentRomOptions.N64FrameBufferEmuType )
     {
     case FRM_BUF_NONE:
         break;
     case FRM_BUF_COMPLETE:
-        frameBufferOptions.bAtEachFrameUpdate       = true;
-        frameBufferOptions.bProcessCPUWrite         = true;
-        frameBufferOptions.bProcessCPURead          = true;
-        frameBufferOptions.bUpdateCIInfo            = true;
+        frameBufferOptions.bAtEachFrameUpdate    = true;
+        frameBufferOptions.bProcessCPUWrite      = true;
+        frameBufferOptions.bProcessCPURead       = true;
+        frameBufferOptions.bUpdateCIInfo         = true;
         break;
     case FRM_BUF_WRITEBACK_AND_RELOAD:
-        frameBufferOptions.bLoadBackBufFromRDRAM    = true;
+        frameBufferOptions.bLoadBackBufFromRDRAM = true;
     case FRM_BUF_BASIC_AND_WRITEBACK:
-        frameBufferOptions.bWriteBackBufToRDRAM     = true;
+        frameBufferOptions.bWriteBackBufToRDRAM  = true;
     case FRM_BUF_BASIC:
-        frameBufferOptions.bCheckBackBufs           = true;
+        frameBufferOptions.bCheckBackBufs        = true;
     case FRM_BUF_IGNORE:
-        frameBufferOptions.bUpdateCIInfo            = true;
+        frameBufferOptions.bUpdateCIInfo         = true;
         break;
     case FRM_BUF_BASIC_AND_WITH_EMULATOR:
         // Banjo Kazooie
-        frameBufferOptions.bCheckBackBufs           = true;
+        frameBufferOptions.bCheckBackBufs        = true;
     case FRM_BUF_WITH_EMULATOR:
-        frameBufferOptions.bUpdateCIInfo            = true;
-        frameBufferOptions.bProcessCPUWrite         = true;
-        frameBufferOptions.bProcessCPURead          = true;
+        frameBufferOptions.bUpdateCIInfo         = true;
+        frameBufferOptions.bProcessCPUWrite      = true;
+        frameBufferOptions.bProcessCPURead       = true;
         break;
     case FRM_BUF_WITH_EMULATOR_READ_ONLY:
-        frameBufferOptions.bUpdateCIInfo            = true;
-        frameBufferOptions.bProcessCPURead          = true;
+        frameBufferOptions.bUpdateCIInfo         = true;
+        frameBufferOptions.bProcessCPURead       = true;
         break;
     case FRM_BUF_WITH_EMULATOR_WRITE_ONLY:
-        frameBufferOptions.bUpdateCIInfo            = true;
-        frameBufferOptions.bProcessCPUWrite         = true;
+        frameBufferOptions.bUpdateCIInfo         = true;
+        frameBufferOptions.bProcessCPUWrite      = true;
         break;
     }
 
     switch( currentRomOptions.N64RenderToTextureEmuType )
     {
     case TXT_BUF_NONE:
-        frameBufferOptions.bSupportRenderTextures           = false;
+        frameBufferOptions.bSupportRenderTextures      = false;
         break;
     case TXT_BUF_WRITE_BACK_AND_RELOAD:
-        frameBufferOptions.bLoadRDRAMIntoRenderTexture      = true;
+        frameBufferOptions.bLoadRDRAMIntoRenderTexture = true;
     case TXT_BUF_WRITE_BACK:
-        frameBufferOptions.bRenderTextureWriteBack          = true;
+        frameBufferOptions.bRenderTextureWriteBack     = true;
     case TXT_BUF_NORMAL:
-        frameBufferOptions.bCheckRenderTextures         = true;
-        frameBufferOptions.bIgnore                  = false;
+        frameBufferOptions.bCheckRenderTextures        = true;
+        frameBufferOptions.bIgnore                     = false;
     case TXT_BUF_IGNORE:
-        frameBufferOptions.bUpdateCIInfo            = true;
-        frameBufferOptions.bSupportRenderTextures           = true;
+        frameBufferOptions.bUpdateCIInfo               = true;
+        frameBufferOptions.bSupportRenderTextures      = true;
         break;
     }
 
