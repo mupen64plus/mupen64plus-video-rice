@@ -30,8 +30,6 @@ typedef enum
 {
     OGL_DEVICE,
     OGL_1_1_DEVICE,
-    OGL_1_2_DEVICE,
-    OGL_1_3_DEVICE,
     OGL_1_4_DEVICE,
     OGL_1_4_V2_DEVICE,
     OGL_FRAGMENT_PROGRAM,

@@ -196,10 +196,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\CNvTNTCombiner.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\Combiner.cpp"
 				>
 			</File>
@@ -229,10 +225,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\DeviceBuilder.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\DirectXDecodedMux.cpp"
 				>
 			</File>
 			<File
@@ -382,10 +374,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\CNvTNTCombiner.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\COLOR.h"
 				>
 			</File>
@@ -423,10 +411,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\DeviceBuilder.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\DirectXDecodedMux.h"
 				>
 			</File>
 			<File
