@@ -181,14 +181,6 @@ SettingInfo openGLDepthBufferSettings[] =
 {"32-bit", 32},
 };
 
-RenderEngineSetting OpenGLRenderSettings[] =
-{
-{"To Fit Your Video Card", OGL_DEVICE},
-{"OpenGL 1.1 (Lowest)",  OGL_1_1_DEVICE},
-{"OpenGL 1.4", OGL_1_4_DEVICE},
-{"OpenGL Fragment Program Extension", OGL_FRAGMENT_PROGRAM},
-};
-
 SettingInfo OnScreenDisplaySettings[] =
 {
 {"Display Nothing", ONSCREEN_DISPLAY_NOTHING},
@@ -200,8 +192,6 @@ SettingInfo OnScreenDisplaySettings[] =
 {"Display Frame Per Second With Core Msgs", ONSCREEN_DISPLAY_FRAME_PER_SECOND_WITH_CORE_MSG},
 {"Display Debug Information With Core Msgs", ONSCREEN_DISPLAY_DEBUG_INFORMATION_WITH_CORE_MSG},
 };
-
-const int numberOfOpenGLRenderEngineSettings = sizeof(OpenGLRenderSettings)/sizeof(RenderEngineSetting);
 
 void GenerateFrameBufferOptions(void)
 {
