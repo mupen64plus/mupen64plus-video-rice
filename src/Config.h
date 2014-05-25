@@ -35,12 +35,6 @@ typedef enum
     OGL_FRAGMENT_PROGRAM,
 } SupportedDeviceType;
 
-typedef struct
-{
-    const char* name;
-    SupportedDeviceType type;
-} RenderEngineSetting;
-
 enum {
     FRM_BUF_NONE,
     FRM_BUF_IGNORE,
