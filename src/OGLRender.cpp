@@ -44,7 +44,6 @@ UVFlagMap OGLXUVFlagMaps[] =
 OGLRender::OGLRender()
 {
     COGLGraphicsContext *pcontext = (COGLGraphicsContext *)(CGraphicsContext::g_pGraphicsContext);
-    m_bSupportFogCoordExt = pcontext->m_bSupportFogCoord;
     m_bMultiTexture = pcontext->m_bSupportMultiTexture;
     for( int i=0; i<8; i++ )
     {
@@ -115,27 +114,24 @@ void OGLRender::Initialize(void)
         OPENGL_CHECK_ERRORS;
     }
 
-    if (m_bSupportFogCoordExt)
-    {
-        pglFogCoordPointerEXT( GL_FLOAT, sizeof(float)*5, &(g_vtxProjected5[0][4]) );
-        OPENGL_CHECK_ERRORS;
-        glEnableClientState( GL_FOG_COORDINATE_ARRAY_EXT );
-        OPENGL_CHECK_ERRORS;
-        glFogi( GL_FOG_COORDINATE_SOURCE_EXT, GL_FOG_COORDINATE_EXT );
-        OPENGL_CHECK_ERRORS;
-        glFogi(GL_FOG_MODE, GL_LINEAR); // Fog Mode
-        OPENGL_CHECK_ERRORS;
-        glFogf(GL_FOG_DENSITY, 1.0f); // How Dense Will The Fog Be
-        OPENGL_CHECK_ERRORS;
-        glHint(GL_FOG_HINT, GL_FASTEST); // Fog Hint Value
-        OPENGL_CHECK_ERRORS;
-        glFogi( GL_FOG_COORDINATE_SOURCE_EXT, GL_FOG_COORDINATE_EXT );
-        OPENGL_CHECK_ERRORS;
-        glFogf( GL_FOG_START, 0.0f );
-        OPENGL_CHECK_ERRORS;
-        glFogf( GL_FOG_END, 1.0f );
-        OPENGL_CHECK_ERRORS;
-    }
+    pglFogCoordPointer( GL_FLOAT, sizeof(float)*5, &(g_vtxProjected5[0][4]) );
+    OPENGL_CHECK_ERRORS;
+    glEnableClientState( GL_FOG_COORDINATE_ARRAY );
+    OPENGL_CHECK_ERRORS;
+    glFogi( GL_FOG_COORDINATE_SOURCE, GL_FOG_COORDINATE );
+    OPENGL_CHECK_ERRORS;
+    glFogi(GL_FOG_MODE, GL_LINEAR); // Fog Mode
+    OPENGL_CHECK_ERRORS;
+    glFogf(GL_FOG_DENSITY, 1.0f); // How Dense Will The Fog Be
+    OPENGL_CHECK_ERRORS;
+    glHint(GL_FOG_HINT, GL_FASTEST); // Fog Hint Value
+    OPENGL_CHECK_ERRORS;
+    glFogi( GL_FOG_COORDINATE_SOURCE, GL_FOG_COORDINATE );
+    OPENGL_CHECK_ERRORS;
+    glFogf( GL_FOG_START, 0.0f );
+    OPENGL_CHECK_ERRORS;
+    glFogf( GL_FOG_END, 1.0f );
+    OPENGL_CHECK_ERRORS;
 
     //glColorPointer( 1, GL_UNSIGNED_BYTE, sizeof(TLITVERTEX), &g_vtxBuffer[0].r);
     glColorPointer( 4, GL_UNSIGNED_BYTE, sizeof(uint8)*4, &(g_oglVtxColors[0][0]) );
@@ -168,11 +164,8 @@ void OGLRender::Initialize(void)
         OPENGL_CHECK_ERRORS;
     }
 
-    if (m_bSupportFogCoordExt)
-    {
-        glVertexAttribPointer(VS_FOG,1,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][4]));
-        OPENGL_CHECK_ERRORS;
-    }
+    glVertexAttribPointer(VS_FOG,1,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][4]));
+    OPENGL_CHECK_ERRORS;
 
     glVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_TRUE, sizeof(uint8)*4, &(g_oglVtxColors[0][0]) );
     OPENGL_CHECK_ERRORS;
@@ -708,14 +701,9 @@ extern FiddledVtx * g_pVtxBase;
 // OpenGL internal transform
 bool OGLRender::RenderFlushTris()
 {
-    if( !m_bSupportFogCoordExt )    
-        SetFogFlagForNegativeW();
-    else
+    if( !gRDP.bFogEnableInBlender && gRSP.bFogEnabled )
     {
-        if( !gRDP.bFogEnableInBlender && gRSP.bFogEnabled )
-        {
-            TurnFogOnOff(false);
-        }
+        TurnFogOnOff(false);
     }
 
     ApplyZBias(m_dwZBias);  // set the bias factors
@@ -760,14 +748,9 @@ bool OGLRender::RenderFlushTris()
     }
 */
 
-    if( !m_bSupportFogCoordExt )    
-        RestoreFogFlag();
-    else
+    if( !gRDP.bFogEnableInBlender && gRSP.bFogEnabled )
     {
-        if( !gRDP.bFogEnableInBlender && gRSP.bFogEnabled )
-        {
-            TurnFogOnOff(true);
-        }
+        TurnFogOnOff(true);
     }
     return true;
 }

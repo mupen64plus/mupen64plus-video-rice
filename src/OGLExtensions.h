@@ -39,7 +39,7 @@ typedef void (APIENTRYP PFUNCGLPROGRAMSTRINGARBPROC) (GLenum target, GLenum form
 typedef void (APIENTRYP PFUNCGLBINDPROGRAMARBPROC) (GLenum target, GLuint program);
 typedef void (APIENTRYP PFUNCGLGENPROGRAMSARBPROC) (GLsizei n, GLuint *programs);
 typedef void (APIENTRYP PFUNCGLPROGRAMENVPARAMETER4FVARBPROC) (GLenum target, GLuint index, const GLfloat *params);
-typedef void (APIENTRYP PFUNCGLFOGCOORDPOINTEREXTPROC) (GLenum type, GLsizei stride, const GLvoid *pointer);
+typedef void (APIENTRYP PFUNCGLFOGCOORDPOINTERPROC) (GLenum type, GLsizei stride, const GLvoid *pointer);
 typedef void (APIENTRYP PFUNCGLCLIENTACTIVETEXTUREARBPROC) (GLenum texture);
 
 extern PFUNCGLACTIVETEXTUREPROC             pglActiveTexture;
@@ -51,7 +51,7 @@ extern PFUNCGLPROGRAMSTRINGARBPROC          pglProgramStringARB;
 extern PFUNCGLBINDPROGRAMARBPROC            pglBindProgramARB;
 extern PFUNCGLGENPROGRAMSARBPROC            pglGenProgramsARB;
 extern PFUNCGLPROGRAMENVPARAMETER4FVARBPROC pglProgramEnvParameter4fvARB;
-extern PFUNCGLFOGCOORDPOINTEREXTPROC        pglFogCoordPointerEXT;
+extern PFUNCGLFOGCOORDPOINTERPROC           pglFogCoordPointer;
 extern PFUNCGLCLIENTACTIVETEXTUREARBPROC    pglClientActiveTextureARB;
 
 #endif  // OGL_EXTENSIONS_H
