@@ -228,10 +228,7 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
 
             if( m_deviceType == OGL_DEVICE )    // Best fit
             {
-                GLint maxUnit = 2;
                 COGLGraphicsContext *pcontext = (COGLGraphicsContext *)(CGraphicsContext::g_pGraphicsContext);
-                glGetIntegerv(GL_MAX_TEXTURE_UNITS,&maxUnit);
-                OPENGL_CHECK_ERRORS;
 
                 if( pcontext->IsExtensionSupported("GL_ARB_fragment_program") )
                 {
@@ -239,15 +236,11 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
                     bColorCombinerFound = true;
                     DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: Fragment Program");
                 }
-                else if( pcontext->IsExtensionSupported("GL_EXT_texture_env_combine") ||
-                         pcontext->IsExtensionSupported("GL_ARB_texture_env_combine") )
+                else if( pcontext->IsExtensionSupported("GL_ARB_texture_env_crossbar") )
                 {
-                    if( pcontext->IsExtensionSupported("GL_ARB_texture_env_crossbar") )
-                    {
-                        m_pColorCombiner = new COGLColorCombiner4(pRender);
-                        bColorCombinerFound = true;
-                        DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: OGL 1.4");
-                    }
+                    m_pColorCombiner = new COGLColorCombiner4(pRender);
+                    bColorCombinerFound = true;
+                    DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: OGL 1.4");
                 }
                 else
                 {

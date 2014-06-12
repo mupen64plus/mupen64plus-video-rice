@@ -210,7 +210,7 @@ void COGLColorCombiner::InitCombinerCycle12(void)
             if( shadeIsUsedInColor && texIsUsedInColor )
             {
                 if( m_bSupportSubtract )
-                    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_SUBTRACT_ARB);
+                    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_SUBTRACT);
                 else
                     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
             }

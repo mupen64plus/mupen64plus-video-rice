@@ -32,7 +32,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "version.h"
 
 COGLGraphicsContext::COGLGraphicsContext() :
-    m_bSupportTextureEnvCombine(false),
     m_bSupportSeparateSpecularColor(false),
     m_bSupportSecondColor(false),
     m_bSupportTextureObject(false),
@@ -289,8 +288,6 @@ void COGLGraphicsContext::InitState(void)
 void COGLGraphicsContext::InitOGLExtension(void)
 {
     // important extension features, it is very bad not to have these feature
-    m_bSupportTextureEnvCombine = IsExtensionSupported("GL_EXT_texture_env_combine");
-    
     m_bSupportSeparateSpecularColor = IsExtensionSupported("GL_EXT_separate_specular_color");
     m_bSupportSecondColor = IsExtensionSupported("GL_EXT_secondary_color");
     m_bSupportTextureObject = IsExtensionSupported("GL_EXT_texture_object");
