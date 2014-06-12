@@ -188,18 +188,8 @@ CRender * OGLDeviceBuilder::CreateRender(void)
             SAFE_CHECK(m_pRender);
         }
 
-        COGLGraphicsContext &context = *((COGLGraphicsContext*)CGraphicsContext::g_pGraphicsContext);
+        m_pRender = new COGLExtRender();
 
-        if( context.m_bSupportMultiTexture )
-        {
-            // OGL extension render
-            m_pRender = new COGLExtRender();
-        }
-        else
-        {
-            // Basic OGL Render
-            m_pRender = new OGLRender();
-        }
         SAFE_CHECK(m_pRender);
         CRender::g_pRender = m_pRender;
     }
@@ -240,7 +230,7 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
             {
                 GLint maxUnit = 2;
                 COGLGraphicsContext *pcontext = (COGLGraphicsContext *)(CGraphicsContext::g_pGraphicsContext);
-                glGetIntegerv(GL_MAX_TEXTURE_UNITS_ARB,&maxUnit);
+                glGetIntegerv(GL_MAX_TEXTURE_UNITS,&maxUnit);
                 OPENGL_CHECK_ERRORS;
 
                 if( pcontext->IsExtensionSupported("GL_ARB_fragment_program") )

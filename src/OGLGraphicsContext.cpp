@@ -32,7 +32,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "version.h"
 
 COGLGraphicsContext::COGLGraphicsContext() :
-    m_bSupportMultiTexture(false),
     m_bSupportTextureEnvCombine(false),
     m_bSupportSeparateSpecularColor(false),
     m_bSupportSecondColor(false),
@@ -290,11 +289,6 @@ void COGLGraphicsContext::InitState(void)
 void COGLGraphicsContext::InitOGLExtension(void)
 {
     // important extension features, it is very bad not to have these feature
-#if SDL_VIDEO_OPENGL
-    m_bSupportMultiTexture = IsExtensionSupported("GL_ARB_multitexture");
-#elif SDL_VIDEO_OPENGL_ES2
-    m_bSupportMultiTexture = true;
-#endif
     m_bSupportTextureEnvCombine = IsExtensionSupported("GL_EXT_texture_env_combine");
     
     m_bSupportSeparateSpecularColor = IsExtensionSupported("GL_EXT_separate_specular_color");

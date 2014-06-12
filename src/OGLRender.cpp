@@ -43,8 +43,6 @@ UVFlagMap OGLXUVFlagMaps[] =
 //===================================================================
 OGLRender::OGLRender()
 {
-    COGLGraphicsContext *pcontext = (COGLGraphicsContext *)(CGraphicsContext::g_pGraphicsContext);
-    m_bMultiTexture = pcontext->m_bSupportMultiTexture;
     for( int i=0; i<8; i++ )
     {
         m_curBoundTex[i]=0;
@@ -90,29 +88,20 @@ void OGLRender::Initialize(void)
     glEnableClientState( GL_VERTEX_ARRAY );
     OPENGL_CHECK_ERRORS;
 
-    if( m_bMultiTexture )
-    {
-        pglClientActiveTextureARB( GL_TEXTURE0_ARB );
-        OPENGL_CHECK_ERRORS;
-        glTexCoordPointer( 2, GL_FLOAT, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[0].u) );
-        OPENGL_CHECK_ERRORS;
-        glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-        OPENGL_CHECK_ERRORS;
+    pglClientActiveTexture( GL_TEXTURE0 );
+    OPENGL_CHECK_ERRORS;
+    glTexCoordPointer( 2, GL_FLOAT, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[0].u) );
+    OPENGL_CHECK_ERRORS;
+    glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+    OPENGL_CHECK_ERRORS;
 
-        pglClientActiveTextureARB( GL_TEXTURE1_ARB );
-        OPENGL_CHECK_ERRORS;
-        glTexCoordPointer( 2, GL_FLOAT, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[1].u) );
-        OPENGL_CHECK_ERRORS;
-        glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-        OPENGL_CHECK_ERRORS;
-    }
-    else
-    {
-        glTexCoordPointer( 2, GL_FLOAT, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[0].u) );
-        OPENGL_CHECK_ERRORS;
-        glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-        OPENGL_CHECK_ERRORS;
-    }
+    pglClientActiveTexture( GL_TEXTURE1 );
+    OPENGL_CHECK_ERRORS;
+    glTexCoordPointer( 2, GL_FLOAT, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[1].u) );
+    OPENGL_CHECK_ERRORS;
+    glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+    OPENGL_CHECK_ERRORS;
+
 
     pglFogCoordPointer( GL_FLOAT, sizeof(float)*5, &(g_vtxProjected5[0][4]) );
     OPENGL_CHECK_ERRORS;
@@ -151,18 +140,10 @@ void OGLRender::Initialize(void)
     glVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][0]));
     OPENGL_CHECK_ERRORS;
 
-    if( m_bMultiTexture )
-    {
-        glVertexAttribPointer(VS_TEXCOORD0,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[0].u));
-        OPENGL_CHECK_ERRORS;
-        glVertexAttribPointer(VS_TEXCOORD1,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[1].u));
-        OPENGL_CHECK_ERRORS;
-    }
-    else
-    {
-        glVertexAttribPointer(VS_TEXCOORD0,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[0].u));
-        OPENGL_CHECK_ERRORS;
-    }
+    glVertexAttribPointer(VS_TEXCOORD0,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[0].u));
+    OPENGL_CHECK_ERRORS;
+    glVertexAttribPointer(VS_TEXCOORD1,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[1].u));
+    OPENGL_CHECK_ERRORS;
 
     glVertexAttribPointer(VS_FOG,1,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][4]));
     OPENGL_CHECK_ERRORS;
@@ -724,22 +705,22 @@ bool OGLRender::RenderFlushTris()
         glVertexPointer( 4, GL_FLOAT, sizeof(float)*5, &(g_vtxProjected5Clipped[0][0]) );
         glEnableClientState( GL_VERTEX_ARRAY );
 
-        pglClientActiveTextureARB( GL_TEXTURE0_ARB );
+        pglClientActiveTexture( GL_TEXTURE0 );
         glTexCoordPointer( 2, GL_FLOAT, sizeof( TLITVERTEX ), &(g_clippedVtxBuffer[0].tcord[0].u) );
         glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 
-        pglClientActiveTextureARB( GL_TEXTURE1_ARB );
+        pglClientActiveTexture( GL_TEXTURE1 );
         glTexCoordPointer( 2, GL_FLOAT, sizeof( TLITVERTEX ), &(g_clippedVtxBuffer[0].tcord[1].u) );
         glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 
         glDrawElements( GL_TRIANGLES, gRSP.numVertices, GL_UNSIGNED_INT, g_vtxIndex );
 
         // Reset the array
-        pglClientActiveTextureARB( GL_TEXTURE0_ARB );
+        pglClientActiveTexture( GL_TEXTURE0 );
         glTexCoordPointer( 2, GL_FLOAT, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[0].u) );
         glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 
-        pglClientActiveTextureARB( GL_TEXTURE1_ARB );
+        pglClientActiveTexture( GL_TEXTURE1 );
         glTexCoordPointer( 2, GL_FLOAT, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[1].u) );
         glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 
@@ -1189,13 +1170,13 @@ void OGLRender::SetFogColor(uint32 r, uint32 g, uint32 b, uint32 a)
 
 void OGLRender::DisableMultiTexture()
 {
-    pglActiveTexture(GL_TEXTURE1_ARB);
+    pglActiveTexture(GL_TEXTURE1);
     OPENGL_CHECK_ERRORS;
     EnableTexUnit(1,FALSE);
-    pglActiveTexture(GL_TEXTURE0_ARB);
+    pglActiveTexture(GL_TEXTURE0);
     OPENGL_CHECK_ERRORS;
     EnableTexUnit(0,FALSE);
-    pglActiveTexture(GL_TEXTURE0_ARB);
+    pglActiveTexture(GL_TEXTURE0);
     OPENGL_CHECK_ERRORS;
     EnableTexUnit(0,TRUE);
 }

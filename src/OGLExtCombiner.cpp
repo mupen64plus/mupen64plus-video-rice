@@ -55,13 +55,12 @@ bool COGLColorCombiner4::Initialize(void)
 #if SDL_VIDEO_OPENGL
     if( COGLColorCombiner::Initialize() )
     {
-        m_bSupportMultiTexture = true;
         COGLGraphicsContext *pcontext = (COGLGraphicsContext *)(CGraphicsContext::g_pGraphicsContext);
 
         if( pcontext->IsExtensionSupported("GL_EXT_texture_env_combine") || pcontext->IsExtensionSupported("GL_ARB_texture_env_combine") )
         {
             m_bOGLExtCombinerSupported = true;
-            glGetIntegerv(GL_MAX_TEXTURE_UNITS_ARB,&m_maxTexUnits);
+            glGetIntegerv(GL_MAX_TEXTURE_UNITS,&m_maxTexUnits);
             OPENGL_CHECK_ERRORS;
             if( m_maxTexUnits > 8 ) m_maxTexUnits = 8;
 
@@ -92,14 +91,14 @@ void COGLColorCombiner4::InitCombinerCycleFill(void)
 {
     for( int i=0; i<m_supportedStages; i++ )
     {
-        pglActiveTexture(GL_TEXTURE0_ARB+i);
+        pglActiveTexture(GL_TEXTURE0+i);
         OPENGL_CHECK_ERRORS;
         m_pOGLRender->EnableTexUnit(i,FALSE);
     }
 
-    //pglActiveTexture(GL_TEXTURE0_ARB);
+    //pglActiveTexture(GL_TEXTURE0);
     //m_pOGLRender->EnableTexUnit(0,FALSE);
-    //pglActiveTexture(GL_TEXTURE1_ARB);
+    //pglActiveTexture(GL_TEXTURE1);
     //m_pOGLRender->EnableTexUnit(1,FALSE);
 }
 
@@ -535,7 +534,7 @@ int COGLColorCombiner4::SaveParsedResult(OGLExtCombinerSaveType &result)
 
 bool isGLtex(GLint val)
 {
-    if( val >= GL_TEXTURE0_ARB && val <= GL_TEXTURE7_ARB )
+    if( val >= GL_TEXTURE0 && val <= GL_TEXTURE7 )
         return true;
     else
         return false;
@@ -590,17 +589,17 @@ GLint COGLColorCombiner4::RGBArgsMap4[] =
     GL_PRIMARY_COLOR_ARB,           //MUX_1
     GL_PREVIOUS_ARB,                //MUX_COMBINED,
 #endif
-    GL_TEXTURE0_ARB,                //MUX_TEXEL0,
+    GL_TEXTURE0,                    //MUX_TEXEL0,
 #if SDL_VIDEO_OPENGL
-    GL_TEXTURE1_ARB,                //MUX_TEXEL1,
+    GL_TEXTURE1,                    //MUX_TEXEL1,
     GL_CONSTANT_ARB,                //MUX_PRIM,
     GL_PRIMARY_COLOR_ARB,           //MUX_SHADE,
     GL_CONSTANT_ARB,                //MUX_ENV,
     GL_PREVIOUS_ARB,                //MUX_COMBALPHA,
 #endif
-    GL_TEXTURE0_ARB,                //MUX_T0_ALPHA,
+    GL_TEXTURE0,                    //MUX_T0_ALPHA,
 #if SDL_VIDEO_OPENGL
-    GL_TEXTURE1_ARB,                //MUX_T1_ALPHA,
+    GL_TEXTURE1,                    //MUX_T1_ALPHA,
     GL_CONSTANT_ARB,                //MUX_PRIM_ALPHA,
     GL_PRIMARY_COLOR_ARB,           //MUX_SHADE_ALPHA,
     GL_CONSTANT_ARB,                //MUX_ENV_ALPHA,
@@ -737,7 +736,7 @@ void COGLColorCombiner4::GenerateCombinerSetting(int index)
 
     for( int i=0; i<res.numOfUnits; i++ )
     {
-        pglActiveTexture(GL_TEXTURE0_ARB+i);
+        pglActiveTexture(GL_TEXTURE0+i);
         OPENGL_CHECK_ERRORS;
         m_pOGLRender->EnableTexUnit(i,TRUE);
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE_ARB);
@@ -749,7 +748,7 @@ void COGLColorCombiner4::GenerateCombinerSetting(int index)
     {
         for( int i=res.numOfUnits; i<m_maxTexUnits; i++ )
         {
-            pglActiveTexture(GL_TEXTURE0_ARB+i);
+            pglActiveTexture(GL_TEXTURE0+i);
             OPENGL_CHECK_ERRORS;
             m_pOGLRender->DisBindTexture(0, i);
             m_pOGLRender->EnableTexUnit(i,FALSE);
@@ -790,7 +789,7 @@ void COGLColorCombiner4::GenerateCombinerSettingConstants(int index)
     {
         for( int i=0; i<res.numOfUnits; i++ )
         {
-            pglActiveTexture(GL_TEXTURE0_ARB+i);
+            pglActiveTexture(GL_TEXTURE0+i);
             OPENGL_CHECK_ERRORS;
             glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR,fv);
             OPENGL_CHECK_ERRORS;
