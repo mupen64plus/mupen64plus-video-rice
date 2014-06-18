@@ -32,7 +32,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "version.h"
 
 COGLGraphicsContext::COGLGraphicsContext() :
-    m_bSupportTextureMirrorRepeat(false),
     m_pVendorStr(NULL),
     m_pRenderStr(NULL),
     m_pExtensionStr(NULL),
@@ -50,7 +49,6 @@ bool COGLGraphicsContext::Initialize(uint32 dwWidth, uint32 dwHeight, BOOL bWind
     DebugMessage(M64MSG_INFO, "Initializing OpenGL Device Context.");
     Lock();
 
-    CGraphicsContext::Get()->m_supportTextureMirror = false;
     CGraphicsContext::Initialize(dwWidth, dwHeight, bWindowed );
 
     if( bWindowed )
@@ -303,15 +301,6 @@ void COGLGraphicsContext::InitOGLExtension(void)
         if((uint32) m_maxAnisotropicFiltering > options.anisotropicFiltering)
         m_maxAnisotropicFiltering = options.anisotropicFiltering;
     }
-
-    // Nvidia only extension features (optional)
-    m_bSupportTextureMirrorRepeat = IsExtensionSupported("GL_IBM_texture_mirrored_repeat") || IsExtensionSupported("ARB_texture_mirrored_repeat");
-#if SDL_VIDEO_OPENGL
-    m_supportTextureMirror = m_bSupportTextureMirrorRepeat;
-#elif SDL_VIDEO_OPENGL_ES2
-    m_supportTextureMirror = true;
-#endif
-
 }
 
 bool COGLGraphicsContext::IsExtensionSupported(const char* pExtName)

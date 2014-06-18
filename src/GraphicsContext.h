@@ -56,8 +56,6 @@ public:
     static void InitWindowInfo();
     static void InitDeviceParameters();
 
-    bool m_supportTextureMirror;
-
 protected:
     static  uint32      m_dwWindowStyle;       // Saved window style for mode switches
     static  uint32      m_dwWindowExStyle;     // Saved window style for mode switches

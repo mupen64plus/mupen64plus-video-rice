@@ -56,9 +56,6 @@ protected:
     bool m_bSupportAnisotropicFiltering;
     int  m_maxAnisotropicFiltering;
 
-    // Nvidia OGL only features
-    bool m_bSupportTextureMirrorRepeat;
-
     const unsigned char* m_pVendorStr;
     const unsigned char* m_pRenderStr;
     const unsigned char* m_pExtensionStr;
