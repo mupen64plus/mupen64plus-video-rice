@@ -805,28 +805,20 @@ void TexGen(float &s, float &t)
     }
 }
 
-void ComputeLOD(bool openGL)
+void ComputeLOD()
 {
     TLITVERTEX &v0 = g_vtxBuffer[0];
     TLITVERTEX &v1 = g_vtxBuffer[1];
     RenderTexture &tex0 = g_textures[gRSP.curTile];
 
     float d,dt;
-    if( openGL )
-    {
-        float x = g_vtxProjected5[0][0] / g_vtxProjected5[0][4] - g_vtxProjected5[1][0] / g_vtxProjected5[1][4];
-        float y = g_vtxProjected5[0][1] / g_vtxProjected5[0][4] - g_vtxProjected5[1][1] / g_vtxProjected5[1][4];
 
-        x = windowSetting.vpWidthW*x/windowSetting.fMultX/2;
-        y = windowSetting.vpHeightW*y/windowSetting.fMultY/2;
-        d = sqrtf(x*x+y*y);
-    }
-    else
-    {
-        float x = (v0.x - v1.x)/ windowSetting.fMultX;
-        float y = (v0.y - v1.y)/ windowSetting.fMultY;
-        d = sqrtf(x*x+y*y);
-    }
+    float x = g_vtxProjected5[0][0] / g_vtxProjected5[0][4] - g_vtxProjected5[1][0] / g_vtxProjected5[1][4];
+    float y = g_vtxProjected5[0][1] / g_vtxProjected5[0][4] - g_vtxProjected5[1][1] / g_vtxProjected5[1][4];
+
+    x = windowSetting.vpWidthW*x/windowSetting.fMultX/2;
+    y = windowSetting.vpHeightW*y/windowSetting.fMultY/2;
+    d = sqrtf(x*x+y*y);
 
     float s0 = v0.tcord[0].u * tex0.m_fTexWidth;
     float t0 = v0.tcord[0].v * tex0.m_fTexHeight;
@@ -848,27 +840,25 @@ void ComputeLOD(bool openGL)
 bool bHalfTxtScale=false;
 extern uint32 lastSetTile;
 
-void InitVertex(uint32 dwV, uint32 vtxIndex, bool bTexture, bool openGL)
+void InitVertex(uint32 dwV, uint32 vtxIndex, bool bTexture)
 {
     VTX_DUMP(TRACE2("Init vertex (%d) to vtx buf[%d]:", dwV, vtxIndex));
 
     TLITVERTEX &v = g_vtxBuffer[vtxIndex];
     VTX_DUMP(TRACE4("  Trans: x=%f, y=%f, z=%f, w=%f",  g_vtxTransformed[dwV].x,g_vtxTransformed[dwV].y,g_vtxTransformed[dwV].z,g_vtxTransformed[dwV].w));
-    if( openGL )
-    {
-        g_vtxProjected5[vtxIndex][0] = g_vtxTransformed[dwV].x;
-        g_vtxProjected5[vtxIndex][1] = g_vtxTransformed[dwV].y;
-        g_vtxProjected5[vtxIndex][2] = g_vtxTransformed[dwV].z;
-        g_vtxProjected5[vtxIndex][3] = g_vtxTransformed[dwV].w;
-        g_vtxProjected5[vtxIndex][4] = g_vecProjected[dwV].z;
 
-        if( g_vtxTransformed[dwV].w < 0 )
-            g_vtxProjected5[vtxIndex][4] = 0;
+    g_vtxProjected5[vtxIndex][0] = g_vtxTransformed[dwV].x;
+    g_vtxProjected5[vtxIndex][1] = g_vtxTransformed[dwV].y;
+    g_vtxProjected5[vtxIndex][2] = g_vtxTransformed[dwV].z;
+    g_vtxProjected5[vtxIndex][3] = g_vtxTransformed[dwV].w;
+    g_vtxProjected5[vtxIndex][4] = g_vecProjected[dwV].z;
 
-        g_vtxIndex[vtxIndex] = vtxIndex;
-    }
+    if( g_vtxTransformed[dwV].w < 0 )
+        g_vtxProjected5[vtxIndex][4] = 0;
 
-    if( !openGL || options.bOGLVertexClipper == TRUE )
+    g_vtxIndex[vtxIndex] = vtxIndex;
+
+    if( options.bOGLVertexClipper == TRUE )
     {
         v.x = g_vecProjected[dwV].x*gRSP.vtxXMul+gRSP.vtxXAdd;
         v.y = g_vecProjected[dwV].y*gRSP.vtxYMul+gRSP.vtxYAdd;
@@ -915,13 +905,10 @@ void InitVertex(uint32 dwV, uint32 vtxIndex, bool bTexture, bool openGL)
         v.dcDiffuse = g_dwVtxDifColor[dwV];
     }
 
-    if( openGL )
-    {
-        g_oglVtxColors[vtxIndex][0] = v.r;
-        g_oglVtxColors[vtxIndex][1] = v.g;
-        g_oglVtxColors[vtxIndex][2] = v.b;
-        g_oglVtxColors[vtxIndex][3] = v.a;
-    }
+    g_oglVtxColors[vtxIndex][0] = v.r;
+    g_oglVtxColors[vtxIndex][1] = v.g;
+    g_oglVtxColors[vtxIndex][2] = v.b;
+    g_oglVtxColors[vtxIndex][3] = v.a;
 
     if( bTexture )
     {
@@ -989,7 +976,7 @@ void InitVertex(uint32 dwV, uint32 vtxIndex, bool bTexture, bool openGL)
     {
         if( CRender::g_pRender->IsTexel1Enable() && CRender::g_pRender->m_pColorCombiner->m_pDecodedMux->isUsed(MUX_LODFRAC) )
         {
-            ComputeLOD(openGL);
+            ComputeLOD();
         }
         else
         {
@@ -1537,11 +1524,10 @@ bool PrepareTriangle(uint32 dwV0, uint32 dwV1, uint32 dwV2)
         SP_Timing(SP_Each_Triangle);
 
         bool textureFlag = (CRender::g_pRender->IsTextureEnabled() || gRSP.ucode == 6 );
-        bool openGL = CDeviceBuilder::m_deviceGeneralType == OGL_DEVICE;
 
-        InitVertex(dwV0, gRSP.numVertices, textureFlag, openGL);
-        InitVertex(dwV1, gRSP.numVertices+1, textureFlag, openGL);
-        InitVertex(dwV2, gRSP.numVertices+2, textureFlag, openGL);
+        InitVertex(dwV0, gRSP.numVertices, textureFlag);
+        InitVertex(dwV1, gRSP.numVertices+1, textureFlag);
+        InitVertex(dwV2, gRSP.numVertices+2, textureFlag);
 
         gRSP.numVertices += 3;
         status.dwNumTrisRendered++;
