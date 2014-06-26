@@ -851,10 +851,7 @@ void InitVertex(uint32 dwV, uint32 vtxIndex, bool bTexture)
     g_vtxProjected5[vtxIndex][1] = g_vtxTransformed[dwV].y;
     g_vtxProjected5[vtxIndex][2] = g_vtxTransformed[dwV].z;
     g_vtxProjected5[vtxIndex][3] = g_vtxTransformed[dwV].w;
-    g_vtxProjected5[vtxIndex][4] = g_vecProjected[dwV].z;
-
-    if( g_vtxTransformed[dwV].w < 0 )
-        g_vtxProjected5[vtxIndex][4] = 0;
+    g_vtxProjected5[vtxIndex][4] = g_fFogCoord[dwV];
 
     g_vtxIndex[vtxIndex] = vtxIndex;
 
