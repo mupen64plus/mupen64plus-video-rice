@@ -23,7 +23,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "osal_preproc.h"
 #include "float.h"
 #include "DeviceBuilder.h"
-#include "VertexShaderConstantDef.h"
 #include "Render.h"
 #include "Timing.h"
 
@@ -1508,27 +1507,16 @@ void ProcessVertexDataNoSSE(uint32 dwAddr, uint32 dwV0, uint32 dwNum)
 
 bool PrepareTriangle(uint32 dwV0, uint32 dwV1, uint32 dwV2)
 {
-    if( status.isVertexShaderEnabled || status.bUseHW_T_L )
-    {
-        g_vtxIndex[gRSP.numVertices++] = dwV0;
-        g_vtxIndex[gRSP.numVertices++] = dwV1;
-        g_vtxIndex[gRSP.numVertices++] = dwV2;
-        status.dwNumTrisRendered++;
-        gRSP.maxVertexID = max(gRSP.maxVertexID,max(dwV0,max(dwV1,dwV2)));
-    }
-    else
-    {
-        SP_Timing(SP_Each_Triangle);
+    SP_Timing(SP_Each_Triangle);
 
-        bool textureFlag = (CRender::g_pRender->IsTextureEnabled() || gRSP.ucode == 6 );
+    bool textureFlag = (CRender::g_pRender->IsTextureEnabled() || gRSP.ucode == 6 );
 
-        InitVertex(dwV0, gRSP.numVertices, textureFlag);
-        InitVertex(dwV1, gRSP.numVertices+1, textureFlag);
-        InitVertex(dwV2, gRSP.numVertices+2, textureFlag);
+    InitVertex(dwV0, gRSP.numVertices, textureFlag);
+    InitVertex(dwV1, gRSP.numVertices+1, textureFlag);
+    InitVertex(dwV2, gRSP.numVertices+2, textureFlag);
 
-        gRSP.numVertices += 3;
-        status.dwNumTrisRendered++;
-    }
+    gRSP.numVertices += 3;
+    status.dwNumTrisRendered++;
 
     return true;
 }
@@ -1540,8 +1528,6 @@ bool PrepareTriangle(uint32 dwV0, uint32 dwV1, uint32 dwV2)
 bool IsTriangleVisible(uint32 dwV0, uint32 dwV1, uint32 dwV2)
 {
     //return true;  //fix me
-
-    if( status.isVertexShaderEnabled || status.bUseHW_T_L ) return true;    // We won't have access to transformed vertex data
 
     DEBUGGER_ONLY_IF( (!debuggerEnableTestTris || !debuggerEnableCullFace), {return TRUE;});
     
