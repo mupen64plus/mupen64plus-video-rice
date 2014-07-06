@@ -312,8 +312,8 @@ BOOL InitConfiguration(void)
             int oldOglDevice;
             if (ConfigGetParameter(l_ConfigVideoRice, "OpenGLRenderSetting", M64TYPE_INT, &oldOglDevice, sizeof(int)) == M64ERR_SUCCESS)
             {
-                /* OGL_1.2 was 2, OGL_1.3 was 3, OGL_TNT2_DEVICE was 6, NVIDIA_OGL was 7 but doesnt exist anymore: Put to auto*/
-                if ((oldOglDevice == 2) || (oldOglDevice == 3) || (oldOglDevice == 6) || (oldOglDevice == 7))
+                /* OGL_1.2 was 2, OGL_1.3 was 3, OGL_1.4_V2 was 5, OGL_TNT2_DEVICE was 6, NVIDIA_OGL was 7 but doesnt exist anymore: Put to auto*/
+                if ((oldOglDevice == 2) || (oldOglDevice == 3) || (oldOglDevice == 5) || (oldOglDevice == 6) || (oldOglDevice == 7))
                 {
                     oldOglDevice = 0; // auto
                 }
@@ -321,16 +321,12 @@ BOOL InitConfiguration(void)
                 {
                     oldOglDevice = 2;
                 }
-                if (oldOglDevice == 5) /* OGL_1.4_V2 (was 5) is now 3*/
+                else if (oldOglDevice >= 8) /* OGL_FRAGMENT_PROGRAM (was 8+) is now 4*/
                 {
                     oldOglDevice = 3;
                 }
-                else if (oldOglDevice >= 8) /* OGL_FRAGMENT_PROGRAM (was 8+) is now 4*/
-                {
-                    oldOglDevice = 4;
-                }
                 ConfigSetParameter(l_ConfigVideoRice, "OpenGLRenderSetting", M64TYPE_INT, &oldOglDevice);
-                ConfigSetParameterHelp(l_ConfigVideoRice, "OpenGLRenderSetting", "OpenGL level to support (0=auto, 1=OGL_1.1, 2=OGL_1.4, 3=OGL_1.4_V2, 4=OGL_FRAGMENT_PROGRAM)");
+                ConfigSetParameterHelp(l_ConfigVideoRice, "OpenGLRenderSetting", "OpenGL level to support (0=auto, 1=OGL_1.1, 2=OGL_1.4, 3=OGL_FRAGMENT_PROGRAM)");
             }
             ConfigParamsVersion = 1;
         } // place others update stuff here and increment "ConfigParamsVersion" and CONFIG_PARAM_VERSION each time.
@@ -364,7 +360,6 @@ BOOL InitConfiguration(void)
     ConfigSetDefaultBool(l_ConfigVideoRice, "FullTMEMEmulation", FALSE, "N64 Texture Memory Full Emulation (may fix some games, may break others)");
     ConfigSetDefaultBool(l_ConfigVideoRice, "OpenGLVertexClipper", FALSE, "Enable vertex clipper for fog operations");
     ConfigSetDefaultBool(l_ConfigVideoRice, "EnableSSE", TRUE, "Enable/Disable SSE optimizations for capable CPUs");
-    ConfigSetDefaultBool(l_ConfigVideoRice, "EnableVertexShader", FALSE, "Use GPU vertex shader");
     ConfigSetDefaultBool(l_ConfigVideoRice, "SkipFrame", FALSE, "If this option is enabled, the plugin will skip every other frame");
     ConfigSetDefaultBool(l_ConfigVideoRice, "TexRectOnly", FALSE, "If enabled, texture enhancement will be done only for TxtRect ucode");
     ConfigSetDefaultBool(l_ConfigVideoRice, "SmallTextureOnly", FALSE, "If enabled, texture enhancement will be done only for textures width+height<=128");
@@ -382,7 +377,7 @@ BOOL InitConfiguration(void)
     ConfigSetDefaultInt(l_ConfigVideoRice, "OpenGLDepthBufferSetting", 16, "Z-buffer depth (only 16 or 32)");
     ConfigSetDefaultInt(l_ConfigVideoRice, "MultiSampling", 0, "Enable/Disable MultiSampling (0=off, 2,4,8,16=quality)");
     ConfigSetDefaultInt(l_ConfigVideoRice, "ColorQuality", TEXTURE_FMT_A8R8G8B8, "Color bit depth for rendering window (0=32 bits, 1=16 bits)");
-    ConfigSetDefaultInt(l_ConfigVideoRice, "OpenGLRenderSetting", OGL_DEVICE, "OpenGL level to support (0=auto, 1=OGL_1.1, 2=OGL_1.4, 3=OGL_1.4_V2, 4=OGL_FRAGMENT_PROGRAM)");
+    ConfigSetDefaultInt(l_ConfigVideoRice, "OpenGLRenderSetting", OGL_DEVICE, "OpenGL level to support (0=auto, 1=OGL_1.1, 2=OGL_1.4, 3=OGL_FRAGMENT_PROGRAM)");
     ConfigSetDefaultInt(l_ConfigVideoRice, "AnisotropicFiltering", 0, "Enable/Disable Anisotropic Filtering for Mipmapping (0=no filtering, 2-16=quality). This is uneffective if Mipmapping is 0. If the given value is to high to be supported by your graphic card, the value will be the highest value your graphic card can support. Better result with Trilinear filtering");
     return TRUE;
 }
@@ -478,7 +473,6 @@ static void ReadConfiguration(void)
     options.bFullTMEM = ConfigGetParamBool(l_ConfigVideoRice, "FullTMEMEmulation");
     options.bOGLVertexClipper = ConfigGetParamBool(l_ConfigVideoRice, "OpenGLVertexClipper");
     options.bEnableSSE = ConfigGetParamBool(l_ConfigVideoRice, "EnableSSE");
-    options.bEnableVertexShader = ConfigGetParamBool(l_ConfigVideoRice, "EnableVertexShader");
     options.bSkipFrame = ConfigGetParamBool(l_ConfigVideoRice, "SkipFrame");
     options.bTexRectOnly = ConfigGetParamBool(l_ConfigVideoRice, "TexRectOnly");
     options.bSmallTextureOnly = ConfigGetParamBool(l_ConfigVideoRice, "SmallTextureOnly");
@@ -503,7 +497,6 @@ static void ReadConfiguration(void)
 
     status.isMMXSupported = isMMXSupported();
     status.isSSESupported = isSSESupported();
-    status.isVertexShaderSupported = false;
 
     status.isSSEEnabled = status.isSSESupported && options.bEnableSSE;
 #if !defined(NO_ASM)
@@ -518,9 +511,6 @@ static void ReadConfiguration(void)
         ProcessVertexData = ProcessVertexDataNoSSE;
         DebugMessage(M64MSG_INFO, "Disabled SSE processing.");
     }
-
-    status.isVertexShaderEnabled = status.isVertexShaderSupported && options.bEnableVertexShader;
-    status.bUseHW_T_L = false;
 }
     
 BOOL LoadConfiguration(void)

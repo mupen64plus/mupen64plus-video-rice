@@ -31,7 +31,6 @@ void OGLExtensions_Init(void);
    mess up the SDL_opengl.h header, resulting in no function pointer typedefs at all, and thus compilation errors.
 */
 typedef void (APIENTRYP PFUNCGLACTIVETEXTUREPROC) (GLenum texture);
-typedef void (APIENTRYP PFUNCGLACTIVETEXTUREARBPROC) (GLenum texture);
 typedef void (APIENTRYP PFUNCGLMULTITEXCOORD2FPROC) (GLenum target, GLfloat s, GLfloat t);
 typedef void (APIENTRYP PFUNCGLMULTITEXCOORD2FVPROC) (GLenum target, const GLfloat *v);
 typedef void (APIENTRYP PFUNCGLDELETEPROGRAMSARBPROC) (GLsizei n, const GLuint *programs);
@@ -39,11 +38,10 @@ typedef void (APIENTRYP PFUNCGLPROGRAMSTRINGARBPROC) (GLenum target, GLenum form
 typedef void (APIENTRYP PFUNCGLBINDPROGRAMARBPROC) (GLenum target, GLuint program);
 typedef void (APIENTRYP PFUNCGLGENPROGRAMSARBPROC) (GLsizei n, GLuint *programs);
 typedef void (APIENTRYP PFUNCGLPROGRAMENVPARAMETER4FVARBPROC) (GLenum target, GLuint index, const GLfloat *params);
-typedef void (APIENTRYP PFUNCGLFOGCOORDPOINTEREXTPROC) (GLenum type, GLsizei stride, const GLvoid *pointer);
-typedef void (APIENTRYP PFUNCGLCLIENTACTIVETEXTUREARBPROC) (GLenum texture);
+typedef void (APIENTRYP PFUNCGLFOGCOORDPOINTERPROC) (GLenum type, GLsizei stride, const GLvoid *pointer);
+typedef void (APIENTRYP PFUNCGLCLIENTACTIVETEXTUREPROC) (GLenum texture);
 
 extern PFUNCGLACTIVETEXTUREPROC             pglActiveTexture;
-extern PFUNCGLACTIVETEXTUREARBPROC          pglActiveTextureARB;
 extern PFUNCGLMULTITEXCOORD2FPROC           pglMultiTexCoord2f;
 extern PFUNCGLMULTITEXCOORD2FVPROC          pglMultiTexCoord2fv;
 extern PFUNCGLDELETEPROGRAMSARBPROC         pglDeleteProgramsARB;
@@ -51,8 +49,8 @@ extern PFUNCGLPROGRAMSTRINGARBPROC          pglProgramStringARB;
 extern PFUNCGLBINDPROGRAMARBPROC            pglBindProgramARB;
 extern PFUNCGLGENPROGRAMSARBPROC            pglGenProgramsARB;
 extern PFUNCGLPROGRAMENVPARAMETER4FVARBPROC pglProgramEnvParameter4fvARB;
-extern PFUNCGLFOGCOORDPOINTEREXTPROC        pglFogCoordPointerEXT;
-extern PFUNCGLCLIENTACTIVETEXTUREARBPROC    pglClientActiveTextureARB;
+extern PFUNCGLFOGCOORDPOINTERPROC           pglFogCoordPointer;
+extern PFUNCGLCLIENTACTIVETEXTUREPROC       pglClientActiveTexture;
 
 #endif  // OGL_EXTENSIONS_H
 
