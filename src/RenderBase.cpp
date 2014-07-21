@@ -1587,24 +1587,6 @@ bool IsTriangleVisible(uint32 dwV0, uint32 dwV1, uint32 dwV2)
     return true;
 }
 
-
-void SetPrimitiveColor(uint32 dwCol, uint32 LODMin, uint32 LODFrac)
-{
-    gRDP.colorsAreReloaded = true;
-    gRDP.primitiveColor = dwCol;
-    gRDP.primLODMin = LODMin;
-    gRDP.primLODFrac = LODFrac;
-    if( gRDP.primLODFrac < gRDP.primLODMin )
-    {
-        gRDP.primLODFrac = gRDP.primLODMin;
-    }
-
-    gRDP.fvPrimitiveColor[0] = ((dwCol>>16)&0xFF)/255.0f;  //r
-    gRDP.fvPrimitiveColor[1] = ((dwCol>>8)&0xFF)/255.0f;   //g
-    gRDP.fvPrimitiveColor[2] = ((dwCol)&0xFF)/255.0f;      //b
-    gRDP.fvPrimitiveColor[3] = ((dwCol>>24)&0xFF)/255.0f;  //a
-}
-
 void SetPrimitiveDepth(uint32 z, uint32 dwDZ)
 {
     gRDP.primitiveDepth = z & 0x7FFF;

@@ -22,6 +22,7 @@
 #if !defined(OSAL_OPENGL_H)
 #define OSAL_OPENGL_H
 
+#define GL_GLEXT_PROTOTYPES 1
 #include <SDL_config.h>
 
 #if SDL_VIDEO_OPENGL
@@ -31,7 +32,20 @@
 // Extension names
 #define OSAL_GL_ARB_TEXTURE_ENV_ADD         "GL_ARB_texture_env_add"
 
+// Vertex shader params
+#define VS_POSITION                         0
+#define VS_COLOR                            1
+#define VS_TEXCOORD0                        2
+#define VS_TEXCOORD1                        3
+#define VS_FOG                              4
 
+#define glLoadIdentity()
+#define glMatrixMode(x)
+#define glOrtho(a,b,c,d,e,f)
+#define glReadBuffer(x)
+#define glTexEnvi(x,y,z)
+#define glTexEnvfv(x,y,z)
+#define glTexCoord2f(u,v)
 
 #elif SDL_VIDEO_OPENGL_ES2
 #include <SDL_opengles2.h>

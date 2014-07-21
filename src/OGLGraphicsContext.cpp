@@ -242,7 +242,6 @@ void COGLGraphicsContext::InitState(void)
     glDisable(GL_NORMALIZE);
     OPENGL_CHECK_ERRORS;
 #endif
-
     glDepthFunc(GL_LEQUAL);
     OPENGL_CHECK_ERRORS;
     glEnable(GL_DEPTH_TEST);
@@ -263,12 +262,9 @@ void COGLGraphicsContext::InitState(void)
     OPENGL_CHECK_ERRORS;
     glLoadIdentity();
     OPENGL_CHECK_ERRORS;
-    
-    glDepthRange(-1, 1);
-
-#elif SDL_VIDEO_OPENGL_ES2
-    glDepthRangef(0.0f, 1.0f);
 #endif
+
+    glDepthRange(0.0f, 1.0f);
     OPENGL_CHECK_ERRORS;
 }
 

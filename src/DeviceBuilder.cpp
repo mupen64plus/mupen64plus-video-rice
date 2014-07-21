@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "OGLTexture.h"
 #if SDL_VIDEO_OPENGL
 #include "OGLExtensions.h"
-#include "OGLFragmentShaders.h"
+#include "OGLSecondFragmentShaders.h"
 #elif SDL_VIDEO_OPENGL_ES2
 #include "OGLES2FragmentShaders.h"
 #endif
@@ -232,7 +232,7 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
 
                 if( pcontext->IsExtensionSupported("GL_ARB_fragment_program") )
                 {
-                    m_pColorCombiner = new COGL_FragmentProgramCombiner(pRender);
+                    m_pColorCombiner = new COGLSecondFragmentProgramCombiner(pRender);
                     bColorCombinerFound = true;
                     DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: Fragment Program");
                 }
@@ -264,7 +264,7 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
                     DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: OGL 1.4");
                     break;
                 case OGL_FRAGMENT_PROGRAM:
-                    m_pColorCombiner = new COGL_FragmentProgramCombiner(pRender);
+                    m_pColorCombiner = new COGLSecondFragmentProgramCombiner(pRender);
                     bColorCombinerFound = true;
                     DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: Fragment Program");
                     break;

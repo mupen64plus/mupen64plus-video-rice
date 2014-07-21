@@ -315,6 +315,16 @@ void CRender::SetMux(uint32 dwMux0, uint32 dwMux1)
     }
 }
 
+void CRender::SetCombineMode(uint32 dwMux0, uint32 dwMux1)
+{
+    uint64 tempModes64 = (((uint64)dwMux0) << 32) | (uint64)dwMux1;
+    if( m_modes64 != tempModes64 )
+    {
+        m_modes64 = tempModes64;
+        m_pColorCombiner->SetCombineMode(dwMux0, dwMux1);
+    }
+}
+
 
 void CRender::SetCombinerAndBlender()
 {
@@ -740,6 +750,12 @@ bool CRender::TexRect(int nX0, int nY0, int nX1, int nY1, float fS0, float fT0, 
     g_texRectTVtx[3].dcSpecular = speColor;
 
     float depth = (gRDP.otherMode.depth_source == 1 ? gRDP.fPrimitiveDepth : 0 );
+    
+    // -0.02 : hack here (arbitrary value...). I guess this offset has do be found "somewhere"
+    if( depth > 0.02 )
+    {
+        depth -= 0.02;
+    }
 
     g_texRectTVtx[0].z = g_texRectTVtx[1].z = g_texRectTVtx[2].z = g_texRectTVtx[3].z = depth;
     g_texRectTVtx[0].rhw = g_texRectTVtx[1].rhw = g_texRectTVtx[2].rhw = g_texRectTVtx[3].rhw = 1;

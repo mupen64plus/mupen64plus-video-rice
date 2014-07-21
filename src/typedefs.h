@@ -175,21 +175,6 @@ typedef struct {
 
 typedef struct {
     float x,y,z;
-    union {
-        COLOR  dcDiffuse;
-        struct {
-            uint8 b;
-            uint8 g;
-            uint8 r;
-            uint8 a;
-        };
-    };
-    COLOR  dcSpecular;
-    TexCord tcord[2];
-} UTLITVERTEX, *LPUTLITVERTEX;
-
-typedef struct {
-    float x,y,z;
     float rhw;
     union {
         COLOR  dcDiffuse;

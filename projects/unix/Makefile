@@ -347,7 +347,7 @@ ifeq ($(USE_GLES), 1)
 		$(SRCDIR)/OGLES2FragmentShaders.cpp
 else
 	SOURCE += \
-		$(SRCDIR)/OGLFragmentShaders.cpp
+		$(SRCDIR)/OGLSecondFragmentShaders.cpp
 endif
 
 ifeq ($(OS),MINGW)

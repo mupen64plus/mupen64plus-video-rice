@@ -40,8 +40,12 @@ public:
     virtual bool Initialize(void)=0;
     virtual void CleanUp(void) {};
     virtual void UpdateCombiner(uint32 dwMux0, uint32 dwMux1);
+    virtual void SetCombineMode(uint32 dwMux0, uint32 dwMux1);
     virtual void InitCombinerBlenderForSimpleTextureDraw(uint32 tile=0)=0;
     virtual void DisableCombiner(void)=0;
+    uint8   m_sources[16];
+    uint32  m_combineMode1;
+    uint32  m_combineMode2;
 
 #ifdef DEBUGGER
     virtual void DisplaySimpleMuxString(void);

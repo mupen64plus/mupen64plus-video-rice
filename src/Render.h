@@ -63,6 +63,7 @@ public:
     uint32  m_dwAlpha;
 
     uint64      m_Mux;
+    uint64      m_modes64; // used to find hacks
     BOOL    m_bBlendModeValid;
 
     CColorCombiner *m_pColorCombiner;
@@ -132,6 +133,7 @@ public:
     virtual void RenderReset();
     virtual void SetCombinerAndBlender();
     virtual void SetMux(uint32 dwMux0, uint32 dwMux1);
+            void SetCombineMode(uint32 dwMux0, uint32 dwMux1);
     virtual void SetCullMode(bool bCullFront, bool bCullBack) { gRSP.bCullFront = bCullFront; gRSP.bCullBack = bCullBack; }
 
     virtual void BeginRendering(void) {CRender::gRenderReferenceCount++;}       // For DirectX only
