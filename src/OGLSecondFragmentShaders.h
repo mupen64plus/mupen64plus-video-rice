@@ -59,7 +59,6 @@ private:
 #include "osal_opengl.h"
 
 #include "OGLCombiner.h"
-#include "OGLExtCombiner.h"
 #include "GeneralCombiner.h"
 
 #define CC_NULL_PROGRAM      0 // Invalid OpenGL program
@@ -100,7 +99,7 @@ typedef struct {
     GLint fogColorLoc;
 } OGLSecondShaderCombinerSaveType;
 
-class COGLSecondFragmentProgramCombiner : public COGLColorCombiner4
+class COGLSecondFragmentProgramCombiner : public COGLColorCombiner
 {
 public:
     bool Initialize(void);

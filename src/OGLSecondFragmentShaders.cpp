@@ -168,7 +168,7 @@ GLuint createProgram(const GLuint vShader, GLuint fShader)
 }
 
 COGLSecondFragmentProgramCombiner::COGLSecondFragmentProgramCombiner(CRender *pRender)
-: COGLColorCombiner4(pRender)
+: COGLColorCombiner(pRender)
 {
     delete m_pDecodedMux;
     m_pDecodedMux = new DecodedMuxForPixelShader;
@@ -204,9 +204,6 @@ void COGLSecondFragmentProgramCombiner::DisableCombiner(void)
 {
     glUseProgram(0);
     OPENGL_CHECK_ERRORS
-    glDisable(GL_FRAGMENT_PROGRAM_ARB);
-    OPENGL_CHECK_ERRORS
-    //COGLColorCombiner4::DisableCombiner();
 }
 
 void COGLSecondFragmentProgramCombiner::InitCombinerCycleCopy(void)
@@ -247,7 +244,6 @@ void COGLSecondFragmentProgramCombiner::InitCombinerCycleCopy(void)
         m_pOGLRender->BindTexture(pTexture->m_dwTextureName, 0);
         m_pOGLRender->SetTexelRepeatFlags(gRSP.curTile);
     }
-    //COGLColorCombiner4::InitCombinerCycleCopy();
 }
 
 void COGLSecondFragmentProgramCombiner::InitCombinerCycleFill(void)
@@ -260,7 +256,6 @@ void COGLSecondFragmentProgramCombiner::InitCombinerCycleFill(void)
     }
     glUniform4f(m_fillColorLoc,((gRDP.fillColor>>16)&0xFF)/255.0f,((gRDP.fillColor>>8)&0xFF)/255.0f,((gRDP.fillColor)&0xFF)/255.0f,((gRDP.fillColor>>24)&0xFF)/255.0f);
     OPENGL_CHECK_ERRORS
-    //COGLColorCombiner4::InitCombinerCycleFill();
 }
 
 // Generate the Blender (BL) part of the fragment shader 
@@ -1515,8 +1510,6 @@ void COGLSecondFragmentProgramCombiner::InitCombinerCycle12(void)
             m_currentProgram = program;
         }
 
-        m_dwLastMux0 = m_pDecodedMux->m_dwMux0;
-        m_dwLastMux1 = m_pDecodedMux->m_dwMux1;
     //}
 
 
