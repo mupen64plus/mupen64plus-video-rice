@@ -64,6 +64,11 @@ COGLTexture::COGLTexture(uint32 dwWidth, uint32 dwHeight, TextureUsage usage) :
         break;
     };
     LOG_TEXTURE(TRACE2("New texture: (%d, %d)", dwWidth, dwHeight));
+    
+    // We create the OGL texture here and will use glTexSubImage2D to increase performance.
+    glBindTexture(GL_TEXTURE_2D, m_dwTextureName);
+    glTexImage2D(GL_TEXTURE_2D, 0, m_glFmt, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, NULL);
+
 }
 
 COGLTexture::~COGLTexture()
@@ -82,13 +87,15 @@ bool COGLTexture::StartUpdate(DrawInfo *di)
 {
     if (m_pTexture == NULL)
         return false;
-
+    
     di->dwHeight = (uint16)m_dwHeight;
     di->dwWidth = (uint16)m_dwWidth;
     di->dwCreatedHeight = m_dwCreatedTextureHeight;
     di->dwCreatedWidth = m_dwCreatedTextureWidth;
     di->lpSurface = m_pTexture;
     di->lPitch = GetPixelSize()*m_dwCreatedTextureWidth;
+    
+    
 
     return true;
 }
@@ -135,7 +142,7 @@ void COGLTexture::EndUpdate(DrawInfo *di)
 
     // Copy the image data from main memory to video card texture memory
 #if SDL_VIDEO_OPENGL
-    glTexImage2D(GL_TEXTURE_2D, 0, m_glFmt, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, m_pTexture);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, GL_BGRA_EXT, GL_UNSIGNED_BYTE, m_pTexture);
 #elif SDL_VIDEO_OPENGL_ES2
     //GL_BGRA_IMG works on adreno but not inside profiler.
     glTexImage2D(GL_TEXTURE_2D, 0, m_glFmt, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_pTexture);
