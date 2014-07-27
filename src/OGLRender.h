@@ -93,7 +93,6 @@ public:
 
 protected:
     COLOR PostProcessDiffuseColor(COLOR curDiffuseColor);
-    COLOR PostProcessSpecularColor();
 
     // Basic render drawing functions
     bool RenderFlushTris();

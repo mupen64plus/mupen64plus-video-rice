@@ -374,7 +374,7 @@ void CRender::DrawSprite2D(Sprite2DInfo &info, uint32 ucode)
     SetAddressUAllStages( 0, TEXTURE_UV_FLAG_CLAMP );
     SetAddressVAllStages( 0, TEXTURE_UV_FLAG_CLAMP );
 
-    COLOR speColor = PostProcessSpecularColor();
+    COLOR speColor = 0;
     COLOR difColor = PostProcessDiffuseColor(0xffffffff);
 
     float depth = ( gRDP.otherMode.depth_source == 1 ) ? gRDP.fPrimitiveDepth : 0;
@@ -445,7 +445,6 @@ void CRender::DrawSpriteR(uObjTxSprite &sprite, bool initCombiner, uint32 tile, 
     g_texRectTVtx[3].tcord[0].u = left/g_textures[tile].m_fTexWidth;
     g_texRectTVtx[3].tcord[0].v = (top+height)/g_textures[tile].m_fTexHeight;
 
-    //COLOR speColor = PostProcessSpecularColor();
     COLOR difColor = PostProcessDiffuseColor(0xffffffff);
 
     g_texRectTVtx[0].dcDiffuse = g_texRectTVtx[1].dcDiffuse 
@@ -558,7 +557,7 @@ void CRender::DrawObjBGCopy(uObjBg &info)
 
     float depth = (gRDP.otherMode.depth_source == 1 ? gRDP.fPrimitiveDepth : 0.0f);
 
-    COLOR speColor = PostProcessSpecularColor();
+    COLOR speColor = 0;
     COLOR difColor = PostProcessDiffuseColor(0xffffffff);
 
     if( options.enableHackForGames == HACK_FOR_COMMANDCONQUER )
@@ -657,7 +656,7 @@ void CRender::DrawObjBG1CYC(uObjScaleBg &bg, bool scaled)   //Without Ratation
     float u1 = (x1-x2)*scaleX/g_textures[0].m_fTexWidth;
     float v1 = (y1-y2)*scaleY/g_textures[0].m_fTexHeight;
 
-    COLOR speColor = PostProcessSpecularColor();
+    COLOR speColor = 0;
     COLOR difColor = PostProcessDiffuseColor(0xffffffff);
 
     SetAlphaTestEnable(FALSE);
@@ -728,7 +727,7 @@ void CRender::DrawSprite(uObjTxSprite &sprite, bool rectR)  //Without Ratation
         }
     }
     SetCombinerAndBlender();
-    COLOR speColor = PostProcessSpecularColor();
+    COLOR speColor = 0;
     COLOR difColor = PostProcessDiffuseColor(0xffffffff);
 
 

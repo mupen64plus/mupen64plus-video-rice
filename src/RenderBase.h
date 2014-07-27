@@ -164,7 +164,6 @@ typedef struct
     bool    bRejectVtx;
 
     bool    bProcessDiffuseColor;
-    bool    bProcessSpecularColor;
 
     float   vtxXMul;
     float   vtxXAdd;

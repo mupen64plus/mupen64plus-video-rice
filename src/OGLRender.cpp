@@ -794,11 +794,6 @@ COLOR OGLRender::PostProcessDiffuseColor(COLOR curDiffuseColor)
     return color;
 }
 
-COLOR OGLRender::PostProcessSpecularColor()
-{
-    return 0;
-}
-
 void OGLRender::SetViewportRender()
 {
     glViewportWrapper(windowSetting.vpLeftW, windowSetting.uDisplayHeight-windowSetting.vpTopW-windowSetting.vpHeightW+windowSetting.statusBarHeightToUse, windowSetting.vpWidthW, windowSetting.vpHeightW);

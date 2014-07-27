@@ -863,17 +863,7 @@ void InitVertex(uint32 dwV, uint32 vtxIndex, bool bTexture)
         v.rhw = g_vecProjected[dwV].w;
         VTX_DUMP(TRACE4("  Proj : x=%f, y=%f, z=%f, rhw=%f",  v.x,v.y,v.z,v.rhw));
 
-        if( gRSP.bProcessSpecularColor )
-        {
-            v.dcSpecular = CRender::g_pRender->PostProcessSpecularColor();
-            if( gRSP.bFogEnabled )
-            {
-                v.dcSpecular &= 0x00FFFFFF;
-                uint32  fogFct = 0xFF-(uint8)((g_fFogCoord[dwV]-gRSPfFogMin)*gRSPfFogDivider);
-                v.dcSpecular |= (fogFct<<24);
-            }
-        }
-        else if( gRSP.bFogEnabled )
+        if( gRSP.bFogEnabled )
         {
             uint32  fogFct = 0xFF-(uint8)((g_fFogCoord[dwV]-gRSPfFogMin)*gRSPfFogDivider);
             v.dcSpecular = (fogFct<<24);

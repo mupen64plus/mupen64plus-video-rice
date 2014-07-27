@@ -430,7 +430,6 @@ void CColorCombiner::UpdateCombiner(uint32 dwMux0, uint32 dwMux1)
         m_bTexelsEnable = m_bTex0Enabled||m_bTex1Enabled;
 
         gRSP.bProcessDiffuseColor = (m_decodedMux.m_dwShadeColorChannelFlag != MUX_0 || m_decodedMux.m_dwShadeAlphaChannelFlag != MUX_0);
-        gRSP.bProcessSpecularColor = false;
     }
 }
 
