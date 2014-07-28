@@ -333,8 +333,6 @@ void DecodedMuxForSemiPixelShader::Reset(void)
 
     Hack();
 
-    gRSP.bProcessDiffuseColor = false;
-
     CheckCombineInCycle1();
     if( g_curRomInfo.bTexture1Hack )
     {

@@ -411,8 +411,7 @@ bool CRender::FillRect(int nX0, int nY0, int nX1, int nY1, uint32 dwColor)
         }
         else
         {
-            //dwColor = PostProcessDiffuseColor(0);
-            dwColor = PostProcessDiffuseColor(gRDP.primitiveColor);
+            dwColor = gRDP.primitiveColor;
         }
 
         float depth = (gRDP.otherMode.depth_source == 1 ? gRDP.fPrimitiveDepth : 0 );
@@ -464,12 +463,12 @@ bool CRender::Line3D(uint32 dwV0, uint32 dwV1, uint32 dwWidth)
     m_line3DVtx[0].x = ViewPortTranslatef_x(g_vecProjected[dwV0].x);
     m_line3DVtx[0].y = ViewPortTranslatef_y(g_vecProjected[dwV0].y);
     m_line3DVtx[0].rhw = g_vecProjected[dwV0].w;
-    m_line3DVtx[0].dcDiffuse = PostProcessDiffuseColor(g_dwVtxDifColor[dwV0]);
+    m_line3DVtx[0].dcDiffuse = g_dwVtxDifColor[dwV0];
 
     m_line3DVtx[1].x = ViewPortTranslatef_x(g_vecProjected[dwV1].x);
     m_line3DVtx[1].y = ViewPortTranslatef_y(g_vecProjected[dwV1].y);
     m_line3DVtx[1].rhw = g_vecProjected[dwV1].w;
-    m_line3DVtx[1].dcDiffuse = PostProcessDiffuseColor(g_dwVtxDifColor[dwV1]);
+    m_line3DVtx[1].dcDiffuse = g_dwVtxDifColor[dwV1];
 
     float width = dwWidth*0.5f+1.5f;
 
@@ -721,10 +720,9 @@ bool CRender::TexRect(int nX0, int nY0, int nX1, int nY1, float fS0, float fT0, 
     
     COLOR difColor;
     if( colorFlag )
-        difColor = PostProcessDiffuseColor(diffuseColor);
+        difColor = diffuseColor;
     else
-        //difColor = PostProcessDiffuseColor(0);
-        difColor = PostProcessDiffuseColor(gRDP.primitiveColor);
+        difColor = gRDP.primitiveColor;
 
     g_texRectTVtx[0].x = ViewPortTranslatei_x(nX0);
     g_texRectTVtx[0].y = ViewPortTranslatei_y(nY0);
@@ -898,7 +896,7 @@ bool CRender::TexRectFlip(int nX0, int nY0, int nX1, int nY1, float fS0, float f
 
     SetCombinerAndBlender();
 
-    COLOR difColor = PostProcessDiffuseColor(gRDP.primitiveColor);
+    COLOR difColor = gRDP.primitiveColor;
 
     // Same as TexRect, but with texcoords 0,2 swapped
     g_texRectTVtx[0].x = ViewPortTranslatei_x(nX0);

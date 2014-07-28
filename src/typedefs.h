@@ -49,6 +49,13 @@ typedef struct _COORDRECT
 #define RGBA_GETGREEN(rgb)      (((rgb) >> 8) & 0xff)
 #define RGBA_GETBLUE(rgb)       ((rgb) & 0xff)
 
+#ifndef min
+#define min(a,b) ((a) < (b) ? (a) : (b))
+#endif
+#ifndef max
+#define max(a,b) ((a) > (b) ? (a) : (b))
+#endif
+
 typedef XMATRIX Matrix;
 typedef void* LPRICETEXTURE ;
 
@@ -195,7 +202,6 @@ typedef struct {
 } FILLRECTVERTEX, *LPFILLRECTVERTEX;
 
 #include "COLOR.h"
-#include "IColor.h"
 
 typedef struct
 {

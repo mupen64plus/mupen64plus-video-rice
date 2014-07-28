@@ -775,25 +775,6 @@ void OGLRender::InitCombinerBlenderForSimpleRectDraw(uint32 tile)
     //glEnable(GL_ALPHA_TEST);
 }
 
-COLOR OGLRender::PostProcessDiffuseColor(COLOR curDiffuseColor)
-{
-    uint32 color = curDiffuseColor;
-    uint32 colorflag = m_pColorCombiner->m_pDecodedMux->m_dwShadeColorChannelFlag;
-    uint32 alphaflag = m_pColorCombiner->m_pDecodedMux->m_dwShadeAlphaChannelFlag;
-    if( colorflag+alphaflag != MUX_0 )
-    {
-        if( (colorflag & 0xFFFFFF00) == 0 && (alphaflag & 0xFFFFFF00) == 0 )
-        {
-            color = (m_pColorCombiner->GetConstFactor(colorflag, alphaflag, curDiffuseColor));
-        }
-        else
-            color = (CalculateConstFactor(colorflag, alphaflag, curDiffuseColor));
-    }
-
-    //return (color<<8)|(color>>24);
-    return color;
-}
-
 void OGLRender::SetViewportRender()
 {
     glViewportWrapper(windowSetting.vpLeftW, windowSetting.uDisplayHeight-windowSetting.vpTopW-windowSetting.vpHeightW+windowSetting.statusBarHeightToUse, windowSetting.vpWidthW, windowSetting.vpHeightW);

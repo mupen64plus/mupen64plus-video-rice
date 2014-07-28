@@ -876,10 +876,6 @@ void InitVertex(uint32 dwV, uint32 vtxIndex, bool bTexture)
         v.dcDiffuse |= 0xFF000000;
     }
 
-    if( gRSP.bProcessDiffuseColor )
-    {
-        v.dcDiffuse = CRender::g_pRender->PostProcessDiffuseColor(v.dcDiffuse);
-    }
     if( options.bWinFrameMode )
     {
         v.dcDiffuse = g_dwVtxDifColor[dwV];

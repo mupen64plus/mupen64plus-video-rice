@@ -163,8 +163,6 @@ typedef struct
     bool    bNearClip;
     bool    bRejectVtx;
 
-    bool    bProcessDiffuseColor;
-
     float   vtxXMul;
     float   vtxXAdd;
     float   vtxYMul;
