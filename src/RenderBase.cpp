@@ -862,12 +862,6 @@ void InitVertex(uint32 dwV, uint32 vtxIndex, bool bTexture)
         //v.z = g_vecProjected[dwV].z;  // DirectX minZ=0, maxZ=1
         v.rhw = g_vecProjected[dwV].w;
         VTX_DUMP(TRACE4("  Proj : x=%f, y=%f, z=%f, rhw=%f",  v.x,v.y,v.z,v.rhw));
-
-        if( gRSP.bFogEnabled )
-        {
-            uint32  fogFct = 0xFF-(uint8)((g_fFogCoord[dwV]-gRSPfFogMin)*gRSPfFogDivider);
-            v.dcSpecular = (fogFct<<24);
-        }
     }
     VTX_DUMP(TRACE2("  (U,V): %f, %f",  g_fVtxTxtCoords[dwV].x,g_fVtxTxtCoords[dwV].y));
 
@@ -970,7 +964,7 @@ void InitVertex(uint32 dwV, uint32 vtxIndex, bool bTexture)
         }
     }
 
-    VTX_DUMP(TRACE2("  DIF(%08X), SPE(%08X)",   v.dcDiffuse, v.dcSpecular));
+    VTX_DUMP(TRACE2("  DIF(%08X)",   v.dcDiffuse));
     VTX_DUMP(TRACE0(""));
 }
 

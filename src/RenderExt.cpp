@@ -374,11 +374,10 @@ void CRender::DrawSprite2D(Sprite2DInfo &info, uint32 ucode)
     SetAddressUAllStages( 0, TEXTURE_UV_FLAG_CLAMP );
     SetAddressVAllStages( 0, TEXTURE_UV_FLAG_CLAMP );
 
-    COLOR speColor = 0;
     COLOR difColor = PostProcessDiffuseColor(0xffffffff);
 
     float depth = ( gRDP.otherMode.depth_source == 1 ) ? gRDP.fPrimitiveDepth : 0;
-    DrawSimple2DTexture((float)x0, (float)y0, (float)x1, (float)y1, t0, s0, t1, s1, speColor, difColor, depth, 1.0f);
+    DrawSimple2DTexture((float)x0, (float)y0, (float)x1, (float)y1, t0, s0, t1, s1, difColor, depth, 1.0f);
 }
 
 
@@ -449,8 +448,6 @@ void CRender::DrawSpriteR(uObjTxSprite &sprite, bool initCombiner, uint32 tile, 
 
     g_texRectTVtx[0].dcDiffuse = g_texRectTVtx[1].dcDiffuse 
         = g_texRectTVtx[2].dcDiffuse = g_texRectTVtx[3].dcDiffuse = difColor;
-    g_texRectTVtx[0].dcSpecular = g_texRectTVtx[1].dcSpecular 
-        = g_texRectTVtx[2].dcSpecular = g_texRectTVtx[3].dcSpecular = difColor;
 
     DrawSpriteR_Render();
 }
@@ -479,13 +476,13 @@ void CRender::DrawFrameBuffer(bool useVIreg, uint32 left, uint32 top, uint32 wid
         {
             // Draw the whole frame buffer
             DrawSimple2DTexture(0, 0, windowSetting.uViWidth, windowSetting.uViHeight, 
-                0, 0, 1/pTexture->m_fXScale, 1/pTexture->m_fYScale, 0xFFFFFFFF, 0xFFFFFFFF, 0, 1);
+                0, 0, 1/pTexture->m_fXScale, 1/pTexture->m_fYScale, 0xFFFFFFFF, 0, 1);
         }
         else
         {
             // Draw a small texture in frame buffer
             DrawSimple2DTexture((float)left, (float)top, (float)(left+width), (float)(top+height), 
-                0, 0, 1/pTexture->m_fXScale, 1/pTexture->m_fYScale, 0xFFFFFFFF, 0xFFFFFFFF, 0, 1);
+                0, 0, 1/pTexture->m_fXScale, 1/pTexture->m_fYScale, 0xFFFFFFFF, 0, 1);
         }
     }
 
@@ -557,7 +554,6 @@ void CRender::DrawObjBGCopy(uObjBg &info)
 
     float depth = (gRDP.otherMode.depth_source == 1 ? gRDP.fPrimitiveDepth : 0.0f);
 
-    COLOR speColor = 0;
     COLOR difColor = PostProcessDiffuseColor(0xffffffff);
 
     if( options.enableHackForGames == HACK_FOR_COMMANDCONQUER )
@@ -565,7 +561,7 @@ void CRender::DrawObjBGCopy(uObjBg &info)
         float s1 = (x1-x0) + s0;
         float t1 = (y1-y0) + t0;
         DrawSimple2DTexture(x0, y0, x1, y1, u0, v0, 
-            s1/g_textures[0].m_fTexWidth, t1/g_textures[0].m_fTexHeight, difColor, speColor, depth, 1);
+            s1/g_textures[0].m_fTexWidth, t1/g_textures[0].m_fTexHeight, difColor, depth, 1);
     }
     else if( x2 >= x1 )
     {
@@ -574,14 +570,14 @@ void CRender::DrawObjBGCopy(uObjBg &info)
         {
             float t1 = (y1-y0) + t0;
             DrawSimple2DTexture(x0, y0, x1, y1, u0, v0, 
-                s1/g_textures[0].m_fTexWidth, t1/g_textures[0].m_fTexHeight, difColor, speColor, depth, 1);
+                s1/g_textures[0].m_fTexWidth, t1/g_textures[0].m_fTexHeight, difColor, depth, 1);
         }
         else
         {
             DrawSimple2DTexture(x0, y0, x1, y2, u0, v0, 
-                s1/g_textures[0].m_fTexWidth, maxv, difColor, speColor, depth, 1);
+                s1/g_textures[0].m_fTexWidth, maxv, difColor, depth, 1);
             DrawSimple2DTexture(x0, y2, x1, y1, u0, 0, 
-                s1/g_textures[0].m_fTexWidth, v1, difColor, speColor, depth, 1);
+                s1/g_textures[0].m_fTexWidth, v1, difColor, depth, 1);
         }
     }
     else
@@ -590,16 +586,16 @@ void CRender::DrawObjBGCopy(uObjBg &info)
         {
             float t1 = (y1-y0) + t0;
             DrawSimple2DTexture(x0, y0, x2, y1, u0, v0, 
-                maxu, t1/g_textures[0].m_fTexHeight, difColor, speColor, depth, 1);
+                maxu, t1/g_textures[0].m_fTexHeight, difColor, depth, 1);
             DrawSimple2DTexture(x2, y0, x1, y1, 0, v0, 
-                u1, t1/g_textures[0].m_fTexHeight, difColor, speColor, depth, 1);
+                u1, t1/g_textures[0].m_fTexHeight, difColor, depth, 1);
         }
         else
         {
-            DrawSimple2DTexture(x0, y0, x2, y2, u0, v0, maxu, maxv, difColor, speColor, depth, 1);
-            DrawSimple2DTexture(x2, y0, x1, y2, 0, v0, u1, maxv, difColor, speColor, depth, 1);
-            DrawSimple2DTexture(x0, y2, x2, y1, u0, 0, maxu, v1, difColor, speColor, depth, 1);
-            DrawSimple2DTexture(x2, y2, x1, y1, 0, 0, u1, v1, difColor, speColor, depth, 1);
+            DrawSimple2DTexture(x0, y0, x2, y2, u0, v0, maxu, maxv, difColor, depth, 1);
+            DrawSimple2DTexture(x2, y0, x1, y2, 0, v0, u1, maxv, difColor, depth, 1);
+            DrawSimple2DTexture(x0, y2, x2, y1, u0, 0, maxu, v1, difColor, depth, 1);
+            DrawSimple2DTexture(x2, y2, x1, y1, 0, 0, u1, v1, difColor, depth, 1);
         }
     }
 
@@ -656,7 +652,6 @@ void CRender::DrawObjBG1CYC(uObjScaleBg &bg, bool scaled)   //Without Ratation
     float u1 = (x1-x2)*scaleX/g_textures[0].m_fTexWidth;
     float v1 = (y1-y2)*scaleY/g_textures[0].m_fTexHeight;
 
-    COLOR speColor = 0;
     COLOR difColor = PostProcessDiffuseColor(0xffffffff);
 
     SetAlphaTestEnable(FALSE);
@@ -666,7 +661,7 @@ void CRender::DrawObjBG1CYC(uObjScaleBg &bg, bool scaled)   //Without Ratation
         float s1 = (x1-x0)*scaleX + s0;
         float t1 = (y1-y0)*scaleY + t0;
         DrawSimple2DTexture(x0, y0, x1, y1, u0, v0, 
-            s1/g_textures[0].m_fTexWidth, t1/g_textures[0].m_fTexHeight, difColor, speColor, depth, 1);
+            s1/g_textures[0].m_fTexWidth, t1/g_textures[0].m_fTexHeight, difColor, depth, 1);
     }
     else if( x2 >= x1 )
     {
@@ -675,14 +670,14 @@ void CRender::DrawObjBG1CYC(uObjScaleBg &bg, bool scaled)   //Without Ratation
         {
             float t1 = (y1-y0)*scaleY + t0;
             DrawSimple2DTexture(x0, y0, x1, y1, u0, v0, 
-                s1/g_textures[0].m_fTexWidth, t1/g_textures[0].m_fTexHeight, difColor, speColor, depth, 1);
+                s1/g_textures[0].m_fTexWidth, t1/g_textures[0].m_fTexHeight, difColor, depth, 1);
         }
         else
         {
             DrawSimple2DTexture(x0, y0, x1, y2, u0, v0, 
-                s1/g_textures[0].m_fTexWidth, maxv, difColor, speColor, depth, 1);
+                s1/g_textures[0].m_fTexWidth, maxv, difColor, depth, 1);
             DrawSimple2DTexture(x0, y2, x1, y1, u0, 0, 
-                s1/g_textures[0].m_fTexWidth, v1, difColor, speColor, depth, 1);
+                s1/g_textures[0].m_fTexWidth, v1, difColor, depth, 1);
         }
     }
     else
@@ -691,16 +686,16 @@ void CRender::DrawObjBG1CYC(uObjScaleBg &bg, bool scaled)   //Without Ratation
         {
             float t1 = (y1-y0)*scaleY + t0;
             DrawSimple2DTexture(x0, y0, x2, y1, u0, v0, 
-                maxu, t1/g_textures[0].m_fTexHeight, difColor, speColor, depth, 1);
+                maxu, t1/g_textures[0].m_fTexHeight, difColor, depth, 1);
             DrawSimple2DTexture(x2, y0, x1, y1, 0, v0, 
-                u1, t1/g_textures[0].m_fTexHeight, difColor, speColor, depth, 1);
+                u1, t1/g_textures[0].m_fTexHeight, difColor, depth, 1);
         }
         else
         {
-            DrawSimple2DTexture(x0, y0, x2, y2, u0, v0, maxu, maxv, difColor, speColor, depth, 1);
-            DrawSimple2DTexture(x2, y0, x1, y2, 0, v0, u1, maxv, difColor, speColor, depth, 1);
-            DrawSimple2DTexture(x0, y2, x2, y1, u0, 0, maxu, v1, difColor, speColor, depth, 1);
-            DrawSimple2DTexture(x2, y2, x1, y1, 0, 0, u1, v1, difColor, speColor, depth, 1);
+            DrawSimple2DTexture(x0, y0, x2, y2, u0, v0, maxu, maxv, difColor, depth, 1);
+            DrawSimple2DTexture(x2, y0, x1, y2, 0, v0, u1, maxv, difColor, depth, 1);
+            DrawSimple2DTexture(x0, y2, x2, y1, u0, 0, maxu, v1, difColor, depth, 1);
+            DrawSimple2DTexture(x2, y2, x1, y1, 0, 0, u1, v1, difColor, depth, 1);
         }
     }
 
@@ -727,7 +722,6 @@ void CRender::DrawSprite(uObjTxSprite &sprite, bool rectR)  //Without Ratation
         }
     }
     SetCombinerAndBlender();
-    COLOR speColor = 0;
     COLOR difColor = PostProcessDiffuseColor(0xffffffff);
 
 
@@ -795,7 +789,7 @@ void CRender::DrawSprite(uObjTxSprite &sprite, bool rectR)  //Without Ratation
     float depth = (gRDP.otherMode.depth_source == 1 ? gRDP.fPrimitiveDepth : 0.0f);
     CTexture *pTexture = g_textures[0].m_pCTexture;
     DrawSimple2DTexture(x0, y0, x1, y1, 0, 0, 1/pTexture->m_fXScale, 1/pTexture->m_fYScale, 
-        difColor, speColor, depth, 1);
+        difColor, depth, 1);
     // return clamp type to original setting
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, iClampS);
     OPENGL_CHECK_ERRORS;

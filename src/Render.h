@@ -214,7 +214,7 @@ public:
     void DrawSprite(uObjTxSprite &sprite, bool rectR = true);
     void DrawObjBGCopy(uObjBg &info);
     virtual void DrawSpriteR_Render(){};
-    virtual void DrawSimple2DTexture(float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, COLOR dif, COLOR spe, float z, float rhw)=0;
+    virtual void DrawSimple2DTexture(float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, COLOR dif, float z, float rhw)=0;
     void DrawFrameBuffer(bool useVIreg=false, uint32 left=0, uint32 top=0, uint32 width=0, uint32 height=0);
     void DrawObjBG1CYC(uObjScaleBg &bg, bool scaled=true);
 
@@ -246,7 +246,7 @@ protected:
     TexCord         m_texRectTex2UV[2];
 
     // DrawSimple2DTexture
-    virtual void    StartDrawSimple2DTexture(float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, COLOR dif, COLOR spe, float z, float rhw);
+    virtual void    StartDrawSimple2DTexture(float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, COLOR dif, float z, float rhw);
 
     // DrawSimpleRect
     virtual void    StartDrawSimpleRect(int nX0, int nY0, int nX1, int nY1, uint32 dwColor, float depth, float rhw);

@@ -169,7 +169,6 @@ typedef struct {
             uint8 a;
         };
     };
-    COLOR  dcSpecular;
     TexCord tcord[2];
 } TLITVERTEX, *LPTLITVERTEX;
 
@@ -185,7 +184,6 @@ typedef struct {
             uint8 a;
         };
     };
-    COLOR  dcSpecular;
 } LITVERTEX, *LPLITVERTEX;
 
 

@@ -636,7 +636,7 @@ bool OGLRender::RenderFlushTris()
     return true;
 }
 
-void OGLRender::DrawSimple2DTexture(float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, COLOR dif, COLOR spe, float z, float rhw)
+void OGLRender::DrawSimple2DTexture(float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, COLOR dif, float z, float rhw)
 {
     if( status.bVIOriginIsUpdated == true && currentRomOptions.screenUpdateSetting==SCREEN_UPDATE_AT_1ST_PRIMITIVE )
     {
@@ -645,7 +645,7 @@ void OGLRender::DrawSimple2DTexture(float x0, float y0, float x1, float y1, floa
         DEBUGGER_PAUSE_AND_DUMP_NO_UPDATE(NEXT_SET_CIMG,{DebuggerAppendMsg("Screen Update at 1st Simple2DTexture");});
     }
 
-    StartDrawSimple2DTexture(x0, y0, x1, y1, u0, v0, u1, v1, dif, spe, z, rhw);
+    StartDrawSimple2DTexture(x0, y0, x1, y1, u0, v0, u1, v1, dif, z, rhw);
 
     GLboolean cullface = glIsEnabled(GL_CULL_FACE);
     glDisable(GL_CULL_FACE);
