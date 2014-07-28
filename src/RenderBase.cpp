@@ -751,10 +751,6 @@ void SetFogMinMax(float fMin, float fMax, float fMul, float fOffset)
     CRender::g_pRender->SetFogMinMax(fMin, fMax);
 }
 
-void InitVertexColors()
-{
-}
-
 void InitVertexTextureConstants()
 {
     float scaleX;
