@@ -59,7 +59,6 @@ private:
 #include "osal_opengl.h"
 
 #include "OGLCombiner.h"
-#include "GeneralCombiner.h"
 
 #define CC_NULL_PROGRAM      0 // Invalid OpenGL program
 #define CC_NULL_SHADER       0 // Invalid OpenGL shader

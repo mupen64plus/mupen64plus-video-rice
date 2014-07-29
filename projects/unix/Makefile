@@ -308,7 +308,6 @@ SOURCE = \
 	$(SRCDIR)/liblinux/pngrw.c \
 	$(SRCDIR)/Blender.cpp \
 	$(SRCDIR)/Combiner.cpp \
-	$(SRCDIR)/CombinerTable.cpp \
 	$(SRCDIR)/Config.cpp \
 	$(SRCDIR)/ConvertImage.cpp \
 	$(SRCDIR)/ConvertImage16.cpp \
@@ -316,7 +315,6 @@ SOURCE = \
 	$(SRCDIR)/DecodedMux.cpp \
 	$(SRCDIR)/DeviceBuilder.cpp \
 	$(SRCDIR)/FrameBuffer.cpp \
-	$(SRCDIR)/GeneralCombiner.cpp \
 	$(SRCDIR)/GraphicsContext.cpp \
 	$(SRCDIR)/OGLCombiner.cpp \
 	$(SRCDIR)/OGLDecodedMux.cpp \
