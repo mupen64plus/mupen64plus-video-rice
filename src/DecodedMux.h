@@ -25,7 +25,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "typedefs.h"
 #include "CombinerDefs.h"
 
-#define CM_IGNORE 0
 #define CM_IGNORE_BYTE 0xFF
 
 typedef enum {
@@ -34,19 +33,6 @@ typedef enum {
     N64Cycle1RGB=2,
     N64Cycle1Alpha=3,
 } N64StageNumberType;
-
-typedef union {
-    struct {
-        uint32 dwMux0;
-        uint32 dwMux1;
-    };
-    uint64 Mux64;
-} MuxType;
-
-typedef struct {
-    MuxType ori_mux;
-    MuxType simple_mux;
-} SimpleMuxMapType;
 
 class DecodedMux
 {
@@ -119,28 +105,17 @@ public:
     void CheckCombineInCycle1(void);
     virtual void Simplify(void);
     virtual void Reformat(bool do_complement = true);
-    virtual void To_AB_Add_CD_Format(void); // Use by TNT,Geforce
-    virtual void To_AB_Add_C_Format(void);  // Use by ATI Radeon
     
     virtual void MergeShadeWithConstants(void);
     virtual void MergeShadeWithConstantsInChannel(CombineChannel channel);
-    virtual void MergeConstants(void);
     virtual void UseShadeForConstant(void);
     virtual void UseTextureForConstant(void);
 
-    void ConvertComplements();
     int HowManyConstFactors();
     int HowManyTextures();
-    void MergeConstFactors();
     virtual void SplitComplexStages();  // Only used if the combiner supports more than 1 stages
     void ConvertLODFracTo0();
     void ReplaceVal(uint8 val1, uint8 val2, int cycle= -1, uint8 mask = MUX_MASK);
-    void Replace1Val(uint8 &val1, const uint8 val2, uint8 mask = MUX_MASK)
-    {
-        val1 &= (~mask);
-        val1 |= val2;
-    }
-    int CountTexels(void);
     int Count(uint8 val, int cycle= -1, uint8 mask = MUX_MASK);
 
 #ifdef DEBUGGER
@@ -185,12 +160,6 @@ public:
         return *this;
     }
 
-    static inline bool IsConstFactor(uint8 val)
-    {
-        uint8 v = val&MUX_MASK;
-        return( v == MUX_0 || v == MUX_1 || v == MUX_PRIM || v == MUX_ENV || v == MUX_LODFRAC || v == MUX_PRIMLODFRAC );
-    }
-
     DecodedMux()
     {
         memset(m_bytes, 0, sizeof(m_bytes));
@@ -212,35 +181,6 @@ public:
     virtual void Simplify(void);
     void SplitComplexStages() {};
 };
-
-class DecodedMuxForSemiPixelShader : public DecodedMux
-{
-public:
-    void Reset(void);
-};
-
-class DecodedMuxForOGL14V2 : public DecodedMuxForPixelShader
-{
-public:
-    virtual void Simplify(void);
-    void UseTextureForConstant(void);
-};
-
-typedef struct 
-{
-    bool bFurtherFormatForOGL2;
-    bool bUseShadeForConstants;
-    bool bUseTextureForConstants;
-    bool bUseMoreThan2TextureForConstants;
-    bool bReformatToAB_CD;
-    bool bAllowHack;
-    bool bAllowComplimentary;
-    bool bCheckCombineInCycle1;
-    bool bSetLODFracTo0;
-    bool bMergeShadeWithConstants;
-    bool bSplitComplexStage;
-    bool bReformatAgainWithTwoTexels;
-} MuxConverterOptions;
 
 #endif
 

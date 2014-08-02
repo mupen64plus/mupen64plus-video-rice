@@ -69,51 +69,6 @@ void swap(uint8 &a, uint8 &b)
     b=c;
 }
 
-//*****************************************************************************
-//
-//*****************************************************************************
-bool    gUsingPrimColour = false;
-bool    gUsingEnvColour = false;
-
-int CountTexel1Cycle(N64CombinerType &m)
-{
-    int hasTexel[2];
-    uint8 *p = (uint8*)&m;
-
-    for( int i=0; i<2; i++)
-    {
-        hasTexel[i]=0;
-        for( int j=0; j<4; j++)
-        {
-            if( (p[j]&MUX_MASK) == MUX_TEXEL0+i )
-            {
-                hasTexel[i]=1;
-                break;
-            }
-        }
-    }
-
-    return hasTexel[0]+hasTexel[1];
-}
-
-uint32 GetTexelNumber(N64CombinerType &m)
-{
-    if( (m.a&MUX_MASK) == MUX_TEXEL1 || (m.b&MUX_MASK) == MUX_TEXEL1 || (m.c&MUX_MASK) == MUX_TEXEL1  || (m.d&MUX_MASK) == MUX_TEXEL1 )
-        return TEX_1;
-    else
-        return TEX_0;
-}
-
-bool IsTxtrUsed(N64CombinerType &m)
-{
-    if( (m.a&MUX_MASK) == MUX_TEXEL1 || (m.b&MUX_MASK) == MUX_TEXEL1 || (m.c&MUX_MASK) == MUX_TEXEL1  || (m.d&MUX_MASK) == MUX_TEXEL1 )
-        return true;
-    if( (m.a&MUX_MASK) == MUX_TEXEL0 || (m.b&MUX_MASK) == MUX_TEXEL0 || (m.c&MUX_MASK) == MUX_TEXEL0  || (m.d&MUX_MASK) == MUX_TEXEL0 )
-        return true;
-    else
-        return false;
-}
-
 //========================================================================
 
 void CColorCombiner::InitCombinerMode(void)

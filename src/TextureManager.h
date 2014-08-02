@@ -117,12 +117,6 @@ public:
             clampT == sec.clampT
             );
     }
-
-    inline bool isEqual(const TxtrInfo& sec)
-    {
-        return (*this == sec);
-    }
-    
 } ;
 
 

@@ -260,33 +260,6 @@ bool DecodedMux::isUsedInCycle(uint8 val, int cycle, uint8 mask)
     return isUsedInCycle(val, cycle/2, cycle%2?ALPHA_CHANNEL:COLOR_CHANNEL, mask);
 }
 
-
-void DecodedMux::ConvertComplements()
-{
-    //For (A-B)*C+D, if A=1, then we can convert A-B to Ac-0
-    if( aRGB0 != MUX_1 && bRGB0 != MUX_0 )
-    {
-        aRGB0 = bRGB0|MUX_COMPLEMENT;
-        bRGB0 = MUX_0;
-    }
-    if( aRGB1 != MUX_1 && bRGB1 != MUX_0 )
-    {
-        aRGB1 = bRGB1|MUX_COMPLEMENT;
-        bRGB1 = MUX_0;
-    }
-    if( aA0 != MUX_1 && bA0 != MUX_0 )
-    {
-        aA0 = bA0|MUX_COMPLEMENT;
-        bA0 = MUX_0;
-    }
-    if( aA1 != MUX_1 && bA1 != MUX_0 )
-    {
-        aA1 = bA1|MUX_COMPLEMENT;
-        bA1 = MUX_0;
-    }
-}
-
-
 CombinerFormatType DecodedMux::GetCombinerFormatType(uint32 cycle)
 {
     //Analyze the formula
@@ -317,44 +290,6 @@ void DecodedMuxForPixelShader::Simplify(void)
     splitType[2] = CM_FMT_TYPE_NOT_USED;
     splitType[3] = CM_FMT_TYPE_NOT_USED;
     mType = CM_FMT_TYPE_NOT_USED;
-
-    m_bTexel0IsUsed = isUsed(MUX_TEXEL0);
-    m_bTexel1IsUsed = isUsed(MUX_TEXEL1);
-}
-
-void DecodedMuxForSemiPixelShader::Reset(void)
-{
-    Decode(m_dwMux0, m_dwMux1);
-    splitType[0] = CM_FMT_TYPE_NOT_CHECKED;
-    splitType[1] = CM_FMT_TYPE_NOT_CHECKED;
-    splitType[2] = CM_FMT_TYPE_NOT_CHECKED;
-    splitType[3] = CM_FMT_TYPE_NOT_CHECKED;
-
-    Hack();
-
-    CheckCombineInCycle1();
-    if( g_curRomInfo.bTexture1Hack )
-    {
-        ReplaceVal(MUX_TEXEL1,MUX_TEXEL0,2);
-        ReplaceVal(MUX_TEXEL1,MUX_TEXEL0,3);
-    }
-
-    m_bTexel0IsUsed = isUsed(MUX_TEXEL0);
-    m_bTexel1IsUsed = isUsed(MUX_TEXEL1);
-}
-
-void DecodedMuxForOGL14V2::Simplify(void)
-{
-    CheckCombineInCycle1();
-    if( g_curRomInfo.bTexture1Hack )
-    {
-        ReplaceVal(MUX_TEXEL1,MUX_TEXEL0,2);
-        ReplaceVal(MUX_TEXEL1,MUX_TEXEL0,3);
-    }
-    Reformat();
-
-    UseTextureForConstant();
-    Reformat();
 
     m_bTexel0IsUsed = isUsed(MUX_TEXEL0);
     m_bTexel1IsUsed = isUsed(MUX_TEXEL1);
@@ -781,21 +716,6 @@ int DecodedMux::HowManyTextures()
     return n;
 }
 
-int DecodedMux::CountTexels(void)
-{
-    int count=0;
-
-    for( int i=0; i<4; i++ )
-    {
-        N64CombinerType &m = m_n64Combiners[i];
-        count = max(count, ::CountTexel1Cycle(m));
-        if( count == 2 ) 
-            break;
-    }
-
-    return count;
-}
-
 void DecodedMux::ReplaceVal(uint8 val1, uint8 val2, int cycle, uint8 mask)
 {
     int start = 0;
@@ -956,16 +876,6 @@ void DecodedMux::MergeShadeWithConstantsInChannel(CombineChannel channel)
 }
 
 
-void DecodedMux::MergeConstants(void)
-{
-    // This function should be called afte the mux has been simplified
-    // The goal of this function is to merge remain constants and to reduce the
-    // total number of constants, so we can implement the mux easiler
-
-    // This function should be called after the MergeShadeWithConstants() function
-}
-
-
 void DecodedMux::UseShadeForConstant(void)
 {
     // If shade is not used in the mux, we can use it for constants
@@ -1096,56 +1006,6 @@ void DecodedMux::UseTextureForConstant(void)
                 ReplaceVal(MUX_ENV, MUX_TEXEL0+i);
                 m_ColorTextureFlag[i] = MUX_ENV;
                 numofconst--;
-                continue;
-            }
-
-            if( isUsed(MUX_LODFRAC) )
-            {
-                ReplaceVal(MUX_LODFRAC, MUX_TEXEL0+i);
-                m_ColorTextureFlag[i] = MUX_LODFRAC;
-                numofconst--;
-                continue;
-            }
-
-            if( isUsed(MUX_PRIMLODFRAC) )
-            {
-                ReplaceVal(MUX_PRIMLODFRAC, MUX_TEXEL0+i);
-                m_ColorTextureFlag[i] = MUX_PRIMLODFRAC;
-                numofconst--;
-                continue;
-            }
-        }
-    }
-}
-
-
-void DecodedMuxForOGL14V2::UseTextureForConstant(void)
-{
-    bool envused = isUsed(MUX_ENV);
-    bool lodused = isUsed(MUX_LODFRAC);
-    
-    int numofconst = 0;
-    if( envused ) numofconst++;
-    if( lodused ) numofconst++;
-
-    int numOftex = HowManyTextures();
-
-    if( numofconst > 0 && numOftex < 2 )
-    {
-        // We can use a texture for a constant
-        for( int i=0; i<2 && numofconst > 0 ; i++ )
-        {
-            if( isUsed(MUX_TEXEL0+i) )
-            {
-                continue;   // can not use this texture
-            }
-
-            if( envused )
-            {
-                ReplaceVal(MUX_ENV, MUX_TEXEL0+i);
-                m_ColorTextureFlag[i] = MUX_ENV;
-                numofconst--;
-                envused = false;
                 continue;
             }
 
@@ -1300,87 +1160,6 @@ void DecodedMux::LogConstantsWithShade(uint32 flag,CombineChannel channel, FILE 
     fprintf(fp,"Shade = %08X in %s channel",flag,channel==COLOR_CHANNEL?"color":"alpha");
 }
 #endif
-
-
-void DecodedMux::To_AB_Add_CD_Format(void)  // Use by TNT,Geforce
-{
-    // This function should be called after calling reformat 
-    // This function will not be called by default, can be called optionally
-    // by TNT/Geforce combiner compilers
-
-    for( int i=0; i<2; i++ )
-    {
-        N64CombinerType &m0 = m_n64Combiners[i];
-        N64CombinerType &m1 = m_n64Combiners[i+2];
-        switch( splitType[i] )
-        {
-        case CM_FMT_TYPE_A_SUB_B_ADD_D:     // = A-B+D      can not map very well in 1 stage
-            if( splitType[i+2] == CM_FMT_TYPE_NOT_USED )
-            {
-                m1.a = m0.d;
-                m1.d = MUX_COMBINED;
-                splitType[i+2] = CM_FMT_TYPE_A_ADD_D;
-
-                m0.d = MUX_0;
-                splitType[i] = CM_FMT_TYPE_A_SUB_B;
-            }
-            else if( splitType[i+2] == CM_FMT_TYPE_A_MOD_C )
-            {
-                if( (m1.c&MUX_MASK) == MUX_COMBINED )   swap(m1.a, m1.c);
-                m1.b = m1.d = m1.c;
-                m1.c = (m0.d | (m1.a & (~MUX_MASK)));
-                splitType[i+2] = CM_FMT_TYPE_AB_ADD_CD;
-
-                m0.d = MUX_0;
-                splitType[i] = CM_FMT_TYPE_A_SUB_B;
-            }
-            break;
-        case CM_FMT_TYPE_A_SUB_B_MOD_C:     // = (A-B)*C    can not map very well in 1 stage
-            m0.d = m0.b;
-            m0.b = m0.c;
-            splitType[i] = CM_FMT_TYPE_AB_SUB_CD;
-            break;
-        case CM_FMT_TYPE_A_ADD_B_MOD_C:     // = (A+B)*C    can not map very well in 1 stage
-            m0.d = m0.b;
-            m0.b = m0.c;
-            splitType[i] = CM_FMT_TYPE_AB_ADD_CD;
-            break;
-        case CM_FMT_TYPE_A_B_C_D:           // = (A-B)*C+D
-        case CM_FMT_TYPE_A_B_C_A:           // = (A-B)*C+D
-            if( splitType[i+2] == CM_FMT_TYPE_NOT_USED )
-            {
-                m1.a = m0.d;
-                m1.d = MUX_COMBINED;
-                splitType[i+2] = CM_FMT_TYPE_A_ADD_D;
-
-                m0.d = m0.b;
-                m0.b = m0.c;
-                splitType[i] = CM_FMT_TYPE_AB_SUB_CD;
-            }
-            else if( splitType[i+2] == CM_FMT_TYPE_A_MOD_C )
-            {
-                if( (m1.c&MUX_MASK) == MUX_COMBINED )   swap(m1.a, m1.c);
-                m1.b = m1.d = m1.c;
-                m1.c = (m0.d | (m1.a & (~MUX_MASK)));
-                splitType[i+2] = CM_FMT_TYPE_AB_ADD_CD;
-
-                m0.d = m0.b;
-                m0.b = m0.c;
-                splitType[i] = CM_FMT_TYPE_AB_ADD_CD;
-            }
-            break;
-         default:
-           break;
-        }
-    }
-}
-
-void DecodedMux::To_AB_Add_C_Format(void)   // Use by ATI Radeon
-{
-    // This function should be called after calling reformat
-    // This function will not be called by default, can be called optionally
-    // by ATI combiner compilers
-}
 
 void DecodedMux::CheckCombineInCycle1(void)
 {
