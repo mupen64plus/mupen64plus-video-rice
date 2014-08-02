@@ -97,7 +97,6 @@ public:
     bool isUsedInColorChannel(uint8 fac, uint8 mask=MUX_MASK);
     bool isUsedInCycle(uint8 fac, int cycle, CombineChannel channel, uint8 mask=MUX_MASK);
     bool isUsedInCycle(uint8 fac, int cycle, uint8 mask=MUX_MASK);
-    uint32 GetCycle(int cycle, CombineChannel channel);
     uint32 GetCycle(int cycle);
     CombinerFormatType GetCombinerFormatType(uint32 cycle);
     void Display(bool simplified=true, FILE *fp=NULL);
@@ -108,7 +107,6 @@ public:
     
     virtual void MergeShadeWithConstants(void);
     virtual void MergeShadeWithConstantsInChannel(CombineChannel channel);
-    virtual void UseShadeForConstant(void);
     virtual void UseTextureForConstant(void);
 
     int HowManyConstFactors();

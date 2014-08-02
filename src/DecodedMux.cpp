@@ -307,9 +307,6 @@ void DecodedMux::Simplify(void)
     }
     Reformat();
 
-    UseShadeForConstant();
-    Reformat();
-
     if( m_dwShadeColorChannelFlag == MUX_0 )
     {
         MergeShadeWithConstants();
@@ -738,20 +735,6 @@ void DecodedMux::ReplaceVal(uint8 val1, uint8 val2, int cycle, uint8 mask)
     }
 }
 
-uint32 DecodedMux::GetCycle(int cycle, CombineChannel channel)
-{
-    uint32* pmux = m_dWords;
-    if( channel == COLOR_CHANNEL )
-    {
-        return pmux[cycle*2];
-    }
-    else
-    {
-        return pmux[cycle*2+1];
-    }
-
-}
-
 uint32 DecodedMux::GetCycle(int cycle)
 {
     return m_dWords[cycle];
@@ -875,108 +858,6 @@ void DecodedMux::MergeShadeWithConstantsInChannel(CombineChannel channel)
         m_dwShadeAlphaChannelFlag = cycleVal;
 }
 
-
-void DecodedMux::UseShadeForConstant(void)
-{
-    // If shade is not used in the mux, we can use it for constants
-    // This function should be called after constants have been merged
-
-    bool doAlphaChannel = true;
-    uint8 mask = (uint8)~MUX_COMPLEMENT;
-
-    int constants = 0;
-    if( isUsed(MUX_ENV) ) constants++;
-    if( isUsed(MUX_PRIM) ) constants++;
-    if( isUsed(MUX_LODFRAC) ) constants++;
-    if( isUsed(MUX_PRIMLODFRAC) ) constants++;
-
-    bool forceToUsed = constants>m_maxConstants;
-
-    if( !isUsedInColorChannel(MUX_SHADE) && (forceToUsed || max(splitType[0], splitType[2]) >= CM_FMT_TYPE_A_MOD_C_ADD_D) )
-    {
-        int countEnv = Count(MUX_ENV, N64Cycle0RGB, mask) + Count(MUX_ENV, N64Cycle1RGB, mask);
-        int countPrim = Count(MUX_PRIM, N64Cycle0RGB, mask) + Count(MUX_PRIM, N64Cycle1RGB, mask);
-        if( countEnv+countPrim > 0 )
-        {
-            if( countPrim >= countEnv )
-            {
-                //TRACE0("Use Shade for PRIM in color channel");
-                ReplaceVal(MUX_PRIM, MUX_SHADE, N64Cycle0RGB);
-                ReplaceVal(MUX_PRIM, MUX_SHADE, N64Cycle1RGB);
-                m_dwShadeColorChannelFlag = MUX_PRIM;
-            }
-            else if( countEnv>0 )
-            {
-                //TRACE0("Use Shade for ENV in color channel");
-                ReplaceVal(MUX_ENV, MUX_SHADE, N64Cycle0RGB);
-                ReplaceVal(MUX_ENV, MUX_SHADE, N64Cycle1RGB);
-                m_dwShadeColorChannelFlag = MUX_ENV;
-            }
-
-            if( isUsedInColorChannel(MUX_SHADE|MUX_ALPHAREPLICATE, mask) )
-            {
-                m_dwShadeAlphaChannelFlag = m_dwShadeColorChannelFlag;
-                ReplaceVal((uint8)m_dwShadeColorChannelFlag, MUX_SHADE, N64Cycle0Alpha);
-                ReplaceVal((uint8)m_dwShadeColorChannelFlag, MUX_SHADE, N64Cycle1Alpha);
-                doAlphaChannel = false;
-            }
-        }
-    }
-
-    if( doAlphaChannel && !isUsedInAlphaChannel(MUX_SHADE) && !isUsedInColorChannel(MUX_SHADE|MUX_ALPHAREPLICATE,MUX_MASK_WITH_ALPHA))
-    {
-        int countEnv = Count(MUX_ENV|MUX_ALPHAREPLICATE, N64Cycle0RGB, mask) + Count(MUX_ENV|MUX_ALPHAREPLICATE, N64Cycle1RGB, mask);
-        int countPrim = Count(MUX_PRIM|MUX_ALPHAREPLICATE, N64Cycle0RGB, mask) + Count(MUX_PRIM|MUX_ALPHAREPLICATE, N64Cycle1RGB, mask);
-
-        if( forceToUsed || max(splitType[1], splitType[3]) >= CM_FMT_TYPE_A_MOD_C_ADD_D ||
-            (max(splitType[0], splitType[2]) >= CM_FMT_TYPE_A_MOD_C_ADD_D && countEnv+countPrim > 0 ) )
-        {
-            countEnv = Count(MUX_ENV, N64Cycle0Alpha) + Count(MUX_ENV, N64Cycle1Alpha) +
-                            Count(MUX_ENV|MUX_ALPHAREPLICATE, N64Cycle0RGB, mask) + Count(MUX_ENV|MUX_ALPHAREPLICATE, N64Cycle1RGB, mask);
-            countPrim = Count(MUX_PRIM, N64Cycle0Alpha) + Count(MUX_PRIM, N64Cycle1Alpha) +
-                            Count(MUX_PRIM|MUX_ALPHAREPLICATE, N64Cycle0RGB, mask) + Count(MUX_PRIM|MUX_ALPHAREPLICATE, N64Cycle1RGB, mask);
-            if( countEnv+countPrim > 0 )
-            {
-                if( countPrim>0 && m_dwShadeColorChannelFlag == MUX_PRIM )
-                {
-                    //TRACE0("Use Shade for PRIM in alpha channel");
-                    ReplaceVal(MUX_PRIM, MUX_SHADE, N64Cycle0Alpha);
-                    ReplaceVal(MUX_PRIM, MUX_SHADE, N64Cycle1Alpha);
-                    ReplaceVal(MUX_PRIM|MUX_ALPHAREPLICATE, MUX_SHADE|MUX_ALPHAREPLICATE, N64Cycle0RGB, mask);
-                    ReplaceVal(MUX_PRIM|MUX_ALPHAREPLICATE, MUX_SHADE|MUX_ALPHAREPLICATE, N64Cycle1RGB, mask);
-                    m_dwShadeAlphaChannelFlag = MUX_PRIM;
-                }               
-                else if( countEnv>0 && m_dwShadeColorChannelFlag == MUX_ENV )
-                {
-                    //TRACE0("Use Shade for PRIM in alpha channel");
-                    ReplaceVal(MUX_ENV, MUX_SHADE, N64Cycle0Alpha);
-                    ReplaceVal(MUX_ENV, MUX_SHADE, N64Cycle1Alpha);
-                    ReplaceVal(MUX_ENV|MUX_ALPHAREPLICATE, MUX_SHADE|MUX_ALPHAREPLICATE, N64Cycle0RGB, mask);
-                    ReplaceVal(MUX_ENV|MUX_ALPHAREPLICATE, MUX_SHADE|MUX_ALPHAREPLICATE, N64Cycle1RGB, mask);
-                    m_dwShadeAlphaChannelFlag = MUX_ENV;
-                }               
-                else if( countPrim >= countEnv )
-                {
-                    //TRACE0("Use Shade for PRIM in alpha channel");
-                    ReplaceVal(MUX_PRIM, MUX_SHADE, N64Cycle0Alpha);
-                    ReplaceVal(MUX_PRIM, MUX_SHADE, N64Cycle1Alpha);
-                    ReplaceVal(MUX_PRIM|MUX_ALPHAREPLICATE, MUX_SHADE|MUX_ALPHAREPLICATE, N64Cycle0RGB, mask);
-                    ReplaceVal(MUX_PRIM|MUX_ALPHAREPLICATE, MUX_SHADE|MUX_ALPHAREPLICATE, N64Cycle1RGB, mask);
-                    m_dwShadeAlphaChannelFlag = MUX_PRIM;
-                }
-                else if( countEnv>0 )
-                {
-                    //TRACE0("Use Shade for ENV in alpha channel");
-                    ReplaceVal(MUX_ENV, MUX_SHADE, N64Cycle0Alpha);
-                    ReplaceVal(MUX_ENV, MUX_SHADE, N64Cycle1Alpha);
-                    ReplaceVal(MUX_ENV|MUX_ALPHAREPLICATE, MUX_SHADE|MUX_ALPHAREPLICATE, N64Cycle0RGB, mask);
-                    ReplaceVal(MUX_ENV|MUX_ALPHAREPLICATE, MUX_SHADE|MUX_ALPHAREPLICATE, N64Cycle1RGB, mask);
-                    m_dwShadeAlphaChannelFlag = MUX_ENV;
-                }
-            }
-        }
-    }
-}
 
 void DecodedMux::UseTextureForConstant(void)
 {
@@ -1260,8 +1141,6 @@ void DecodedMux::SplitComplexStages()
            break;
         }
     }
-    //Reformat();
-    //UseShadeForConstant();
 }
 
 
