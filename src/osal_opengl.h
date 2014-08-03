@@ -37,13 +37,8 @@
 #define VS_TEXCOORD1                        3
 #define VS_FOG                              4
 
-#define glLoadIdentity()
-#define glMatrixMode(x)
-#define glOrtho(a,b,c,d,e,f)
 #define glReadBuffer(x)
 #define glTexEnvi(x,y,z)
-#define glTexEnvfv(x,y,z)
-#define glTexCoord2f(u,v)
 
 #elif SDL_VIDEO_OPENGL_ES2
 #include <SDL_opengles2.h>
@@ -73,13 +68,8 @@
 #define pglActiveTexture                    glActiveTexture
 
 // No-op substitutions (unavailable in GLES2)
-#define glLoadIdentity()
-#define glMatrixMode(x)
-#define glOrtho(a,b,c,d,e,f)
 #define glReadBuffer(x)
 #define glTexEnvi(x,y,z)
-#define glTexEnvfv(x,y,z)
-#define glTexCoord2f(u,v)
 
 #endif // SDL_VIDEO_OPENGL*
 

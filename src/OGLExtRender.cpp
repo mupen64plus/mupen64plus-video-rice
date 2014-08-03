@@ -75,47 +75,6 @@ void COGLExtRender::DisBindTexture(GLuint texture, int unitno)
         OGLRender::DisBindTexture(texture, unitno);
 }
 
-void COGLExtRender::TexCoord2f(float u, float v)
-{
-#if SDL_VIDEO_OPENGL
-    if( m_bEnableMultiTexture )
-    {
-        for( int i=0; i<8; i++ )
-        {
-            if( m_textureUnitMap[i] >= 0 )
-            {
-                pglMultiTexCoord2f(GL_TEXTURE0+i, u, v);
-            }
-        }
-    }
-    else
-    {
-        OGLRender::TexCoord2f(u,v);
-    }
-#endif
-}
-
-void COGLExtRender::TexCoord(TLITVERTEX &vtxInfo)
-{
-#if SDL_VIDEO_OPENGL
-    if( m_bEnableMultiTexture )
-    {
-        for( int i=0; i<8; i++ )
-        {
-            if( m_textureUnitMap[i] >= 0 )
-            {
-                pglMultiTexCoord2fv(GL_TEXTURE0+i, &(vtxInfo.tcord[m_textureUnitMap[i]].u));
-            }
-        }
-    }
-    else
-    {
-        OGLRender::TexCoord(vtxInfo);
-    }
-#endif
-}
-
-
 void COGLExtRender::SetTexWrapS(int unitno,GLuint flag)
 {
     static GLuint mflag[8];

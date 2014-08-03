@@ -229,8 +229,6 @@ void COGLColorCombiner::InitCombinerCycle12(void)
                     fv = GetEnvColorfv();
                 }
 
-                glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR,fv);
-                OPENGL_CHECK_ERRORS;
                 glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
                 OPENGL_CHECK_ERRORS;
                 break;

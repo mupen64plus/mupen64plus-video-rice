@@ -207,10 +207,6 @@ void COGLGraphicsContext::InitState(void)
     m_pExtensionStr = glGetString(GL_EXTENSIONS);
     m_pVersionStr   = glGetString(GL_VERSION);
     m_pVendorStr    = glGetString(GL_VENDOR);
-    glMatrixMode(GL_PROJECTION);
-    OPENGL_CHECK_ERRORS;
-    glLoadIdentity();
-    OPENGL_CHECK_ERRORS;
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     OPENGL_CHECK_ERRORS;
@@ -220,10 +216,6 @@ void COGLGraphicsContext::InitState(void)
 #if SDL_VIDEO_OPENGL
     glShadeModel(GL_SMOOTH);
     OPENGL_CHECK_ERRORS;
-
-    //position viewer 
-    //glMatrixMode(GL_MODELVIEW);
-    //glLoadIdentity();
 
     glDisable(GL_ALPHA_TEST);
     OPENGL_CHECK_ERRORS;
@@ -256,11 +248,6 @@ void COGLGraphicsContext::InitState(void)
     OPENGL_CHECK_ERRORS;
 #if SDL_VIDEO_OPENGL
     glEnable(GL_ALPHA_TEST);
-    OPENGL_CHECK_ERRORS;
-
-    glMatrixMode(GL_PROJECTION);
-    OPENGL_CHECK_ERRORS;
-    glLoadIdentity();
     OPENGL_CHECK_ERRORS;
 #endif
 
