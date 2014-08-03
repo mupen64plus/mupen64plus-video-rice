@@ -76,7 +76,6 @@ public:
     void DrawText(const char* str, RECT *rect);
 
     void SetFogMinMax(float fMin, float fMax);
-    void SetFogEnable(bool bEnable);
     void TurnFogOnOff(bool flag);
     void SetFogColor(uint32 r, uint32 g, uint32 b, uint32 a);
 

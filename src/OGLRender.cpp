@@ -1009,42 +1009,6 @@ void OGLRender::TurnFogOnOff(bool flag)
 #endif
 }
 
-void OGLRender::SetFogEnable(bool bEnable)
-{
-    DEBUGGER_IF_DUMP( (gRSP.bFogEnabled != (bEnable==TRUE) && logFog ), TRACE1("Set Fog %s", bEnable? "enable":"disable"));
-
-    gRSP.bFogEnabled = bEnable&&(options.fogMethod == 1);
-    
-    // If force fog
-    if(options.fogMethod == 2)
-    {
-        gRSP.bFogEnabled = true;
-    }
-
-#if SDL_VIDEO_OPENGL
-    /*if( gRSP.bFogEnabled )
-    {
-        //TRACE2("Enable fog, min=%f, max=%f",gRSPfFogMin,gRSPfFogMax );
-        glFogfv(GL_FOG_COLOR, gRDP.fvFogColor); // Set Fog Color
-        OPENGL_CHECK_ERRORS;
-        glFogf(GL_FOG_START, gRSPfFogMin); // Fog Start Depth
-        OPENGL_CHECK_ERRORS;
-        glFogf(GL_FOG_END, gRSPfFogMax); // Fog End Depth
-        OPENGL_CHECK_ERRORS;
-        glEnable(GL_FOG);
-        OPENGL_CHECK_ERRORS;
-    }
-    else
-    {
-        glDisable(GL_FOG);
-        OPENGL_CHECK_ERRORS;
-    }*/
-#elif SDL_VIDEO_OPENGL_ES2
-    ((COGL_FragmentProgramCombiner*)m_pColorCombiner)->SetFogState(gRSP.bFogEnabled);
-    OPENGL_CHECK_ERRORS;
-#endif
-}
-
 void OGLRender::SetFogColor(uint32 r, uint32 g, uint32 b, uint32 a)
 {
     gRDP.fogColor = COLOR_RGBA(r, g, b, a); 

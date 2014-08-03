@@ -307,7 +307,7 @@ BOOL InitConfiguration(void)
     if (ConfigParamsVersion < CONFIG_PARAM_VERSION)
     {
         DebugMessage(M64MSG_WARNING, "Old parameter config version detected : %d, updating to %d;", ConfigParamsVersion, CONFIG_PARAM_VERSION);
-        if (ConfigParamsVersion == 0) /* From v0 to v1: Remove OGL_TNT2_DEVICE and NVIDIA_OGL device */
+        if (ConfigParamsVersion == 0) /* From v0 to v1: Remove OGL_TNT2_DEVICE and NVIDIA_OGL device, Remove force fog method option */
         {
             int oldOglDevice;
             if (ConfigGetParameter(l_ConfigVideoRice, "OpenGLRenderSetting", M64TYPE_INT, &oldOglDevice, sizeof(int)) == M64ERR_SUCCESS)
@@ -323,6 +323,16 @@ BOOL InitConfiguration(void)
                 }
                 ConfigSetParameter(l_ConfigVideoRice, "OpenGLRenderSetting", M64TYPE_INT, &oldOglDevice);
                 ConfigSetParameterHelp(l_ConfigVideoRice, "OpenGLRenderSetting", "OpenGL level to support (0=auto, 1=OGL_1.1, 2=OGL_FRAGMENT_PROGRAM)");
+            }
+            int fogMethod;
+            if (ConfigGetParameter(l_ConfigVideoRice, "FogMethod", M64TYPE_INT, &fogMethod, sizeof(int)) == M64ERR_SUCCESS)
+            {
+                if ( fogMethod > 1 ) // if FogMethod was "Force Fog"
+                {
+                    fogMethod = 1;
+                    ConfigSetParameter(l_ConfigVideoRice, "FogMethod", M64TYPE_INT, &fogMethod);
+                }
+                ConfigSetParameterHelp(l_ConfigVideoRice, "FogMethod", "Enable, Disable fog generation (0=Disable, 1=Enable)");
             }
             ConfigParamsVersion = 1;
         } // place others update stuff here and increment "ConfigParamsVersion" and CONFIG_PARAM_VERSION each time.
@@ -365,7 +375,7 @@ BOOL InitConfiguration(void)
     ConfigSetDefaultBool(l_ConfigVideoRice, "ShowFPS", FALSE, "Display On-screen FPS");
 
     ConfigSetDefaultInt(l_ConfigVideoRice, "Mipmapping", 2, "Use Mipmapping? 0=no, 1=nearest, 2=bilinear, 3=trilinear");
-    ConfigSetDefaultInt(l_ConfigVideoRice, "FogMethod", 0, "Enable, Disable or Force fog generation (0=Disable, 1=Enable n64 choose, 2=Force Fog)");
+    ConfigSetDefaultInt(l_ConfigVideoRice, "FogMethod", 1, "Enable, Disable fog generation (0=Disable, 1=Enable)");
     ConfigSetDefaultInt(l_ConfigVideoRice, "ForceTextureFilter", 0, "Force to use texture filtering or not (0=auto: n64 choose, 1=force no filtering, 2=force filtering)");
     ConfigSetDefaultInt(l_ConfigVideoRice, "TextureEnhancement", 0, "Primary texture enhancement filter (0=None, 1=2X, 2=2XSAI, 3=HQ2X, 4=LQ2X, 5=HQ4X, 6=Sharpen, 7=Sharpen More, 8=External, 9=Mirrored)");
     ConfigSetDefaultInt(l_ConfigVideoRice, "TextureEnhancementControl", 0, "Secondary texture enhancement filter (0 = none, 1-4 = filtered)");
