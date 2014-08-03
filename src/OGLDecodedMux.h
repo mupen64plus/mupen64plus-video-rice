@@ -28,13 +28,6 @@ protected:
     virtual void Reformat(void);
 };
 
-class COGLExtDecodedMux : public COGLDecodedMux
-{
-protected:
-    virtual void FurtherFormatForOGL2(void);
-    virtual void Simplify(void);
-};
-
 #endif
 
 

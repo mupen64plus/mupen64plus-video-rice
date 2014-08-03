@@ -160,32 +160,6 @@ void DecodedMux::Decode(uint32 dwMux0, uint32 dwMux1)
     m_ColorTextureFlag[1] = 0;
 }
 
-int DecodedMux::Count(uint8 val, int cycle, uint8 mask)
-{
-    uint8* pmux = m_bytes;
-    int count=0;
-    int start=0;
-    int end=16;
-
-    if( cycle >= 0 )
-    {
-        start = cycle*4;
-        end = start+4;
-    }
-
-
-    for( int i=start; i<end; i++ )
-    {
-        if( (pmux[i]&mask) == (val&mask) )
-        {
-            count++;
-        }
-    }
-
-    return count;
-}
-
-
 bool DecodedMux::isUsed(uint8 val, uint8 mask)
 {
     uint8* pmux = m_bytes;
