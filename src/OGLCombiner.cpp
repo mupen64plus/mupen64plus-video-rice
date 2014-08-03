@@ -50,8 +50,7 @@ uint32 DirectX_OGL_BlendFuncMaps [] =
 //========================================================================
 COGLColorCombiner::COGLColorCombiner(CRender *pRender) :
     CColorCombiner(pRender),
-    m_pOGLRender((OGLRender*)pRender),
-    m_bSupportAdd(false), m_bSupportSubtract(false)
+    m_pOGLRender((OGLRender*)pRender)
 {
     m_pDecodedMux = new COGLDecodedMux;
     m_pDecodedMux->m_maxConstants = 0;
@@ -66,20 +65,7 @@ COGLColorCombiner::~COGLColorCombiner()
 
 bool COGLColorCombiner::Initialize(void)
 {
-    m_bSupportAdd = false;
-    m_bSupportSubtract = false;
     m_supportedStages = 1;
-
-    COGLGraphicsContext *pcontext = (COGLGraphicsContext *)(CGraphicsContext::g_pGraphicsContext);
-    if( pcontext->IsExtensionSupported(OSAL_GL_ARB_TEXTURE_ENV_ADD) || pcontext->IsExtensionSupported("GL_EXT_texture_env_add") )
-    {
-        m_bSupportAdd = true;
-    }
-
-    if( pcontext->IsExtensionSupported("GL_EXT_blend_subtract") )
-    {
-        m_bSupportSubtract = true;
-    }
 
     return true;
 }
@@ -193,10 +179,7 @@ void COGLColorCombiner::InitCombinerCycle12(void)
         case CM_FMT_TYPE_A_ADD_D:           // = A+D
             if( shadeIsUsedInColor && texIsUsedInColor )
             {
-                if( m_bSupportAdd )
-                    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_ADD);
-                else
-                    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
+                glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_ADD);
             }
             else if( texIsUsedInColor )
             {
@@ -209,10 +192,7 @@ void COGLColorCombiner::InitCombinerCycle12(void)
         case CM_FMT_TYPE_A_SUB_B:           // = A-B
             if( shadeIsUsedInColor && texIsUsedInColor )
             {
-                if( m_bSupportSubtract )
-                    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_SUBTRACT);
-                else
-                    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
+                glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_SUBTRACT);
             }
             else if( texIsUsedInColor )
             {

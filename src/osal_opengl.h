@@ -29,8 +29,6 @@
 #include <SDL_opengl.h>
 #define GLSL_VERSION "120"
 
-// Extension names
-#define OSAL_GL_ARB_TEXTURE_ENV_ADD         "GL_ARB_texture_env_add"
 
 // Vertex shader params
 #define VS_POSITION                         0
@@ -51,8 +49,6 @@
 #include <SDL_opengles2.h>
 #define GLSL_VERSION "100"
 
-// Extension names
-#define OSAL_GL_ARB_TEXTURE_ENV_ADD         "GL_texture_env_add"
 
 // Vertex shader params
 #define VS_POSITION                         0

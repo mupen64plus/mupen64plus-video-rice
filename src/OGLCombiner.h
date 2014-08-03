@@ -43,9 +43,6 @@ protected:
     COGLColorCombiner(CRender *pRender);
     ~COGLColorCombiner();
     OGLRender *m_pOGLRender;
-    
-    bool    m_bSupportAdd;
-    bool    m_bSupportSubtract;
 
 #ifdef DEBUGGER
     void DisplaySimpleMuxString(void);
