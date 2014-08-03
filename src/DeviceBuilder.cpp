@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "FrameBuffer.h"
 #include "OGLCombiner.h"
 #include "OGLDebug.h"
-#include "OGLExtRender.h"
+#include "OGLRender.h"
 #include "OGLGraphicsContext.h"
 #include "OGLTexture.h"
 #if SDL_VIDEO_OPENGL
@@ -186,7 +186,7 @@ CRender * OGLDeviceBuilder::CreateRender(void)
             SAFE_CHECK(m_pRender);
         }
 
-        m_pRender = new COGLExtRender();
+        m_pRender = new OGLRender();
 
         SAFE_CHECK(m_pRender);
         CRender::g_pRender = m_pRender;

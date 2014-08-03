@@ -1416,9 +1416,7 @@ void COGLSecondFragmentProgramCombiner::GenerateCombinerSettingConstants( int sh
 //////////////////////////////////////////////////////////////////////////
 void COGLSecondFragmentProgramCombiner::InitCombinerCycle12(void)
 {
-    /*m_pOGLRender->EnableMultiTexture();
-
-    bool combinerIsChanged = false;
+    /*bool combinerIsChanged = false;
 
     if( m_pDecodedMux->m_dwMux0 != m_dwLastMux0 || m_pDecodedMux->m_dwMux1 != m_dwLastMux1 || m_lastIndex < 0 )
     {
@@ -1480,9 +1478,6 @@ void COGLSecondFragmentProgramCombiner::InitCombinerCycle12(void)
     OPENGL_CHECK_ERRORS;
     pglProgramEnvParameter4fvARB(GL_FRAGMENT_PROGRAM_ARB, 6, tempf3);
     OPENGL_CHECK_ERRORS;*/
-    
-
-    m_pOGLRender->EnableMultiTexture();
 
     bool combinerIsChanged = false;
     

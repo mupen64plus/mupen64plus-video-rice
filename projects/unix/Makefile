@@ -319,7 +319,6 @@ SOURCE = \
 	$(SRCDIR)/OGLCombiner.cpp \
 	$(SRCDIR)/OGLDecodedMux.cpp \
 	$(SRCDIR)/OGLExtensions.cpp \
-	$(SRCDIR)/OGLExtRender.cpp \
 	$(SRCDIR)/OGLGraphicsContext.cpp \
 	$(SRCDIR)/OGLRender.cpp \
 	$(SRCDIR)/OGLRenderExt.cpp \

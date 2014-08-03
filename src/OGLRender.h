@@ -81,7 +81,6 @@ public:
     void SetFogColor(uint32 r, uint32 g, uint32 b, uint32 a);
 
     void DisableMultiTexture();
-    void EnableMultiTexture() {m_bEnableMultiTexture=true;}
     void EndRendering(void);
 
     void glViewportWrapper(GLint x, GLint y, GLsizei width, GLsizei height, bool flag=true);
@@ -100,7 +99,8 @@ protected:
     GLuint  m_curBoundTex[8];
     BOOL    m_texUnitEnabled[8];
 
-    bool m_bEnableMultiTexture;
+    GLint m_maxTexUnits;
+    int m_textureUnitMap[8];
 };
 
 #endif

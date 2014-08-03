@@ -43,17 +43,10 @@ UVFlagMap OGLXUVFlagMaps[] =
 //===================================================================
 OGLRender::OGLRender()
 {
-    for( int i=0; i<8; i++ )
-    {
-        m_curBoundTex[i]=0;
-        m_texUnitEnabled[i]=FALSE;
-    }
-    m_bEnableMultiTexture = false;
 }
 
 OGLRender::~OGLRender()
 {
-    ClearDeviceObjects();
 }
 
 bool OGLRender::InitDeviceObjects()
@@ -90,6 +83,15 @@ void OGLRender::Initialize(void)
 
     glVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_TRUE, sizeof(uint8)*4, &(g_oglVtxColors[0][0]) );
     OPENGL_CHECK_ERRORS;
+
+    // Initialize multitexture
+    glGetIntegerv(GL_MAX_TEXTURE_UNITS,&m_maxTexUnits);
+    OPENGL_CHECK_ERRORS;
+
+    for( int i=0; i<8; i++ )
+        m_textureUnitMap[i] = -1;
+    m_textureUnitMap[0] = 0;    // T0 is usually using texture unit 0
+    m_textureUnitMap[1] = 1;    // T1 is usually using texture unit 1
 }
 //===================================================================
 TextureFilterMap OglTexFilterMap[2]=
@@ -100,35 +102,84 @@ TextureFilterMap OglTexFilterMap[2]=
 
 void OGLRender::ApplyTextureFilter()
 {
-    static uint32 minflag=0xFFFF, magflag=0xFFFF;
-    static uint32 mtex;
 
-    if( m_texUnitEnabled[0] )
+    static uint32 minflag[8], magflag[8];
+    static uint32 mtex[8];
+
+    int iMinFilter, iMagFilter;
+
+    for( int i=0; i<m_maxTexUnits; i++ )
     {
-        if( mtex != m_curBoundTex[0] )
+        //Compute iMinFilter and iMagFilter
+        if(m_dwMinFilter == FILTER_LINEAR) //Texture will use filtering
         {
-            mtex = m_curBoundTex[0];
-            minflag = m_dwMinFilter;
-            magflag = m_dwMagFilter;
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, OglTexFilterMap[m_dwMinFilter].realFilter);
-            OPENGL_CHECK_ERRORS;
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, OglTexFilterMap[m_dwMagFilter].realFilter);
-            OPENGL_CHECK_ERRORS;
-        }
-        else
-        {
-            if( minflag != (unsigned int)m_dwMinFilter )
+            iMagFilter = GL_LINEAR;
+
+            //Texture filtering method user want
+            switch(options.mipmapping)
             {
-                minflag = m_dwMinFilter;
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, OglTexFilterMap[m_dwMinFilter].realFilter);
+            case TEXTURE_BILINEAR_FILTER:
+                iMinFilter = GL_LINEAR_MIPMAP_NEAREST;
+                break;
+            case TEXTURE_TRILINEAR_FILTER:
+                iMinFilter = GL_LINEAR_MIPMAP_LINEAR;
+                break;
+            case TEXTURE_NO_FILTER:
+                iMinFilter = GL_NEAREST_MIPMAP_NEAREST;
+                break;
+            case TEXTURE_NO_MIPMAP:
+            default:
+                //Bilinear without mipmap
+                iMinFilter = GL_LINEAR;
+            }
+        }
+        else    //dont use filtering, all is nearest
+        {
+            iMagFilter = GL_NEAREST;
+
+            if(options.mipmapping)
+            {
+                iMinFilter = GL_NEAREST_MIPMAP_NEAREST;
+            }
+            else
+            {
+                iMinFilter = GL_NEAREST;
+            }
+        }
+
+        if( m_texUnitEnabled[i] )
+        {
+            if( mtex[i] != m_curBoundTex[i] )
+            {
+                mtex[i] = m_curBoundTex[i];
+                pglActiveTexture(GL_TEXTURE0+i);
+                OPENGL_CHECK_ERRORS;
+                minflag[i] = m_dwMinFilter;
+                magflag[i] = m_dwMagFilter;
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, iMinFilter);
+                OPENGL_CHECK_ERRORS;
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, iMagFilter);
                 OPENGL_CHECK_ERRORS;
             }
-            if( magflag != (unsigned int)m_dwMagFilter )
+            else
             {
-                magflag = m_dwMagFilter;
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, OglTexFilterMap[m_dwMagFilter].realFilter);
-                OPENGL_CHECK_ERRORS;
-            }   
+                if( minflag[i] != (unsigned int)m_dwMinFilter )
+                {
+                    minflag[i] = m_dwMinFilter;
+                    pglActiveTexture(GL_TEXTURE0+i);
+                    OPENGL_CHECK_ERRORS;
+                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, iMinFilter);
+                    OPENGL_CHECK_ERRORS;
+                }
+                if( magflag[i] != (unsigned int)m_dwMagFilter )
+                {
+                    magflag[i] = m_dwMagFilter;
+                    pglActiveTexture(GL_TEXTURE0+i);
+                    OPENGL_CHECK_ERRORS;
+                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, iMagFilter);
+                    OPENGL_CHECK_ERRORS;
+                }
+            }
         }
     }
 }
@@ -382,30 +433,24 @@ void OGLRender::SetAddressVAllStages(uint32 dwTile, TextureUVFlag dwFlag)
 
 void OGLRender::SetTexWrapS(int unitno,GLuint flag)
 {
-    static GLuint mflag;
-    static GLuint mtex;
-#ifdef DEBUGGER
-    if( unitno != 0 )
+    static GLuint mflag[8];
+    static GLuint mtex[8];
+    if( m_curBoundTex[unitno] != mtex[unitno] || mflag[unitno] != flag )
     {
-        DebuggerAppendMsg("Check me, unitno != 0 in base ogl");
-    }
-#endif
-    if( m_curBoundTex[0] != mtex || mflag != flag )
-    {
-        mtex = m_curBoundTex[0];
-        mflag = flag;
+        mtex[unitno] = m_curBoundTex[0];
+        mflag[unitno] = flag;
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, flag);
         OPENGL_CHECK_ERRORS;
     }
 }
 void OGLRender::SetTexWrapT(int unitno,GLuint flag)
 {
-    static GLuint mflag;
-    static GLuint mtex;
-    if( m_curBoundTex[0] != mtex || mflag != flag )
+    static GLuint mflag[8];
+    static GLuint mtex[8];
+    if( m_curBoundTex[unitno] != mtex[unitno] || mflag[unitno] != flag )
     {
-        mtex = m_curBoundTex[0];
-        mflag = flag;
+        mtex[unitno] = m_curBoundTex[0];
+        mflag[unitno] = flag;
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, flag);
         OPENGL_CHECK_ERRORS;
     }
@@ -413,30 +458,78 @@ void OGLRender::SetTexWrapT(int unitno,GLuint flag)
 
 void OGLRender::SetTextureUFlag(TextureUVFlag dwFlag, uint32 dwTile)
 {
+
     TileUFlags[dwTile] = dwFlag;
-    if( dwTile == gRSP.curTile )    // For basic OGL, only support the 1st texel
+
+    int tex;
+    if( dwTile == gRSP.curTile )
+        tex=0;
+    else if( dwTile == ((gRSP.curTile+1)&7) )
+        tex=1;
+    else
     {
-        COGLTexture* pTexture = g_textures[gRSP.curTile].m_pCOGLTexture;
-        if( pTexture )
+        if( dwTile == ((gRSP.curTile+2)&7) )
+            tex=2;
+        else if( dwTile == ((gRSP.curTile+3)&7) )
+            tex=3;
+        else
         {
-            EnableTexUnit(0,TRUE);
-            BindTexture(pTexture->m_dwTextureName, 0);
+            TRACE2("Incorrect tile number for OGL SetTextureUFlag: cur=%d, tile=%d", gRSP.curTile, dwTile);
+            return;
         }
-        SetTexWrapS(0, OGLXUVFlagMaps[dwFlag].realFlag);
+    }
+
+    for( int textureNo=0; textureNo<8; textureNo++)
+    {
+        if( m_textureUnitMap[textureNo] == tex )
+        {
+            pglActiveTexture(GL_TEXTURE0+textureNo);
+            OPENGL_CHECK_ERRORS;
+            COGLTexture* pTexture = g_textures[(gRSP.curTile+tex)&7].m_pCOGLTexture;
+            if( pTexture ) 
+            {
+                EnableTexUnit(textureNo,TRUE);
+                BindTexture(pTexture->m_dwTextureName, textureNo);
+            }
+            SetTexWrapS(textureNo, OGLXUVFlagMaps[dwFlag].realFlag);
+        }
     }
 }
 void OGLRender::SetTextureVFlag(TextureUVFlag dwFlag, uint32 dwTile)
 {
+
     TileVFlags[dwTile] = dwFlag;
-    if( dwTile == gRSP.curTile )    // For basic OGL, only support the 1st texel
+
+    int tex;
+    if( dwTile == gRSP.curTile )
+        tex=0;
+    else if( dwTile == ((gRSP.curTile+1)&7) )
+        tex=1;
+    else
     {
-        COGLTexture* pTexture = g_textures[gRSP.curTile].m_pCOGLTexture;
-        if( pTexture ) 
+        if( dwTile == ((gRSP.curTile+2)&7) )
+            tex=2;
+        else if( dwTile == ((gRSP.curTile+3)&7) )
+            tex=3;
+        else
         {
-            EnableTexUnit(0,TRUE);
-            BindTexture(pTexture->m_dwTextureName, 0);
+            TRACE2("Incorrect tile number for OGL SetTextureVFlag: cur=%d, tile=%d", gRSP.curTile, dwTile);
+            return;
         }
-        SetTexWrapT(0, OGLXUVFlagMaps[dwFlag].realFlag);
+    }
+    
+    for( int textureNo=0; textureNo<8; textureNo++)
+    {
+        if( m_textureUnitMap[textureNo] == tex )
+        {
+            COGLTexture* pTexture = g_textures[(gRSP.curTile+tex)&7].m_pCOGLTexture;
+            if( pTexture )
+            {
+                EnableTexUnit(textureNo,TRUE);
+                BindTexture(pTexture->m_dwTextureName, textureNo);
+            }
+            SetTexWrapT(textureNo, OGLXUVFlagMaps[dwFlag].realFlag);
+        }
     }
 }
 
@@ -798,41 +891,39 @@ void OGLRender::SetAlphaTestEnable(BOOL bAlphaTestEnable)
 
 void OGLRender::BindTexture(GLuint texture, int unitno)
 {
-#ifdef DEBUGGER
-    if( unitno != 0 )
+    if( unitno < m_maxTexUnits )
     {
-        DebuggerAppendMsg("Check me, base ogl bind texture, unit no != 0");
-    }
-#endif
-    if( m_curBoundTex[0] != texture )
-    {
-        glBindTexture(GL_TEXTURE_2D,texture);
-        OPENGL_CHECK_ERRORS;
-        m_curBoundTex[0] = texture;
+        if( m_curBoundTex[unitno] != texture )
+        {
+            pglActiveTexture(GL_TEXTURE0+unitno);
+            OPENGL_CHECK_ERRORS;
+            glBindTexture(GL_TEXTURE_2D,texture);
+            OPENGL_CHECK_ERRORS;
+            m_curBoundTex[unitno] = texture;
+        }
     }
 }
 
 void OGLRender::DisBindTexture(GLuint texture, int unitno)
 {
-    //EnableTexUnit(0,FALSE);
-    //glBindTexture(GL_TEXTURE_2D, 0);  //Not to bind any texture
+    pglActiveTexture(GL_TEXTURE0+unitno);
+    OPENGL_CHECK_ERRORS;
+    glBindTexture(GL_TEXTURE_2D, 0);    //Not to bind any texture
+    OPENGL_CHECK_ERRORS;
 }
 
 void OGLRender::EnableTexUnit(int unitno, BOOL flag)
 {
-#ifdef DEBUGGER
-    if( unitno != 0 )
+    if( m_texUnitEnabled[unitno] != flag )
     {
-        DebuggerAppendMsg("Check me, in the base ogl render, unitno!=0");
-    }
-#endif
-    if( m_texUnitEnabled[0] != flag )
-    {
-        m_texUnitEnabled[0] = flag;
+        m_texUnitEnabled[unitno] = flag;
+        pglActiveTexture(GL_TEXTURE0+unitno);
+        OPENGL_CHECK_ERRORS;
         if( flag == TRUE )
             glEnable(GL_TEXTURE_2D);
         else
             glDisable(GL_TEXTURE_2D);
+        OPENGL_CHECK_ERRORS;
     }
 }
 
