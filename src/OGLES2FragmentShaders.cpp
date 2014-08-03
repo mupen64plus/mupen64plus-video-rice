@@ -132,7 +132,7 @@ COGL_FragmentProgramCombiner::COGL_FragmentProgramCombiner(CRender *pRender)
 : COGLColorCombiner4(pRender)
 {
     delete m_pDecodedMux;
-    m_pDecodedMux = new DecodedMuxForPixelShader;
+    m_pDecodedMux = new DecodedMux;
     m_bFragmentProgramIsSupported = true;
     m_AlphaRef = 0.0f;
     bAlphaTestState = false;
@@ -361,7 +361,7 @@ static void CheckFpVars(uint8 MuxVar, bool &bNeedT0, bool &bNeedT1)
 
 void COGL_FragmentProgramCombiner::GenerateProgramStr()
 {
-    DecodedMuxForPixelShader &mux = *(DecodedMuxForPixelShader*)m_pDecodedMux;
+    DecodedMux &mux = *(DecodedMux*)m_pDecodedMux;
 
     mux.splitType[0] = mux.splitType[1] = mux.splitType[2] = mux.splitType[3] = CM_FMT_TYPE_NOT_CHECKED;
     m_pDecodedMux->Reformat(false);
@@ -751,7 +751,7 @@ void COGL_FragmentProgramCombiner::InitCombinerCycle12(void)
 void COGL_FragmentProgramCombiner::DisplaySimpleMuxString(void)
 {
     COGLColorCombiner::DisplaySimpleMuxString();
-    DecodedMuxForPixelShader &mux = *(DecodedMuxForPixelShader*)m_pDecodedMux;
+    DecodedMux &mux = *(DecodedMux*)m_pDecodedMux;
     mux.Reformat(false);
     GenerateProgramStr();
     //sprintf(oglNewFP, oglFP, 

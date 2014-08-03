@@ -171,7 +171,7 @@ COGLSecondFragmentProgramCombiner::COGLSecondFragmentProgramCombiner(CRender *pR
 : COGLColorCombiner(pRender)
 {
     delete m_pDecodedMux;
-    m_pDecodedMux = new DecodedMuxForPixelShader;
+    m_pDecodedMux = new DecodedMux;
     m_currentProgram = CC_NULL_PROGRAM;
     
     m_vtxShader = createShader( GL_VERTEX_SHADER, vertexShaderStr );
@@ -1144,7 +1144,7 @@ GLuint COGLSecondFragmentProgramCombiner::GenerateCopyProgram()
 
 void COGLSecondFragmentProgramCombiner::GenerateProgramStr()
 {
-    /*DecodedMuxForPixelShader &mux = *(DecodedMuxForPixelShader*)m_pDecodedMux;
+    /*DecodedMux &mux = *(DecodedMux*)m_pDecodedMux;
 
     mux.splitType[0] = mux.splitType[1] = mux.splitType[2] = mux.splitType[3] = CM_FMT_TYPE_NOT_CHECKED;
     m_pDecodedMux->Reformat(false);
@@ -1614,7 +1614,7 @@ int COGLSecondFragmentProgramCombiner::FindCompiledShaderId()
 void COGLSecondFragmentProgramCombiner::DisplaySimpleMuxString(void)
 {
     COGLColorCombiner::DisplaySimpleMuxString();
-    DecodedMuxForPixelShader &mux = *(DecodedMuxForPixelShader*)m_pDecodedMux;
+    DecodedMux &mux = *(DecodedMux*)m_pDecodedMux;
     mux.Reformat(false);
     GenerateProgramStr();
     //sprintf(oglNewFP, oglFP, 

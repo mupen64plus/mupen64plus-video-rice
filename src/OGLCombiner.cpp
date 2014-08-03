@@ -53,8 +53,6 @@ COGLColorCombiner::COGLColorCombiner(CRender *pRender) :
     m_pOGLRender((OGLRender*)pRender)
 {
     m_pDecodedMux = new COGLDecodedMux;
-    m_pDecodedMux->m_maxConstants = 0;
-    m_pDecodedMux->m_maxTextures = 1;
 }
 
 COGLColorCombiner::~COGLColorCombiner()
@@ -65,8 +63,6 @@ COGLColorCombiner::~COGLColorCombiner()
 
 bool COGLColorCombiner::Initialize(void)
 {
-    m_supportedStages = 1;
-
     return true;
 }
 

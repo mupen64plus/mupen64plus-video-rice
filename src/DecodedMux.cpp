@@ -22,8 +22,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "Config.h"
 #include "RenderBase.h"
 
-#define ALLOW_USE_TEXTURE_FOR_CONSTANTS
-
 static const uint8 sc_Mux32[32] = 
 {
     MUX_COMBINED, MUX_TEXEL0,   MUX_TEXEL1, MUX_PRIM,
@@ -211,7 +209,7 @@ CombinerFormatType DecodedMux::GetCombinerFormatType(uint32 cycle)
     return CM_FMT_TYPE_D;
 }
 
-void DecodedMuxForPixelShader::Simplify(void)
+void DecodedMux::Simplify(void)
 {
     CheckCombineInCycle1();
     //Reformat();
@@ -226,47 +224,6 @@ void DecodedMuxForPixelShader::Simplify(void)
     splitType[2] = CM_FMT_TYPE_NOT_USED;
     splitType[3] = CM_FMT_TYPE_NOT_USED;
     mType = CM_FMT_TYPE_NOT_USED;
-
-    m_bTexel0IsUsed = isUsed(MUX_TEXEL0);
-    m_bTexel1IsUsed = isUsed(MUX_TEXEL1);
-}
-
-void DecodedMux::Simplify(void)
-{
-    CheckCombineInCycle1();
-    if( gRDP.otherMode.text_lod )
-        ConvertLODFracTo0();
-    if( g_curRomInfo.bTexture1Hack )
-    {
-        ReplaceVal(MUX_TEXEL1,MUX_TEXEL0,2);
-        ReplaceVal(MUX_TEXEL1,MUX_TEXEL0,3);
-    }
-    Reformat();
-
-#ifdef ALLOW_USE_TEXTURE_FOR_CONSTANTS
-    UseTextureForConstant();
-    for( int i=0; i<2; i++ )
-    {
-        if( m_ColorTextureFlag[i] != 0 )
-        {
-            if( m_dwShadeColorChannelFlag == m_ColorTextureFlag[i] )
-            {
-                ReplaceVal(MUX_SHADE,MUX_TEXEL0+i,N64Cycle0RGB);
-                ReplaceVal(MUX_SHADE,MUX_TEXEL0+i,N64Cycle1RGB);
-                m_dwShadeColorChannelFlag = 0;
-            }
-            if( m_dwShadeAlphaChannelFlag == m_ColorTextureFlag[i] )
-            {
-                ReplaceVal(MUX_SHADE,MUX_TEXEL0+i,N64Cycle0Alpha);
-                ReplaceVal(MUX_SHADE,MUX_TEXEL0+i,N64Cycle1Alpha);
-                ReplaceVal(MUX_SHADE|MUX_ALPHAREPLICATE,(MUX_TEXEL0+i)|MUX_ALPHAREPLICATE,N64Cycle0RGB,MUX_MASK_WITH_ALPHA);
-                ReplaceVal(MUX_SHADE|MUX_ALPHAREPLICATE,(MUX_TEXEL0+i)|MUX_ALPHAREPLICATE,N64Cycle1RGB,MUX_MASK_WITH_ALPHA);
-                m_dwShadeAlphaChannelFlag = 0;
-            }
-        }
-    }
-    Reformat();
-#endif
 
     m_bTexel0IsUsed = isUsed(MUX_TEXEL0);
     m_bTexel1IsUsed = isUsed(MUX_TEXEL1);
@@ -625,24 +582,6 @@ void DecodedMux::Display(bool simplified,FILE *fp)
     }
 }
 
-int DecodedMux::HowManyConstFactors()
-{
-    int n=0;
-    if( isUsed(MUX_PRIM) ) n++;
-    if( isUsed(MUX_ENV) ) n++;
-    if( isUsed(MUX_LODFRAC) ) n++;
-    if( isUsed(MUX_PRIMLODFRAC) ) n++;
-    return n;
-}
-
-int DecodedMux::HowManyTextures()
-{
-    int n=0;
-    if( isUsed(MUX_TEXEL0) ) n++;
-    if( isUsed(MUX_TEXEL1) ) n++;
-    return n;
-}
-
 void DecodedMux::ReplaceVal(uint8 val1, uint8 val2, int cycle, uint8 mask)
 {
     int start = 0;
@@ -661,56 +600,6 @@ void DecodedMux::ReplaceVal(uint8 val1, uint8 val2, int cycle, uint8 mask)
         {
             pmux[i] &= (~mask);
             pmux[i] |= val2;
-        }
-    }
-}
-
-void DecodedMux::UseTextureForConstant(void)
-{
-    int numofconst = HowManyConstFactors();
-    int numOftex = HowManyTextures();
-
-    if( numofconst > m_maxConstants && numOftex < m_maxTextures )
-    {
-        // We can use a texture for a constant
-        for( int i=0; i<2 && numofconst > m_maxConstants ; i++ )
-        {
-            if( isUsed(MUX_TEXEL0+i) )
-            {
-                continue;   // can not use this texture
-            }
-
-            if( isUsed(MUX_PRIM) )
-            {
-                ReplaceVal(MUX_PRIM, MUX_TEXEL0+i);
-                m_ColorTextureFlag[i] = MUX_PRIM;
-                numofconst--;
-                continue;
-            }
-
-            if( isUsed(MUX_ENV) )
-            {
-                ReplaceVal(MUX_ENV, MUX_TEXEL0+i);
-                m_ColorTextureFlag[i] = MUX_ENV;
-                numofconst--;
-                continue;
-            }
-
-            if( isUsed(MUX_LODFRAC) )
-            {
-                ReplaceVal(MUX_LODFRAC, MUX_TEXEL0+i);
-                m_ColorTextureFlag[i] = MUX_LODFRAC;
-                numofconst--;
-                continue;
-            }
-
-            if( isUsed(MUX_PRIMLODFRAC) )
-            {
-                ReplaceVal(MUX_PRIMLODFRAC, MUX_TEXEL0+i);
-                m_ColorTextureFlag[i] = MUX_PRIMLODFRAC;
-                numofconst--;
-                continue;
-            }
         }
     }
 }
@@ -876,86 +765,6 @@ void DecodedMux::CheckCombineInCycle1(void)
         ReplaceVal(MUX_COMBALPHA, MUX_SHADE, 1);
     }
 }
-
-void DecodedMux::SplitComplexStages()
-{
-    for( int i=0; i<2; i++) // Color channel and alpha channel
-    {
-        if( splitType[i+2] != CM_FMT_TYPE_NOT_USED )    
-            continue;
-
-        N64CombinerType &m = m_n64Combiners[i];
-        N64CombinerType &m2 = m_n64Combiners[i+2];
-        
-        switch( splitType[i] )
-        {
-        case CM_FMT_TYPE_A_MOD_C_ADD_D:     // = A*C+D      can mapped to MULTIPLYADD(arg1,arg2,arg0)
-            m2.a = m.d;
-            m2.d = MUX_COMBINED;
-            m2.c = MUX_1;
-            m2.b = 0;
-            splitType[i+2] = CM_FMT_TYPE_A_ADD_D;
-            m.d = MUX_0;
-            splitType[i] = CM_FMT_TYPE_A_MOD_C;
-            break;
-        case CM_FMT_TYPE_A_SUB_B_ADD_D:     // = A-B+D      can not map very well in 1 stage
-            m2.a = m.d;
-            m2.d = MUX_COMBINED;
-            m2.c = MUX_1;
-            m2.b=0;
-            splitType[i+2] = CM_FMT_TYPE_A_ADD_D;
-            m.d = MUX_0;
-            splitType[i] = CM_FMT_TYPE_A_SUB_B;
-            break;
-        case CM_FMT_TYPE_A_SUB_B_MOD_C:     // = (A-B)*C    can not map very well in 1 stage
-            m2.a = m.c;
-            m2.c = MUX_COMBINED;
-            m2.d = m2.b=0;
-            splitType[i+2] = CM_FMT_TYPE_A_MOD_C;
-            m.c = MUX_1;
-            splitType[i] = CM_FMT_TYPE_A_SUB_B;
-            break;
-        case CM_FMT_TYPE_A_ADD_B_MOD_C:     // = (A+B)*C    can not map very well in 1 stage
-            m2.a = m.c;
-            m2.c = MUX_COMBINED;
-            m2.d = m2.b = 0;
-            splitType[i+2] = CM_FMT_TYPE_A_MOD_C;
-            m.c = MUX_1;
-            m.d = m.b;
-            m.b = MUX_0;
-            splitType[i] = CM_FMT_TYPE_A_ADD_D;
-            break;
-        case CM_FMT_TYPE_A_B_C_D:           // = (A-B)*C+D  can not map very well in 1 stage
-            m2.a = m.d;
-            m2.d = MUX_COMBINED;
-            m2.c = MUX_1;
-            m2.b = 0;
-            splitType[i+2] = CM_FMT_TYPE_A_ADD_D;
-            m.d = MUX_0;
-            splitType[i] = CM_FMT_TYPE_A_SUB_B_MOD_C;
-            break;
-        case CM_FMT_TYPE_A_B_C_A:           // = (A-B)*C+A  can not map very well in 1 stage
-            m2.a = m.d;
-            m2.d = MUX_COMBINED;
-            m2.c = MUX_1;
-            m2.b = 0;
-            splitType[i+2] = CM_FMT_TYPE_A_ADD_D;
-            m.d = MUX_0;
-            splitType[i] = CM_FMT_TYPE_A_SUB_B_MOD_C;
-            break;
-         default:
-           break;
-        }
-    }
-}
-
-
-void DecodedMux::ConvertLODFracTo0()
-{
-    ReplaceVal(MUX_LODFRAC,MUX_0);
-    ReplaceVal(MUX_PRIMLODFRAC,MUX_0);
-}
-
 
 void DecodedMux::Hack(void)
 {

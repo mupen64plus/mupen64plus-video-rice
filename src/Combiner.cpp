@@ -167,8 +167,6 @@ void CColorCombiner::UpdateCombiner(uint32 dwMux0, uint32 dwMux1)
             m_decodedMux.Hack();
 
             m_decodedMux.Simplify();
-            if( m_supportedStages>1)    
-                m_decodedMux.SplitComplexStages();
             
             m_DecodedMuxList.add(m_decodedMux.m_u64Mux, *m_pDecodedMux);
 #ifdef DEBUGGER

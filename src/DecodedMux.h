@@ -84,11 +84,6 @@ public:
     bool m_bTexel0IsUsed;
     bool m_bTexel1IsUsed;
 
-    int  m_maxConstants;    // OpenGL 1.1 does not really support a constant color in combiner
-                            // must use shade for constants;
-    int  m_maxTextures;     // 1 or 2
-
-
     void Decode(uint32 dwMux0, uint32 dwMux1);
     virtual void Hack(void);
     bool isUsed(uint8 fac, uint8 mask=MUX_MASK);
@@ -101,12 +96,6 @@ public:
     virtual void Simplify(void);
     virtual void Reformat(bool do_complement = true);
     
-    virtual void UseTextureForConstant(void);
-
-    int HowManyConstFactors();
-    int HowManyTextures();
-    virtual void SplitComplexStages();  // Only used if the combiner supports more than 1 stages
-    void ConvertLODFracTo0();
     void ReplaceVal(uint8 val1, uint8 val2, int cycle= -1, uint8 mask = MUX_MASK);
 
 #ifdef DEBUGGER
@@ -141,8 +130,6 @@ public:
         m_bTexel0IsUsed = mux.m_bTexel0IsUsed;
         m_bTexel1IsUsed = mux.m_bTexel1IsUsed;
 
-        m_maxConstants = mux.m_maxConstants;
-        m_maxTextures = mux.m_maxTextures;
         m_ColorTextureFlag[0] = mux.m_ColorTextureFlag[0];
         m_ColorTextureFlag[1] = mux.m_ColorTextureFlag[1];
 
@@ -157,18 +144,9 @@ public:
         {
             splitType[i] = CM_FMT_TYPE_NOT_CHECKED;
         }
-        m_maxConstants = 1;
-        m_maxTextures = 2;
     }
     
     virtual ~DecodedMux() {}
-};
-
-class DecodedMuxForPixelShader : public DecodedMux
-{
-public:
-    virtual void Simplify(void);
-    void SplitComplexStages() {};
 };
 
 #endif
