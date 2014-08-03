@@ -984,16 +984,6 @@ void OGLRender::ApplyScissorWithClipRatio(bool force)
     status.curScissor = RSP_SCISSOR;
 }
 
-void OGLRender::SetFogMinMax(float fMin, float fMax)
-{
-#if SDL_VIDEO_OPENGL
-    glFogf(GL_FOG_START, gRSPfFogMin); // Fog Start Depth
-    OPENGL_CHECK_ERRORS;
-    glFogf(GL_FOG_END, gRSPfFogMax); // Fog End Depth
-    OPENGL_CHECK_ERRORS;
-#endif
-}
-
 // TODO: Remove this function as its now handled by the Color Combiner
 void OGLRender::TurnFogOnOff(bool flag)
 {
