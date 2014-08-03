@@ -149,8 +149,6 @@ void DecodedMux::Decode(uint32 dwMux0, uint32 dwMux1)
     cA1    = sc_Mux8[cA1];
     dA1    = sc_Mux8[dA1];
 
-    m_bShadeIsUsed[1] = isUsedInAlphaChannel(MUX_SHADE);
-    m_bShadeIsUsed[0] = isUsedInColorChannel(MUX_SHADE);
     m_bTexel0IsUsed = isUsed(MUX_TEXEL0);
     m_bTexel1IsUsed = isUsed(MUX_TEXEL1);
 
@@ -175,42 +173,6 @@ bool DecodedMux::isUsed(uint8 val, uint8 mask)
 
     return isUsed;
 }
-
-bool DecodedMux::isUsedInAlphaChannel(uint8 val, uint8 mask)
-{
-    uint8* pmux = m_bytes;
-    bool isUsed = false;
-    for( int i=0; i<16; i++ )
-    {
-        if( (i/4)%2 == 0 )
-            continue;   //Don't test color channel
-
-        if( (pmux[i]&mask) == (val&mask) )
-        {
-            isUsed = true;
-            break;
-        }
-    }
-
-    return isUsed;
-}
-
-bool DecodedMux::isUsedInColorChannel(uint8 val, uint8 mask)
-{
-    uint8* pmux = m_bytes;
-    bool isUsed = false;
-    for( int i=0; i<16; i++ )
-    {
-        if( (i/4)%2 == 0 && (pmux[i]&mask) == (val&mask) )
-        {
-            isUsed = true;
-            break;
-        }
-    }
-
-    return isUsed;
-}
-
 
 bool DecodedMux::isUsedInCycle(uint8 val, int cycle, CombineChannel channel, uint8 mask)
 {
