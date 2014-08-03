@@ -454,7 +454,7 @@ bool OGLRender::RenderTexRect()
     glDisable(GL_CULL_FACE);
     OPENGL_CHECK_ERRORS;
 
-    GLfloat colour[] = {
+    GLubyte colour[] = {
             g_texRectTVtx[3].r, g_texRectTVtx[3].g, g_texRectTVtx[3].b, g_texRectTVtx[3].a,
             g_texRectTVtx[2].r, g_texRectTVtx[2].g, g_texRectTVtx[2].b, g_texRectTVtx[2].a,
             g_texRectTVtx[1].r, g_texRectTVtx[1].g, g_texRectTVtx[1].b, g_texRectTVtx[1].a,
@@ -506,10 +506,10 @@ bool OGLRender::RenderTexRect()
 
 bool OGLRender::RenderFillRect(uint32 dwColor, float depth)
 {
-    float a = (dwColor>>24)/255.0f;
-    float r = ((dwColor>>16)&0xFF)/255.0f;
-    float g = ((dwColor>>8)&0xFF)/255.0f;
-    float b = (dwColor&0xFF)/255.0f;
+    uint8 a = (dwColor>>24);
+    uint8 r = ((dwColor>>16)&0xFF);
+    uint8 g = ((dwColor>>8)&0xFF);
+    uint8 b = (dwColor&0xFF);
     glViewportWrapper(0, windowSetting.statusBarHeightToUse, windowSetting.uDisplayWidth, windowSetting.uDisplayHeight);
     OPENGL_CHECK_ERRORS;
 
@@ -517,7 +517,7 @@ bool OGLRender::RenderFillRect(uint32 dwColor, float depth)
     glDisable(GL_CULL_FACE);
     OPENGL_CHECK_ERRORS;
 
-    GLfloat colour[] = {
+    GLubyte colour[] = {
             r,g,b,a,
             r,g,b,a,
             r,g,b,a,
@@ -532,7 +532,7 @@ bool OGLRender::RenderFillRect(uint32 dwColor, float depth)
             -inv + m_fillRectVtx[0].x / w, inv - m_fillRectVtx[0].y / h, depth, 1
     };
 
-    glVertexAttribPointer(VS_COLOR, 4, GL_FLOAT,GL_FALSE, 0, &colour );
+    glVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_FALSE, 0, &colour );
     glVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,0,&vertices);
     glDisableVertexAttribArray(VS_TEXCOORD0);
     glDisableVertexAttribArray(VS_TEXCOORD1);
@@ -654,18 +654,14 @@ void OGLRender::DrawSimple2DTexture(float x0, float y0, float x1, float y1, floa
     glViewportWrapper(0, windowSetting.statusBarHeightToUse, windowSetting.uDisplayWidth, windowSetting.uDisplayHeight);
     OPENGL_CHECK_ERRORS;
 
-    float a = (g_texRectTVtx[0].dcDiffuse >>24)/255.0f;
-    float r = ((g_texRectTVtx[0].dcDiffuse>>16)&0xFF)/255.0f;
-    float g = ((g_texRectTVtx[0].dcDiffuse>>8)&0xFF)/255.0f;
-    float b = (g_texRectTVtx[0].dcDiffuse&0xFF)/255.0f;
+    GLubyte colour[] = {
+        g_texRectTVtx[0].r, g_texRectTVtx[0].g, g_texRectTVtx[0].b, g_texRectTVtx[0].a,
+        g_texRectTVtx[1].r, g_texRectTVtx[1].g, g_texRectTVtx[1].b, g_texRectTVtx[1].a,
+        g_texRectTVtx[2].r, g_texRectTVtx[2].g, g_texRectTVtx[2].b, g_texRectTVtx[2].a,
 
-    GLfloat colour[] = {
-            r,g,b,a,
-            r,g,b,a,
-            r,g,b,a,
-            r,g,b,a,
-            r,g,b,a,
-            r,g,b,a
+        g_texRectTVtx[0].r, g_texRectTVtx[0].g, g_texRectTVtx[0].b, g_texRectTVtx[0].a,
+        g_texRectTVtx[2].r, g_texRectTVtx[2].g, g_texRectTVtx[2].b, g_texRectTVtx[2].a,
+        g_texRectTVtx[3].r, g_texRectTVtx[3].g, g_texRectTVtx[3].b, g_texRectTVtx[3].a,
     };
 
     GLfloat tex[] = {
@@ -700,7 +696,7 @@ void OGLRender::DrawSimple2DTexture(float x0, float y0, float x1, float y1, floa
             -inv + g_texRectTVtx[3].x/ w, inv - g_texRectTVtx[3].y/ h, -g_texRectTVtx[3].z,1
     };
 
-    glVertexAttribPointer(VS_COLOR, 4, GL_FLOAT,GL_FALSE, 0, &colour );
+    glVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_FALSE, 0, &colour );
     glVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,0,&vertices);
     glVertexAttribPointer(VS_TEXCOORD0,2,GL_FLOAT,GL_FALSE, 0, &tex);
     glVertexAttribPointer(VS_TEXCOORD1,2,GL_FLOAT,GL_FALSE, 0, &tex2);
@@ -726,12 +722,12 @@ void OGLRender::DrawSimpleRect(int nX0, int nY0, int nX1, int nY1, uint32 dwColo
     glDisable(GL_CULL_FACE);
     OPENGL_CHECK_ERRORS;
 
-    float a = (dwColor>>24)/255.0f;
-    float r = ((dwColor>>16)&0xFF)/255.0f;
-    float g = ((dwColor>>8)&0xFF)/255.0f;
-    float b = (dwColor&0xFF)/255.0f;
+    uint8 a = (dwColor>>24);
+    uint8 r = ((dwColor>>16)&0xFF);
+    uint8 g = ((dwColor>>8)&0xFF);
+    uint8 b = (dwColor&0xFF);
     
-    GLfloat colour[] = {
+    GLubyte colour[] = {
             r,g,b,a,
             r,g,b,a,
             r,g,b,a,
@@ -745,7 +741,7 @@ void OGLRender::DrawSimpleRect(int nX0, int nY0, int nX1, int nY1, uint32 dwColo
             -inv + m_simpleRectVtx[0].x / w, inv - m_simpleRectVtx[0].y / h, -depth, 1
     };
 
-    glVertexAttribPointer(VS_COLOR, 4, GL_FLOAT,GL_FALSE, 0, &colour );
+    glVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_FALSE, 0, &colour );
     glVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,0,&vertices);
     glDisableVertexAttribArray(VS_TEXCOORD0);
     glDisableVertexAttribArray(VS_TEXCOORD1);
