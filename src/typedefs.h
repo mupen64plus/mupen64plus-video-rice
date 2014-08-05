@@ -273,14 +273,6 @@ typedef struct
 
 typedef struct
 {
-    char na;
-    char nz;    // b
-    char ny;    //g
-    char nx;    //r
-}NormalStruct;
-
-typedef struct
-{
     short y;
     short x;
     
@@ -297,7 +289,12 @@ typedef struct
             uint8 g;
             uint8 r;
         } rgba;
-        NormalStruct norma;
+        struct {
+            char na;
+            char nz;    // b
+            char ny;    //g
+            char nx;    //r
+        } norma;
     };
 } FiddledVtx;
 

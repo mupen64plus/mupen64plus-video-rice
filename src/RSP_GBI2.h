@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 void RSP_GBI2_Vtx(Gfx *gfx)
 {
     uint32 addr = RSPSegmentAddr((gfx->gbi2vtx.addr));
-    int vend    = gfx->gbi2vtx.vend/2;
+    int vend    = gfx->gbi2vtx.vend;
     int n       = gfx->gbi2vtx.n;
     int v0      = vend - n;
 
