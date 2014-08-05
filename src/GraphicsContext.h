@@ -53,14 +53,7 @@ public:
     virtual void UpdateFrame(bool swaponly=false) = 0;
     virtual int ToggleFullscreen()=0;       // return 0 as the result is windowed
 
-    static void InitWindowInfo();
-    static void InitDeviceParameters();
-
 protected:
-    static  uint32      m_dwWindowStyle;       // Saved window style for mode switches
-    static  uint32      m_dwWindowExStyle;     // Saved window style for mode switches
-    static  uint32      m_dwStatusWindowStyle; // Saved window style for mode switches
-
     static  bool        m_deviceCapsIsInitialized;
 
     bool                m_bReady;

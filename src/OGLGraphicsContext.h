@@ -38,7 +38,6 @@ public:
     int ToggleFullscreen();     // return 0 as the result is windowed
 
     bool IsExtensionSupported(const char* pExtName);
-    static void InitDeviceParameters();
 
     //Get methods (TODO, remove all friend class and use get methods instead)
     bool IsSupportAnisotropicFiltering();

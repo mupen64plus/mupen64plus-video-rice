@@ -442,11 +442,6 @@ int COGLGraphicsContext::ToggleFullscreen()
     return m_bWindowed?0:1;
 }
 
-// This is a static function, will be called when the plugin DLL is initialized
-void COGLGraphicsContext::InitDeviceParameters()
-{
-}
-
 // Get methods
 bool COGLGraphicsContext::IsSupportAnisotropicFiltering()
 {
