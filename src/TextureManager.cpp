@@ -563,8 +563,6 @@ TxtrCacheEntry * CTextureManager::GetTexture(TxtrInfo * pgti, bool fromTMEM, boo
     if( g_curRomInfo.bDisableTextureCRC )
         doCRCCheck = false;
 
-    gRDP.texturesAreReloaded = true;
-
     dwAsmCRC = 0;
     uint32 dwPalCRC = 0;
 
@@ -1369,12 +1367,10 @@ TxtrCacheEntry * CTextureManager::GetPrimColorTexture(uint32 color)
         m_PrimColorTextureEntry.ti.WidthToCreate = 4;
         m_PrimColorTextureEntry.ti.HeightToCreate = 4;
         updateColorTexture(m_PrimColorTextureEntry.pTexture,color);
-        gRDP.texturesAreReloaded = true;
     }
     else if( mcolor != color )
     {
         updateColorTexture(m_PrimColorTextureEntry.pTexture,color);
-        gRDP.texturesAreReloaded = true;
     }
 
     mcolor = color;
@@ -1388,14 +1384,12 @@ TxtrCacheEntry * CTextureManager::GetEnvColorTexture(uint32 color)
         m_EnvColorTextureEntry.pTexture = CDeviceBuilder::GetBuilder()->CreateTexture(4, 4);
         m_EnvColorTextureEntry.ti.WidthToCreate = 4;
         m_EnvColorTextureEntry.ti.HeightToCreate = 4;
-        gRDP.texturesAreReloaded = true;
 
         updateColorTexture(m_EnvColorTextureEntry.pTexture,color);
     }
     else if( mcolor != color )
     {
         updateColorTexture(m_EnvColorTextureEntry.pTexture,color);
-        gRDP.texturesAreReloaded = true;
     }
 
     mcolor = color;
@@ -1414,7 +1408,6 @@ TxtrCacheEntry * CTextureManager::GetLODFracTexture(uint8 fac)
         color |= factor << 8;
         color |= color << 16;
         updateColorTexture(m_LODFracTextureEntry.pTexture,color);
-        gRDP.texturesAreReloaded = true;
     }
     else if( mfac != fac )
     {
@@ -1423,7 +1416,6 @@ TxtrCacheEntry * CTextureManager::GetLODFracTexture(uint8 fac)
         color |= factor << 8;
         color |= color << 16;
         updateColorTexture(m_LODFracTextureEntry.pTexture,color);
-        gRDP.texturesAreReloaded = true;
     }
 
     mfac = fac;
@@ -1443,7 +1435,6 @@ TxtrCacheEntry * CTextureManager::GetPrimLODFracTexture(uint8 fac)
         color |= factor << 8;
         color |= color << 16;
         updateColorTexture(m_PrimLODFracTextureEntry.pTexture,color);
-        gRDP.texturesAreReloaded = true;
     }
     else if( mfac != fac )
     {
@@ -1452,7 +1443,6 @@ TxtrCacheEntry * CTextureManager::GetPrimLODFracTexture(uint8 fac)
         color |= factor << 8;
         color |= color << 16;
         updateColorTexture(m_PrimLODFracTextureEntry.pTexture,color);
-        gRDP.texturesAreReloaded = true;
     }
 
     mfac = fac;

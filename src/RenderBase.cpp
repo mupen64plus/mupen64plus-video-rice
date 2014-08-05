@@ -717,9 +717,7 @@ void InitRenderBase()
     gRSP.bNearClip  = false;
     gRSP.bRejectVtx = false;
 
-    gRDP.texturesAreReloaded = false;
     gRDP.textureIsChanged = false;
-    gRDP.colorsAreReloaded = false;
 
     memset(&gRDP.otherMode,0,sizeof(RDP_OtherMode));
     memset(&gRDP.tiles,0,sizeof(Tile)*8);

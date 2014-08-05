@@ -40,7 +40,6 @@ protected:
 
 private:
     virtual int ParseDecodedMux();
-    virtual void GenerateProgramStr();
     int FindCompiledMux();
     virtual void GenerateCombinerSetting(int index);
     virtual void GenerateCombinerSettingConstants(int index);
@@ -64,45 +63,8 @@ private:
 #define CC_NULL_SHADER       0 // Invalid OpenGL shader
 #define CC_INACTIVE_UNIFORM -1 // Invalid program uniform
 
-typedef struct {
-    uint32 combineMode1;
-    uint32 combineMode2;
-    unsigned int cycle_type;    // 1/2/fill/copy
-    unsigned int key_enabled:1;   // Chroma key
-    uint16       blender;
-    unsigned int alpha_compare; // None/Threshold/Dither
-    unsigned int aa_en:1;
-    unsigned int z_cmp:1;
-    unsigned int z_upd:1;
-    unsigned int alpha_cvg_sel:1;
-    unsigned int cvg_x_alpha:1;
-    unsigned int fog_enabled:1;
-    unsigned int fog_in_blender:1;
-    //unsigned int clr_on_cvg;
-    //unsigned int cvg_dst;
-    GLuint program;
-    // Progam uniform locations
-    GLint fogMaxMinLoc;
-    GLint blendColorLoc;
-    GLint primColorLoc;
-    GLint envColorLoc;
-    GLint chromaKeyCenterLoc;
-    GLint chromaKeyScaleLoc;
-    GLint chromaKeyWidthLoc;
-    GLint lodFracLoc;
-    GLint primLodFracLoc;
-    GLint k5Loc;
-    GLint k4Loc;
-    GLint tex0Loc;
-    GLint tex1Loc;
-    GLint fogColorLoc;
-} OGLSecondShaderCombinerSaveType;
-
 class COGLSecondFragmentProgramCombiner : public COGLColorCombiner
 {
-public:
-    bool Initialize(void);
-
 protected:
     friend class OGLDeviceBuilder;
 
@@ -114,25 +76,58 @@ protected:
     COGLSecondFragmentProgramCombiner(CRender *pRender);
     ~COGLSecondFragmentProgramCombiner();
 
-    std::vector<OGLSecondShaderCombinerSaveType> m_vGeneratedPrograms;
-    int m_currentShaderId;
-    GLuint m_currentProgram;
-
 private:
+
+    typedef struct {
+        uint32 combineMode1;
+        uint32 combineMode2;
+        unsigned int cycle_type;    // 1/2/fill/copy
+        unsigned int key_enabled:1;   // Chroma key
+        uint16       blender;
+        unsigned int alpha_compare; // None/Threshold/Dither
+        unsigned int aa_en:1;
+        //unsigned int z_cmp:1;
+        //unsigned int z_upd:1;
+        unsigned int alpha_cvg_sel:1;
+        unsigned int cvg_x_alpha:1;
+        unsigned int fog_enabled:1;
+        unsigned int fog_in_blender:1;
+        //unsigned int clr_on_cvg;
+        //unsigned int cvg_dst;
+        GLuint program;
+        // Progam uniform locations
+        GLint fogMaxMinLoc;
+        GLint blendColorLoc;
+        GLint primColorLoc;
+        GLint envColorLoc;
+        GLint chromaKeyCenterLoc;
+        GLint chromaKeyScaleLoc;
+        GLint chromaKeyWidthLoc;
+        GLint lodFracLoc;
+        GLint primLodFracLoc;
+        GLint k5Loc;
+        GLint k4Loc;
+        GLint tex0Loc;
+        GLint tex1Loc;
+        GLint fogColorLoc;
+    } ShaderSaveType;
+
     virtual int ParseDecodedMux();
     void genFragmentBlenderStr( char *newFrgStr );
     virtual GLuint GenerateCycle12Program();
     virtual GLuint GenerateCopyProgram();
-    virtual void GenerateProgramStr();
-    //int FindCompiledMux();
     virtual void GenerateCombinerSetting();
     virtual void GenerateCombinerSettingConstants( int shaderId );
-    void StoreUniformLocations( OGLSecondShaderCombinerSaveType &saveType );
+    void StoreUniformLocations( ShaderSaveType &saveType );
     int FindCompiledShaderId();
-    
-    GLuint m_vtxShader;   // Generate vertex shader once as it never change
-    GLuint m_fillProgram; // Generate fill program once as it never change
-    GLint  m_fillColorLoc;
+    void useProgram( const GLuint &program );
+
+    GLuint m_vtxShader;    // Generate vertex shader once as it never change
+    GLuint m_fillProgram;  // Generate fill program once as it never change
+    GLint  m_fillColorLoc; // fill color uniform's program location
+
+    std::vector<ShaderSaveType> m_generatedPrograms;
+    GLuint m_currentProgram; // Used to avoid multiple glUseProgram calls
 
 #ifdef DEBUGGER
     void DisplaySimpleMuxString(void);

@@ -1623,7 +1623,6 @@ void DLParser_SetFogColor(Gfx *gfx)
 void DLParser_SetBlendColor(Gfx *gfx)
 {
     DP_Timing(DLParser_SetBlendColor);
-    gRDP.colorsAreReloaded = true;
     gRDP.blendColor      = gfx->setcolor.color; 
     gRDP.fvBlendColor[0] = gfx->setcolor.r/255.0f;
     gRDP.fvBlendColor[1] = gfx->setcolor.g/255.0f;
@@ -1635,8 +1634,7 @@ void DLParser_SetBlendColor(Gfx *gfx)
 void DLParser_SetPrimColor(Gfx *gfx)
 {
     DP_Timing(DLParser_SetPrimColor);
-    gRDP.colorsAreReloaded = true;
-    
+
     gRDP.primitiveColor    = gfx->setcolor.color;
     gRDP.primLODMin        = gfx->setcolor.prim_min_level;
     gRDP.primLODFrac       = gfx->setcolor.prim_level;
@@ -1654,7 +1652,6 @@ void DLParser_SetPrimColor(Gfx *gfx)
 void DLParser_SetEnvColor(Gfx *gfx)
 {
     DP_Timing(DLParser_SetEnvColor);
-    gRDP.colorsAreReloaded = true;
     gRDP.envColor      = gfx->setcolor.color; 
     gRDP.fvEnvColor[0] = gfx->setcolor.r/255.0f;
     gRDP.fvEnvColor[1] = gfx->setcolor.g/255.0f;

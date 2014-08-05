@@ -233,8 +233,6 @@ typedef struct {
     ScissorType scissor;
 
     bool    textureIsChanged;
-    bool    texturesAreReloaded;
-    bool    colorsAreReloaded;
 
 } RDP_Options;
 
