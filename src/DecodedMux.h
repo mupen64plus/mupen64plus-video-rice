@@ -81,12 +81,8 @@ public:
                                     // when there are more constant colors are used than    
                                     // the system can support
 
-    bool m_bTexel0IsUsed;
-    bool m_bTexel1IsUsed;
-
     void Decode(uint32 dwMux0, uint32 dwMux1);
     virtual void Hack(void);
-    bool isUsed(uint8 fac, uint8 mask=MUX_MASK);
     bool isUsedInCycle(uint8 fac, int cycle, CombineChannel channel, uint8 mask=MUX_MASK);
     bool isUsedInCycle(uint8 fac, int cycle, uint8 mask=MUX_MASK);
     CombinerFormatType GetCombinerFormatType(uint32 cycle);
@@ -126,9 +122,6 @@ public:
 
         m_dwShadeColorChannelFlag = mux.m_dwShadeColorChannelFlag;
         m_dwShadeAlphaChannelFlag = mux.m_dwShadeAlphaChannelFlag;
-
-        m_bTexel0IsUsed = mux.m_bTexel0IsUsed;
-        m_bTexel1IsUsed = mux.m_bTexel1IsUsed;
 
         m_ColorTextureFlag[0] = mux.m_ColorTextureFlag[0];
         m_ColorTextureFlag[1] = mux.m_ColorTextureFlag[1];

@@ -71,6 +71,25 @@ void swap(uint8 &a, uint8 &b)
 
 //========================================================================
 
+const CColorCombiner::SourceIndex CColorCombiner::color_indices[8] = {
+                                                    CS_COLOR_A0 ,
+                                                    CS_COLOR_B0 ,
+                                                    CS_COLOR_C0 ,
+                                                    CS_COLOR_D0 ,
+                                                    CS_COLOR_A1 ,
+                                                    CS_COLOR_B1 ,
+                                                    CS_COLOR_C1 ,
+                                                    CS_COLOR_D1 };
+const CColorCombiner::SourceIndex CColorCombiner::alpha_indices[8] = {
+                                                    CS_ALPHA_A0 ,
+                                                    CS_ALPHA_B0 ,
+                                                    CS_ALPHA_C0 ,
+                                                    CS_ALPHA_D0 ,
+                                                    CS_ALPHA_A1 ,
+                                                    CS_ALPHA_B1 ,
+                                                    CS_ALPHA_C1 ,
+                                                    CS_ALPHA_D1 };
+
 void CColorCombiner::InitCombinerMode(void)
 {
 #ifdef DEBUGGER
@@ -177,10 +196,6 @@ void CColorCombiner::UpdateCombiner(uint32 dwMux0, uint32 dwMux1)
             }
 #endif
         }
-
-        m_bTex0Enabled = m_decodedMux.m_bTexel0IsUsed;
-        m_bTex1Enabled = m_decodedMux.m_bTexel1IsUsed;
-        m_bTexelsEnable = m_bTex0Enabled||m_bTex1Enabled;
     }
 }
 
@@ -190,44 +205,67 @@ void CColorCombiner::UpdateCombiner(uint32 dwMux0, uint32 dwMux1)
 // alpha1 = (a1 - b1) * c1 + d1
 void CColorCombiner::SetCombineMode(uint32 dwMux0, uint32 dwMux1)
 {
-    uint8 A0 = (uint8)((dwMux0 >> 20) & 0xF);
-    uint8 B0 = (uint8)((dwMux1 >> 28) & 0xF);
-    uint8 C0 = (uint8)((dwMux0 >> 15) & 0x1F);
-    uint8 D0 = (uint8)((dwMux1 >> 15) & 0x7);
-    uint8 a0 = (uint8)((dwMux0 >> 12) & 0x7);
-    uint8 b0 = (uint8)((dwMux1 >> 12) & 0x7);
-    uint8 c0 = (uint8)((dwMux0 >> 9)  & 0x7);
-    uint8 d0 = (uint8)((dwMux1 >> 9)  & 0x7);
-    
-    uint8 A1 = (uint8)((dwMux0 >> 5)  & 0xF);
-    uint8 B1 = (uint8)((dwMux1 >> 24) & 0xF);
-    uint8 C1 = (uint8)((dwMux0 >> 0)  & 0x1F);
-    uint8 D1 = (uint8)((dwMux1 >> 6)  & 0x7);
-    uint8 a1 = (uint8)((dwMux1 >> 21) & 0x7);
-    uint8 b1 = (uint8)((dwMux1 >> 3)  & 0x7);
-    uint8 c1 = (uint8)((dwMux1 >> 18) & 0x7);
-    uint8 d1 = (uint8)((dwMux1 >> 0)  & 0x7);
-    
-    // TODO use an array is not very nice, we should find something better.
-    m_sources[0] = A0;
-    m_sources[1] = B0;
-    m_sources[2] = C0;
-    m_sources[3] = D0;
-    m_sources[4] = a0;
-    m_sources[5] = b0;
-    m_sources[6] = c0;
-    m_sources[7] = d0;
-    m_sources[8] = A1;
-    m_sources[9] = B1;
-    m_sources[10] = C1;
-    m_sources[11] = D1;
-    m_sources[12] = a1;
-    m_sources[13] = b1;
-    m_sources[14] = c1;
-    m_sources[15] = d1;
+    // Cycle 1
+    m_sources[CS_COLOR_A0] = (uint8)((dwMux0 >> 20) & 0xF);
+    m_sources[CS_COLOR_B0] = (uint8)((dwMux1 >> 28) & 0xF);
+    m_sources[CS_COLOR_C0] = (uint8)((dwMux0 >> 15) & 0x1F);
+    m_sources[CS_COLOR_D0] = (uint8)((dwMux1 >> 15) & 0x7);
+    m_sources[CS_ALPHA_A0] = (uint8)((dwMux0 >> 12) & 0x7);
+    m_sources[CS_ALPHA_B0] = (uint8)((dwMux1 >> 12) & 0x7);
+    m_sources[CS_ALPHA_C0] = (uint8)((dwMux0 >> 9)  & 0x7);
+    m_sources[CS_ALPHA_D0] = (uint8)((dwMux1 >> 9)  & 0x7);
+    //Cycle 2
+    m_sources[CS_COLOR_A1] = (uint8)((dwMux0 >> 5)  & 0xF);
+    m_sources[CS_COLOR_B1] = (uint8)((dwMux1 >> 24) & 0xF);
+    m_sources[CS_COLOR_C1] = (uint8)((dwMux0 >> 0)  & 0x1F);
+    m_sources[CS_COLOR_D1] = (uint8)((dwMux1 >> 6)  & 0x7);
+    m_sources[CS_ALPHA_A1] = (uint8)((dwMux1 >> 21) & 0x7);
+    m_sources[CS_ALPHA_B1] = (uint8)((dwMux1 >> 3)  & 0x7);
+    m_sources[CS_ALPHA_C1] = (uint8)((dwMux1 >> 18) & 0x7);
+    m_sources[CS_ALPHA_D1] = (uint8)((dwMux1 >> 0)  & 0x7);
 
     m_combineMode1 = dwMux0;
     m_combineMode2 = dwMux1;
+
+    // Look what is used in this combine mode.
+    // TODO: We should be able to remove this part in the futur and let the
+    // plugin reproduce the N64 behavior to keep the code clean and avoid
+    // unnecessary optimizations.
+    m_bTex0Enabled    = true;
+    m_bTex1Enabled    = true;
+    m_bLODFracEnabled = true;
+
+    for( int i = 0; i < 8; i++ ) {
+        switch( color_indices[i] ) {
+            case CCMUX_TEXEL0:
+            case CCMUX_TEXEL0_ALPHA:
+                m_bTex0Enabled = true;
+                break;
+            case CCMUX_TEXEL1:
+            case CCMUX_TEXEL1_ALPHA:
+                m_bTex1Enabled = true;
+                break;
+            case CCMUX_LOD_FRACTION:
+                m_bLODFracEnabled = true;
+                break;
+            default:
+                break;
+        }
+        switch( alpha_indices[i] ) {
+            case ACMUX_TEXEL0:
+                m_bTex0Enabled = true;
+                break;
+            case ACMUX_TEXEL1:
+                m_bTex1Enabled = true;
+                break;
+            case ACMUX_LOD_FRACTION:
+                m_bLODFracEnabled = true;
+                break;
+            default:
+                break;
+        }
+    }
+    m_bTexelsEnable = m_bTex0Enabled || m_bTex1Enabled;
 }
 
 

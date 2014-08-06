@@ -42,9 +42,7 @@ public:
     virtual void SetCombineMode(uint32 dwMux0, uint32 dwMux1);
     virtual void InitCombinerBlenderForSimpleTextureDraw(uint32 tile=0)=0;
     virtual void DisableCombiner(void)=0;
-    uint8   m_sources[16];
-    uint32  m_combineMode1;
-    uint32  m_combineMode2;
+    bool    m_bLODFracEnabled; // TODO: Find a way to remove that.
 
 #ifdef DEBUGGER
     virtual void DisplaySimpleMuxString(void);
@@ -63,15 +61,42 @@ protected:
     virtual void InitCombinerCycleFill(void)=0;
     virtual void InitCombinerCycle12(void)=0;
 
-    bool    m_bTex0Enabled;
-    bool    m_bTex1Enabled;
-    bool    m_bTexelsEnable;
+    enum SourceIndex {
+        CS_COLOR_A0 = 0, // index for Color A, cycle 1
+        CS_COLOR_B0,
+        CS_COLOR_C0,
+        CS_COLOR_D0,
+        CS_ALPHA_A0,     // index for Alpha A,cycle 1
+        CS_ALPHA_B0,
+        CS_ALPHA_C0,
+        CS_ALPHA_D0,
+        CS_COLOR_A1,     // index for Color A, cycle 2
+        CS_COLOR_B1,
+        CS_COLOR_C1,
+        CS_COLOR_D1,
+        CS_ALPHA_A1,     // index for Alpha A, cycle 2
+        CS_ALPHA_B1,
+        CS_ALPHA_C1,
+        CS_ALPHA_D1
+    };
 
-    bool    m_bCycleChanged;    // A flag will be set if cycle is changed to FILL or COPY
+    uint8  m_sources[16];
+    uint32 m_combineMode1;
+    uint32 m_combineMode2;
+
+    bool   m_bTex0Enabled;
+    bool   m_bTex1Enabled;
+    bool   m_bTexelsEnable;
+
+    bool   m_bCycleChanged;    // A flag will be set if cycle is changed to FILL or COPY
 
     CRender *m_pRender;
 
     CSortedList<uint64, DecodedMux> m_DecodedMuxList;
+
+private:
+    static const SourceIndex color_indices[8];
+    static const SourceIndex alpha_indices[8];
 };
 
 void swap(uint8 &a, uint8 &b);

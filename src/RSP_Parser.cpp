@@ -1600,6 +1600,11 @@ void DLParser_SetCombine(Gfx *gfx)
     uint32 dwMux0 = (gfx->words.w0)&0x00FFFFFF;
     uint32 dwMux1 = (gfx->words.w1);
     CRender::g_pRender->SetMux(dwMux0, dwMux1); //TODO: Remove this when SetCombineMode will work
+    // This seems to be the only variables need to be able to skip the SetMux defenetely:
+    //CRender::g_pRender->m_pColorCombiner->m_pDecodedMux->m_dwShadeColorChannelFlag = 0;
+    //CRender::g_pRender->m_pColorCombiner->m_pDecodedMux->m_dwShadeAlphaChannelFlag = 0;
+    //CRender::g_pRender->m_pColorCombiner->m_pDecodedMux->m_ColorTextureFlag[0] = 0;
+    //CRender::g_pRender->m_pColorCombiner->m_pDecodedMux->m_ColorTextureFlag[1] = 0;
     CRender::g_pRender->SetCombineMode(dwMux0, dwMux1);
 }
 

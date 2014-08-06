@@ -74,7 +74,7 @@ public:
     
     inline bool IsTexel0Enable() {return m_pColorCombiner->m_bTex0Enabled;}
     inline bool IsTexel1Enable() {return m_pColorCombiner->m_bTex1Enabled;}
-    inline bool IsTextureEnabled() { return (m_pColorCombiner->m_bTex0Enabled||m_pColorCombiner->m_bTex1Enabled); }
+    inline bool IsTextureEnabled() { return (m_pColorCombiner->m_bTexelsEnable); }
 
     inline RenderTexture& GetCurrentTexture() { return g_textures[gRSP.curTile]; }
     inline RenderTexture& GetTexture(uint32 dwTile) { return g_textures[dwTile]; }

@@ -432,7 +432,7 @@ GLuint COGLSecondFragmentProgramCombiner::GenerateCycle12Program()
     ////////////////////////////////////////////////////////////////////////////
 
     // A0 (Cycle 1)
-    switch( m_sources[0]  )
+    switch( m_sources[CS_COLOR_A0] )
     {
         case CCMUX_COMBINED : // 0 (this commented numbers are related to the Color Combiner schema)
             printf("CCMUX_COMBINED for AColor. This should never happen in cycle 1.\n");
@@ -466,7 +466,7 @@ GLuint COGLSecondFragmentProgramCombiner::GenerateCycle12Program()
     }
 
     // B0 (Cycle 1)
-    switch( m_sources[1]  )
+    switch( m_sources[CS_COLOR_B0] )
     {
         case CCMUX_COMBINED : // 0
             printf("CCMUX_COMBINED for BColor. This should never happen in cycle 1.\n");
@@ -501,7 +501,7 @@ GLuint COGLSecondFragmentProgramCombiner::GenerateCycle12Program()
     }
 
     // C0 (Cycle 1)
-    switch( m_sources[2]  )
+    switch( m_sources[CS_COLOR_C0] )
     {
         case CCMUX_COMBINED : // 0
             printf("CCMUX_COMBINED for CColor. This should never happen in cycle 1.\n");
@@ -561,7 +561,7 @@ GLuint COGLSecondFragmentProgramCombiner::GenerateCycle12Program()
     }
 
     // D0 (Cycle 1)
-    switch( m_sources[3]  )
+    switch( m_sources[CS_COLOR_D0] )
     {
         case CCMUX_COMBINED : // 0
             printf("CCMUX_COMBINED for DColor. This should never happen in cycle 1.\n");
@@ -596,7 +596,7 @@ GLuint COGLSecondFragmentProgramCombiner::GenerateCycle12Program()
     ////////////////////////////////////////////////////////////////////////////
 
     // a0 (Cycle 1) (same than b0 and c0 actually)
-    switch( m_sources[4]  )
+    switch( m_sources[CS_ALPHA_A0] )
     {
         case ACMUX_COMBINED : // 0
             printf("ACMUX_COMBINED for AAlpha. This should never happen in cycle 1.\n");
@@ -627,7 +627,7 @@ GLuint COGLSecondFragmentProgramCombiner::GenerateCycle12Program()
     }
 
     // b0 (Cycle 1) (same than a0 and c0 actually)
-    switch( m_sources[5]  )
+    switch( m_sources[CS_ALPHA_B0] )
     {
         case ACMUX_COMBINED : // 0
             printf("ACMUX_COMBINED for BAlpha. This should never happen in cycle 1.\n");
@@ -658,7 +658,7 @@ GLuint COGLSecondFragmentProgramCombiner::GenerateCycle12Program()
     }
 
     // c0 (Cycle 1) kind of "exotic"
-    switch( m_sources[6]  )
+    switch( m_sources[CS_ALPHA_C0] )
     {
         case ACMUX_LOD_FRACTION : // 0
             strcat(newFrgStr, "float CAlpha = uLodFrac;\n");
@@ -688,7 +688,7 @@ GLuint COGLSecondFragmentProgramCombiner::GenerateCycle12Program()
     }
 
     // d0 (Cycle 1) (same than a0 and b0 actually)
-    switch( m_sources[7]  )
+    switch( m_sources[CS_ALPHA_D0] )
     {
         case ACMUX_COMBINED : // 0
             printf("ACMUX_COMBINED for DAlpha. This should never happen in cycle 1.\n");
@@ -748,7 +748,7 @@ GLuint COGLSecondFragmentProgramCombiner::GenerateCycle12Program()
                 ////////////////////////////////////////////////////////////////////////////
 
                 // A0 (Cycle 2)
-                switch( m_sources[8] )
+                switch( m_sources[CS_COLOR_A1] )
                 {
                     case CCMUX_COMBINED : // 0
                         strcat(newFrgStr, "AColor = cycle1Color;\n");
@@ -781,7 +781,7 @@ GLuint COGLSecondFragmentProgramCombiner::GenerateCycle12Program()
                 }
 
                 // B0 (Cycle 2)
-                switch( m_sources[9] )
+                switch( m_sources[CS_COLOR_B1] )
                 {
                     case CCMUX_COMBINED : // 0
                         strcat(newFrgStr, "BColor = cycle1Color;\n");
@@ -814,7 +814,7 @@ GLuint COGLSecondFragmentProgramCombiner::GenerateCycle12Program()
                 }
 
                 // C0 (Cycle 2)
-                switch( m_sources[10] )
+                switch( m_sources[CS_COLOR_C1] )
                 {
                     case CCMUX_COMBINED : // 0
                         strcat(newFrgStr, "CColor = cycle1Color;\n");
@@ -871,7 +871,7 @@ GLuint COGLSecondFragmentProgramCombiner::GenerateCycle12Program()
                 }
 
                 // D0 (Cycle 2)
-                switch( m_sources[11] )
+                switch( m_sources[CS_COLOR_D1] )
                 {
                     case CCMUX_COMBINED : // 0
                         strcat(newFrgStr, "DColor = cycle1Color;\n");
@@ -905,7 +905,7 @@ GLuint COGLSecondFragmentProgramCombiner::GenerateCycle12Program()
                 ////////////////////////////////////////////////////////////////////////////
 
                 // a0 (Cycle 2) (same than b0 and c0 actually)
-                switch( m_sources[12] )
+                switch( m_sources[CS_ALPHA_A1] )
                 {
                     case ACMUX_COMBINED : // 0
                         strcat(newFrgStr, "AAlpha = cycle1Alpha;\n");
@@ -935,7 +935,7 @@ GLuint COGLSecondFragmentProgramCombiner::GenerateCycle12Program()
                 }
 
                 // b0 (Cycle 2) (same than a0 and c0 actually)
-                switch( m_sources[13] )
+                switch( m_sources[CS_ALPHA_B1] )
                 {
                     case ACMUX_COMBINED : // 0
                         strcat(newFrgStr, "BAlpha = cycle1Alpha;\n");
@@ -965,7 +965,7 @@ GLuint COGLSecondFragmentProgramCombiner::GenerateCycle12Program()
                 }
 
                 // c0 (Cycle 2) kind of "exotic"
-                switch( m_sources[14] )
+                switch( m_sources[CS_ALPHA_C1] )
                 {
                     case ACMUX_LOD_FRACTION : // 0
                         strcat(newFrgStr, "CAlpha = uLodFrac;\n");
@@ -995,7 +995,7 @@ GLuint COGLSecondFragmentProgramCombiner::GenerateCycle12Program()
                 }
 
                 // d0 (Cycle 2) (same than a0 and b0 actually)
-                switch( m_sources[15] )
+                switch( m_sources[CS_ALPHA_D1] )
                 {
                     case ACMUX_COMBINED : // 0
                         strcat(newFrgStr, "DAlpha = cycle1Alpha;\n");

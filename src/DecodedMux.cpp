@@ -147,29 +147,10 @@ void DecodedMux::Decode(uint32 dwMux0, uint32 dwMux1)
     cA1    = sc_Mux8[cA1];
     dA1    = sc_Mux8[dA1];
 
-    m_bTexel0IsUsed = isUsed(MUX_TEXEL0);
-    m_bTexel1IsUsed = isUsed(MUX_TEXEL1);
-
     m_dwShadeColorChannelFlag = 0;
     m_dwShadeAlphaChannelFlag = 0;
     m_ColorTextureFlag[0] = 0;
     m_ColorTextureFlag[1] = 0;
-}
-
-bool DecodedMux::isUsed(uint8 val, uint8 mask)
-{
-    uint8* pmux = m_bytes;
-    bool isUsed = false;
-    for( int i=0; i<16; i++ )
-    {
-        if( (pmux[i]&mask) == (val&mask) )
-        {
-            isUsed = true;
-            break;
-        }
-    }
-
-    return isUsed;
 }
 
 bool DecodedMux::isUsedInCycle(uint8 val, int cycle, CombineChannel channel, uint8 mask)
@@ -224,9 +205,6 @@ void DecodedMux::Simplify(void)
     splitType[2] = CM_FMT_TYPE_NOT_USED;
     splitType[3] = CM_FMT_TYPE_NOT_USED;
     mType = CM_FMT_TYPE_NOT_USED;
-
-    m_bTexel0IsUsed = isUsed(MUX_TEXEL0);
-    m_bTexel1IsUsed = isUsed(MUX_TEXEL1);
 }
 
 void DecodedMux::Reformat(bool do_complement)

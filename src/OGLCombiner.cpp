@@ -155,11 +155,10 @@ void COGLColorCombiner::InitCombinerCycle12(void)
     }
 #endif
 
-    bool texIsUsed = m_pDecodedMux->isUsed(MUX_TEXEL0);
     bool shadeIsUsedInColor = m_pDecodedMux->isUsedInCycle(MUX_SHADE, 0, COLOR_CHANNEL);
     bool texIsUsedInColor = m_pDecodedMux->isUsedInCycle(MUX_TEXEL0, 0, COLOR_CHANNEL);
 
-    if( texIsUsed )
+    if( m_bTex0Enabled )
     {
         // Parse the simplified the mux, because the OGL 1.1 combiner function is so much
         // limited, we only parse the 1st N64 combiner setting and only the RGB part
