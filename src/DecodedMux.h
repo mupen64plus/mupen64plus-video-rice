@@ -75,9 +75,9 @@ public:
     CombinerFormatType splitType[4];
     CombinerFormatType mType;
     
-    uint32 m_dwShadeColorChannelFlag;
-    uint32 m_dwShadeAlphaChannelFlag;
-    uint32 m_ColorTextureFlag[2];   // I may use a texture to represent a constant color
+    //uint32 m_dwShadeColorChannelFlag;
+    //uint32 m_dwShadeAlphaChannelFlag;
+    //uint32 m_ColorTextureFlag[2];   // I may use a texture to represent a constant color
                                     // when there are more constant colors are used than    
                                     // the system can support
 
@@ -120,11 +120,11 @@ public:
         splitType[3] = mux.splitType[3];
         mType = mux.mType;
 
-        m_dwShadeColorChannelFlag = mux.m_dwShadeColorChannelFlag;
-        m_dwShadeAlphaChannelFlag = mux.m_dwShadeAlphaChannelFlag;
+        //m_dwShadeColorChannelFlag = mux.m_dwShadeColorChannelFlag;
+        //m_dwShadeAlphaChannelFlag = mux.m_dwShadeAlphaChannelFlag;
 
-        m_ColorTextureFlag[0] = mux.m_ColorTextureFlag[0];
-        m_ColorTextureFlag[1] = mux.m_ColorTextureFlag[1];
+        //m_ColorTextureFlag[0] = mux.m_ColorTextureFlag[0];
+        //m_ColorTextureFlag[1] = mux.m_ColorTextureFlag[1];
 
         return *this;
     }

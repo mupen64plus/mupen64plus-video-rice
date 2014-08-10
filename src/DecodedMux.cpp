@@ -146,11 +146,6 @@ void DecodedMux::Decode(uint32 dwMux0, uint32 dwMux1)
     bA1    = sc_Mux8[bA1];
     cA1    = sc_Mux8[cA1];
     dA1    = sc_Mux8[dA1];
-
-    m_dwShadeColorChannelFlag = 0;
-    m_dwShadeAlphaChannelFlag = 0;
-    m_ColorTextureFlag[0] = 0;
-    m_ColorTextureFlag[1] = 0;
 }
 
 bool DecodedMux::isUsedInCycle(uint8 val, int cycle, CombineChannel channel, uint8 mask)
@@ -658,7 +653,7 @@ void DecodedMux::LogMuxString(const char *prompt, FILE *fp)
 }
 
 void DecodedMux::LogSimpliedMuxString(const char *prompt, FILE *fp)
-{
+{/*
     fprintf(fp,"//Simplied Mux=0x%08x%08x\t%s in %s\n", m_dwMux0, m_dwMux1, prompt, g_curRomInfo.szGameName);
     fprintf(fp,"Simplied DWORDs=%08X, %08X, %08X, %08X\n", m_dWords[0],m_dWords[1],m_dWords[2],m_dWords[3]);
     Display(true,fp);
@@ -703,7 +698,7 @@ void DecodedMux::LogSimpliedMuxString(const char *prompt, FILE *fp)
             else if( m_ColorTextureFlag[i] == MUX_PRIMLODFRAC )
             TRACE1("Tex %d = MUX_PRIMLODFRAC", i)
         }
-    }
+    }*/
 
 
     TRACE0("\n");
