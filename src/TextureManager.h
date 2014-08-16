@@ -214,10 +214,10 @@ protected:
     TxtrCacheEntry m_EnvColorTextureEntry;
     TxtrCacheEntry m_LODFracTextureEntry;
     TxtrCacheEntry m_PrimLODFracTextureEntry;
-    TxtrCacheEntry * GetPrimColorTexture(uint32 color);
-    TxtrCacheEntry * GetEnvColorTexture(uint32 color);
-    TxtrCacheEntry * GetLODFracTexture(uint8 fac);
-    TxtrCacheEntry * GetPrimLODFracTexture(uint8 fac);
+    TxtrCacheEntry * GetPrimColorTexture(uint32 color); //TODO: Remove this
+    TxtrCacheEntry * GetEnvColorTexture(uint32 color); //TODO: Remove this
+    TxtrCacheEntry * GetLODFracTexture(uint8 fac); //TODO: Remove this
+    TxtrCacheEntry * GetPrimLODFracTexture(uint8 fac); //TODO: Remove this
 
     void MakeTextureYoungest(TxtrCacheEntry *pEntry);
     unsigned int m_currentTextureMemUsage;
@@ -229,7 +229,7 @@ public:
     ~CTextureManager();
 
     TxtrCacheEntry * GetBlackTexture(void);
-    TxtrCacheEntry * GetConstantColorTexture(uint32 constant);
+    TxtrCacheEntry * GetConstantColorTexture(uint32 constant); //TODO: Remove this
     TxtrCacheEntry * GetTexture(TxtrInfo * pgti, bool fromTMEM, bool doCRCCheck=true, bool AutoExtendTexture = false);
     
     void PurgeOldTextures();

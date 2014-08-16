@@ -78,8 +78,7 @@ CRender::CRender() :
     m_dwMinFilter(FILTER_POINT),
     m_dwMagFilter(FILTER_POINT),
         m_dwAlpha(0xFF),
-        m_Mux(0),
-        m_bBlendModeValid(FALSE)
+        m_modes64(0)
 {
     int i;
     InitRenderBase();
@@ -302,17 +301,6 @@ void CRender::SetWorldProjectMatrix(Matrix &mtx)
 
     gRSP.bMatrixIsUpdated = false;
     gRSP.bCombinedMatrixIsUpdated = true;
-}
-
-void CRender::SetMux(uint32 dwMux0, uint32 dwMux1)
-{
-    uint64 tempmux = (((uint64)dwMux0) << 32) | (uint64)dwMux1;
-    if( m_Mux != tempmux )
-    {
-        m_Mux = tempmux;
-        m_bBlendModeValid = FALSE;
-        m_pColorCombiner->UpdateCombiner(dwMux0, dwMux1);
-    }
 }
 
 void CRender::SetCombineMode(uint32 dwMux0, uint32 dwMux1)
@@ -1690,7 +1678,7 @@ void CRender::SetVertexTextureUVCoord(TLITVERTEX &v, float fTex0S, float fTex0T)
 }
 void CRender::SetVertexTextureUVCoord(TLITVERTEX &v, float fTex0S, float fTex0T, float fTex1S, float fTex1T)
 {
-    if( (options.enableHackForGames == HACK_FOR_ZELDA||options.enableHackForGames == HACK_FOR_ZELDA_MM) && m_Mux == 0x00262a60150c937fLL && gRSP.curTile == 0 )
+    if( (options.enableHackForGames == HACK_FOR_ZELDA||options.enableHackForGames == HACK_FOR_ZELDA_MM) && m_modes64 == 0x00262a60150c937fLL && gRSP.curTile == 0 )
     {
         // Hack for Zelda Sun
         Tile &t0 = gRDP.tiles[0];
@@ -1922,7 +1910,7 @@ void CRender::InitOtherModes(void)
         }
     }
 
-    if( options.enableHackForGames == HACK_FOR_SOUTH_PARK_RALLY && m_Mux == 0x00121824ff33ffffLL &&
+    if( options.enableHackForGames == HACK_FOR_SOUTH_PARK_RALLY && m_modes64 == 0x00121824ff33ffffLL &&
         gRSP.bCullFront && gRDP.otherMode.aa_en && gRDP.otherMode.z_cmp && gRDP.otherMode.z_upd )
     {
         SetZCompare(FALSE);
@@ -1941,7 +1929,7 @@ void CRender::InitOtherModes(void)
     }
 
     /*
-    if( options.enableHackForGames == HACK_FOR_SOUTH_PARK_RALLY && m_Mux == 0x00121824ff33ffff &&
+    if( options.enableHackForGames == HACK_FOR_SOUTH_PARK_RALLY && m_modes64 == 0x00121824ff33ffff &&
         gRSP.bCullFront && gRDP.otherMode.z_cmp && gRDP.otherMode.z_upd )//&& gRDP.otherMode.aa_en )
     {
         SetZCompare(FALSE);

@@ -49,7 +49,6 @@ public:
     float m_fScreenViewportMultX;
     float m_fScreenViewportMultY;
 
-
     uint32  m_dwTexturePerspective;
     BOOL    m_bAlphaTestEnable;
 
@@ -62,13 +61,10 @@ public:
 
     uint32  m_dwAlpha;
 
-    uint64      m_Mux;
-    uint64      m_modes64; // used to find hacks
-    BOOL    m_bBlendModeValid;
+    uint64  m_modes64; // used to find hacks
 
     CColorCombiner *m_pColorCombiner;
     CBlender *m_pAlphaBlender;
-    
     
     virtual ~CRender();
     
@@ -131,7 +127,6 @@ public:
 
     virtual void RenderReset();
     virtual void SetCombinerAndBlender();
-    virtual void SetMux(uint32 dwMux0, uint32 dwMux1);
             void SetCombineMode(uint32 dwMux0, uint32 dwMux1);
     virtual void SetCullMode(bool bCullFront, bool bCullBack) { gRSP.bCullFront = bCullFront; gRSP.bCullBack = bCullBack; }
 

@@ -38,7 +38,7 @@ public:
 
     virtual bool Initialize(void)=0;
     virtual void CleanUp(void) {};
-    virtual void UpdateCombiner(uint32 dwMux0, uint32 dwMux1);
+    virtual void UpdateCombiner(uint32 dwMux0, uint32 dwMux1); // TODO: Remove this but it still have a lot of hacks that could be interesting.
     virtual void SetCombineMode(uint32 dwMux0, uint32 dwMux1);
     virtual void InitCombinerBlenderForSimpleTextureDraw(uint32 tile=0)=0;
     virtual void DisableCombiner(void)=0;
