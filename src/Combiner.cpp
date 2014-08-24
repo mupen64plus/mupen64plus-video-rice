@@ -231,9 +231,9 @@ void CColorCombiner::SetCombineMode(uint32 dwMux0, uint32 dwMux1)
     // TODO: We should be able to remove this part in the futur and let the
     // plugin reproduce the N64 behavior to keep the code clean and avoid
     // unnecessary optimizations.
-    m_bTex0Enabled    = true;
-    m_bTex1Enabled    = true;
-    m_bLODFracEnabled = true;
+    m_bTex0Enabled    = false;
+    m_bTex1Enabled    = false;
+    m_bLODFracEnabled = false;
 
     for( int i = 0; i < 8; i++ ) {
         switch( color_indices[i] ) {
@@ -266,6 +266,22 @@ void CColorCombiner::SetCombineMode(uint32 dwMux0, uint32 dwMux1)
         }
     }
     m_bTexelsEnable = m_bTex0Enabled || m_bTex1Enabled;
+
+    // Hacks
+    if( options.enableHackForGames == HACK_FOR_TOPGEARRALLY )
+    {
+        //Mux=0x00317e025ffef3fa    Used in TOP GEAR RALLY
+        //Color0: (PRIM - ENV) * TEXEL1 + ENV
+        //Color1: (COMBINED - 0) * TEXEL1 + 0
+        //Alpha0: (0 - 0) * 0 + TEXEL0
+        //Alpha1: (0 - 0) * 0 + TEXEL1
+        if( dwMux1 == 0x5ffef3fa || dwMux0 == 0x00317e02 )
+        {
+            // The texts
+            m_sources[CS_ALPHA_D1] = ACMUX_COMBINED;
+            m_sources[CS_COLOR_C1] = CCMUX_TEXEL0;
+        }
+    }
 }
 
 

@@ -59,7 +59,7 @@ private:
         uint32 combineMode2;
         unsigned int cycle_type;    // 1/2/fill/copy
         unsigned int key_enabled:1;   // Chroma key
-        uint16       blender;
+        //uint16       blender;
         unsigned int alpha_compare; // None/Threshold/Dither
         unsigned int aa_en:1;
         //unsigned int z_cmp:1;
