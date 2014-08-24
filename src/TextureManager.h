@@ -145,7 +145,6 @@ typedef struct TxtrCacheEntry
     uint32  dwUses;         // Total times used (for stats)
     uint32  dwTimeLastUsed; // timeGetTime of time of last usage
     uint32  FrameLastUsed;  // Frame # that this was last used
-    uint32  FrameLastUpdated;
 
     CTexture    *pTexture;
     CTexture    *pEnhancedTexture;
@@ -210,14 +209,6 @@ protected:
     uint32 m_numOfCachedTxtrList;
 
     TxtrCacheEntry m_blackTextureEntry;
-    TxtrCacheEntry m_PrimColorTextureEntry;
-    TxtrCacheEntry m_EnvColorTextureEntry;
-    TxtrCacheEntry m_LODFracTextureEntry;
-    TxtrCacheEntry m_PrimLODFracTextureEntry;
-    TxtrCacheEntry * GetPrimColorTexture(uint32 color); //TODO: Remove this
-    TxtrCacheEntry * GetEnvColorTexture(uint32 color); //TODO: Remove this
-    TxtrCacheEntry * GetLODFracTexture(uint8 fac); //TODO: Remove this
-    TxtrCacheEntry * GetPrimLODFracTexture(uint8 fac); //TODO: Remove this
 
     void MakeTextureYoungest(TxtrCacheEntry *pEntry);
     unsigned int m_currentTextureMemUsage;
@@ -229,7 +220,6 @@ public:
     ~CTextureManager();
 
     TxtrCacheEntry * GetBlackTexture(void);
-    TxtrCacheEntry * GetConstantColorTexture(uint32 constant); //TODO: Remove this
     TxtrCacheEntry * GetTexture(TxtrInfo * pgti, bool fromTMEM, bool doCRCCheck=true, bool AutoExtendTexture = false);
     
     void PurgeOldTextures();
