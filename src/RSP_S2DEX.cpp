@@ -94,8 +94,6 @@ void RSP_S2DEX_OBJ_SPRITE(Gfx *gfx)
     status.bAllowLoadFromTMEM = false;  // Because we need to use TLUT loaded by ObjTlut cmd
     PrepareTextures();
     status.bAllowLoadFromTMEM = true;
-    
-    //CRender::g_pRender->SetCombinerAndBlender();
 
     uObjTxSprite drawinfo;
     memcpy( &(drawinfo.sprite), info, sizeof(uObjSprite));
