@@ -952,7 +952,7 @@ char * tidy(char * s)
     char * p = s + strlen(s);
 
     p--;
-    while (p >= s && (*p == ' ' || *p == 0xa || *p == '\n') )
+    while (p >= s && (*p == ' ' || *p == '\r' || *p == '\n') )
     {
         *p = 0;
         p--;
