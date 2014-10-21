@@ -133,20 +133,20 @@ static GLuint createShader( GLenum shaderType, const char* shaderSrc )
 {
     assert( shaderSrc != NULL );
 
-    GLuint shader = glCreateShader( shaderType ); // GL_VERTEX_SHADER, GL_FRAGMENT_SHADER
+    GLuint shader = pglCreateShader( shaderType ); // GL_VERTEX_SHADER, GL_FRAGMENT_SHADER
 
-    glShaderSource(shader, 1, &shaderSrc, NULL);
-    glCompileShader(shader);
+    pglShaderSource(shader, 1, &shaderSrc, NULL);
+    pglCompileShader(shader);
 
     GLint status;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+    pglGetShaderiv(shader, GL_COMPILE_STATUS, &status);
     if (status == GL_FALSE)
     {
         GLint infoLogLength;
-        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
+        pglGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
 
         GLchar strInfoLog[ infoLogLength ];
-        glGetShaderInfoLog(shader, infoLogLength, NULL, strInfoLog);
+        pglGetShaderInfoLog(shader, infoLogLength, NULL, strInfoLog);
 
         const char *strShaderType = NULL;
         switch(shader)
@@ -168,33 +168,33 @@ static GLuint createProgram(const GLuint vShader, GLuint fShader)
     assert( vShader > CC_NULL_SHADER );
     assert( fShader > CC_NULL_SHADER );
 
-    GLuint program = glCreateProgram();
+    GLuint program = pglCreateProgram();
 
-    glAttachShader(program, vShader);
-    glAttachShader(program, fShader);
+    pglAttachShader(program, vShader);
+    pglAttachShader(program, fShader);
 
-    glBindAttribLocation(program,VS_POSITION,"inPosition");
-    glBindAttribLocation(program,VS_TEXCOORD0,"inTexCoord0");
-    glBindAttribLocation(program,VS_TEXCOORD1,"inTexCoord1");
-    glBindAttribLocation(program,VS_FOG,"inFog");
-    glBindAttribLocation(program,VS_COLOR,"inShadeColor");
+    pglBindAttribLocation(program,VS_POSITION,"inPosition");
+    pglBindAttribLocation(program,VS_TEXCOORD0,"inTexCoord0");
+    pglBindAttribLocation(program,VS_TEXCOORD1,"inTexCoord1");
+    pglBindAttribLocation(program,VS_FOG,"inFog");
+    pglBindAttribLocation(program,VS_COLOR,"inShadeColor");
 
-    glLinkProgram(program);
+    pglLinkProgram(program);
 
     GLint status;
-    glGetProgramiv(program, GL_LINK_STATUS, &status);
+    pglGetProgramiv(program, GL_LINK_STATUS, &status);
     if (status == GL_FALSE)
     {
         GLint infoLogLength;
-        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
+        pglGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
 
         GLchar strInfoLog[ infoLogLength ];
-        glGetProgramInfoLog(program, infoLogLength, NULL, strInfoLog);
+        pglGetProgramInfoLog(program, infoLogLength, NULL, strInfoLog);
         printf("Linker failure: %s\n", strInfoLog);
     }
 
-    glDetachShader(program, vShader);
-    glDetachShader(program, fShader);
+    pglDetachShader(program, vShader);
+    pglDetachShader(program, fShader);
 
     return program;
 }
@@ -209,19 +209,19 @@ COGLColorCombiner::COGLColorCombiner(CRender *pRender) :
     // Generate Fill program
     GLuint frgShaderFill = createShader( GL_FRAGMENT_SHADER, fragmentFill );
     m_fillProgram  = createProgram(m_vtxShader, frgShaderFill);
-    m_fillColorLoc = glGetUniformLocation(m_fillProgram,"uFillColor");
+    m_fillColorLoc = pglGetUniformLocation(m_fillProgram,"uFillColor");
     OPENGL_CHECK_ERRORS
-    glDeleteShader( frgShaderFill );
+    pglDeleteShader( frgShaderFill );
     OPENGL_CHECK_ERRORS
 }
 
 COGLColorCombiner::~COGLColorCombiner()
 {
-    if( glIsShader( m_vtxShader ) == GL_TRUE )
-        glDeleteShader(m_vtxShader); OPENGL_CHECK_ERRORS
+    if( pglIsShader( m_vtxShader ) == GL_TRUE )
+        pglDeleteShader(m_vtxShader); OPENGL_CHECK_ERRORS
 
-    if ( glIsProgram( m_fillProgram ) == GL_TRUE )
-        glDeleteProgram( m_fillProgram ); OPENGL_CHECK_ERRORS
+    if ( pglIsProgram( m_fillProgram ) == GL_TRUE )
+        pglDeleteProgram( m_fillProgram ); OPENGL_CHECK_ERRORS
 
     // Remove every created OpenGL programs
     ShaderSaveType* saveType = NULL;
@@ -229,8 +229,8 @@ COGLColorCombiner::~COGLColorCombiner()
     {
         saveType = &m_generatedPrograms[i];
 
-        if ( glIsProgram( saveType->program ) == GL_TRUE )
-            glDeleteProgram( saveType->program ); OPENGL_CHECK_ERRORS
+        if ( pglIsProgram( saveType->program ) == GL_TRUE )
+            pglDeleteProgram( saveType->program ); OPENGL_CHECK_ERRORS
     }
 }
 
@@ -263,15 +263,15 @@ void COGLColorCombiner::InitCombinerCycleCopy(void)
     GenerateCombinerSetting();
     GenerateCombinerSettingConstants( shaderId );
 
-    glEnableVertexAttribArray(VS_POSITION);
+    pglEnableVertexAttribArray(VS_POSITION);
     OPENGL_CHECK_ERRORS
-    glEnableVertexAttribArray(VS_TEXCOORD0);
+    pglEnableVertexAttribArray(VS_TEXCOORD0);
     OPENGL_CHECK_ERRORS
-    glDisableVertexAttribArray(VS_COLOR);
+    pglDisableVertexAttribArray(VS_COLOR);
     OPENGL_CHECK_ERRORS
-    glDisableVertexAttribArray(VS_TEXCOORD1);
+    pglDisableVertexAttribArray(VS_TEXCOORD1);
     OPENGL_CHECK_ERRORS
-    glDisableVertexAttribArray(VS_FOG);
+    pglDisableVertexAttribArray(VS_FOG);
     OPENGL_CHECK_ERRORS
     COGLTexture* pTexture = g_textures[gRSP.curTile].m_pCOGLTexture;
     if( pTexture )
@@ -285,10 +285,10 @@ void COGLColorCombiner::InitCombinerCycleFill(void)
 {
     useProgram( m_fillProgram );
 
-    glUniform4f( m_fillColorLoc, ((gRDP.fillColor>>16)&0xFF)/255.0f,
-                                 ((gRDP.fillColor>>8) &0xFF)/255.0f,
-                                 ((gRDP.fillColor)    &0xFF)/255.0f,
-                                 ((gRDP.fillColor>>24)&0xFF)/255.0f);
+    pglUniform4f( m_fillColorLoc, ((gRDP.fillColor>>16)&0xFF)/255.0f,
+                                  ((gRDP.fillColor>>8) &0xFF)/255.0f,
+                                  ((gRDP.fillColor)    &0xFF)/255.0f,
+                                  ((gRDP.fillColor>>24)&0xFF)/255.0f);
     OPENGL_CHECK_ERRORS
 }
 
@@ -1092,7 +1092,7 @@ GLuint COGLColorCombiner::GenerateCycle12Program()
 
     GLuint program = createProgram( m_vtxShader, frgShader );
 
-    glDeleteShader(frgShader); OPENGL_CHECK_ERRORS
+    pglDeleteShader(frgShader); OPENGL_CHECK_ERRORS
 
     ////////////////////////////////////////////////////////////////////////////
     // Generate and store the save ype
@@ -1140,7 +1140,7 @@ GLuint COGLColorCombiner::GenerateCopyProgram()
 
     GLuint program = createProgram( m_vtxShader, frgShader );
 
-    glDeleteShader(frgShader); OPENGL_CHECK_ERRORS
+    pglDeleteShader(frgShader); OPENGL_CHECK_ERRORS
 
     ////////////////////////////////////////////////////////////////////////////
     // Generate and store the save type
@@ -1170,29 +1170,29 @@ GLuint COGLColorCombiner::GenerateCopyProgram()
 // The program must be bind before use this.
 void COGLColorCombiner::GenerateCombinerSetting()
 {
-    glEnableVertexAttribArray(VS_POSITION);
+    pglEnableVertexAttribArray(VS_POSITION);
     OPENGL_CHECK_ERRORS;
-    glVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][0]));
-    OPENGL_CHECK_ERRORS;
-
-    glEnableVertexAttribArray(VS_TEXCOORD0);
-    OPENGL_CHECK_ERRORS;
-    glVertexAttribPointer(VS_TEXCOORD0,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[0].u));
+    pglVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][0]));
     OPENGL_CHECK_ERRORS;
 
-    glEnableVertexAttribArray(VS_TEXCOORD1);
+    pglEnableVertexAttribArray(VS_TEXCOORD0);
     OPENGL_CHECK_ERRORS;
-    glVertexAttribPointer(VS_TEXCOORD1,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[1].u));
-    OPENGL_CHECK_ERRORS;
-
-    glEnableVertexAttribArray(VS_COLOR);
-    OPENGL_CHECK_ERRORS;
-    glVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_TRUE, sizeof(uint8)*4, &(g_oglVtxColors[0][0]) );
+    pglVertexAttribPointer(VS_TEXCOORD0,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[0].u));
     OPENGL_CHECK_ERRORS;
 
-    glEnableVertexAttribArray(VS_FOG);
+    pglEnableVertexAttribArray(VS_TEXCOORD1);
     OPENGL_CHECK_ERRORS;
-    glVertexAttribPointer(VS_FOG,1,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][4]));
+    pglVertexAttribPointer(VS_TEXCOORD1,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[1].u));
+    OPENGL_CHECK_ERRORS;
+
+    pglEnableVertexAttribArray(VS_COLOR);
+    OPENGL_CHECK_ERRORS;
+    pglVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_TRUE, sizeof(uint8)*4, &(g_oglVtxColors[0][0]) );
+    OPENGL_CHECK_ERRORS;
+
+    pglEnableVertexAttribArray(VS_FOG);
+    OPENGL_CHECK_ERRORS;
+    pglVertexAttribPointer(VS_FOG,1,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][4]));
     OPENGL_CHECK_ERRORS;
 }
 
@@ -1205,91 +1205,91 @@ void COGLColorCombiner::GenerateCombinerSettingConstants( int shaderId )
 
     // Vertex shader
     if( saveType.fogMaxMinLoc != CC_INACTIVE_UNIFORM ) {
-        glUniform2f( saveType.fogMaxMinLoc, gRSPfFogMin ,
-                                            gRSPfFogMax );
+        pglUniform2f( saveType.fogMaxMinLoc, gRSPfFogMin ,
+                                             gRSPfFogMax );
         OPENGL_CHECK_ERRORS;
     }
 
     // Fragment shader
     if(    saveType.blendColorLoc != CC_INACTIVE_UNIFORM ) {
-        glUniform4f( saveType.blendColorLoc, gRDP.fvBlendColor[0],
-                                             gRDP.fvBlendColor[1],
-                                             gRDP.fvBlendColor[2],
-                                             gRDP.fvBlendColor[3]);
+        pglUniform4f( saveType.blendColorLoc, gRDP.fvBlendColor[0],
+                                              gRDP.fvBlendColor[1],
+                                              gRDP.fvBlendColor[2],
+                                              gRDP.fvBlendColor[3]);
         OPENGL_CHECK_ERRORS
     }
     if(    saveType.primColorLoc != CC_INACTIVE_UNIFORM ) {
-        glUniform4f( saveType.primColorLoc, gRDP.fvPrimitiveColor[0],
-                                            gRDP.fvPrimitiveColor[1],
-                                            gRDP.fvPrimitiveColor[2],
-                                            gRDP.fvPrimitiveColor[3]);
+        pglUniform4f( saveType.primColorLoc, gRDP.fvPrimitiveColor[0],
+                                             gRDP.fvPrimitiveColor[1],
+                                             gRDP.fvPrimitiveColor[2],
+                                             gRDP.fvPrimitiveColor[3]);
         OPENGL_CHECK_ERRORS
     }
 
     if( saveType.envColorLoc != CC_INACTIVE_UNIFORM ) {
-        glUniform4f( saveType.envColorLoc, gRDP.fvEnvColor[0],
-                                           gRDP.fvEnvColor[1],
-                                           gRDP.fvEnvColor[2],
-                                           gRDP.fvEnvColor[3]);
+        pglUniform4f( saveType.envColorLoc, gRDP.fvEnvColor[0],
+                                            gRDP.fvEnvColor[1],
+                                            gRDP.fvEnvColor[2],
+                                            gRDP.fvEnvColor[3]);
         OPENGL_CHECK_ERRORS
     }
 
     if( saveType.chromaKeyCenterLoc != CC_INACTIVE_UNIFORM ) {
-        glUniform3f( saveType.chromaKeyCenterLoc, gRDP.keyCenterR/255.0f,
-                                                  gRDP.keyCenterG/255.0f,
-                                                  gRDP.keyCenterB/255.0f);
+        pglUniform3f( saveType.chromaKeyCenterLoc, gRDP.keyCenterR/255.0f,
+                                                   gRDP.keyCenterG/255.0f,
+                                                   gRDP.keyCenterB/255.0f);
         OPENGL_CHECK_ERRORS
     }
 
     if( saveType.chromaKeyScaleLoc != CC_INACTIVE_UNIFORM ) {
-        glUniform3f( saveType.chromaKeyScaleLoc, gRDP.keyScaleR/255.0f,
-                                                 gRDP.keyScaleG/255.0f,
-                                                 gRDP.keyScaleB/255.0f);
+        pglUniform3f( saveType.chromaKeyScaleLoc, gRDP.keyScaleR/255.0f,
+                                                  gRDP.keyScaleG/255.0f,
+                                                  gRDP.keyScaleB/255.0f);
         OPENGL_CHECK_ERRORS
     }
 
     if( saveType.chromaKeyWidthLoc != CC_INACTIVE_UNIFORM ) {
-        glUniform3f( saveType.chromaKeyWidthLoc, gRDP.keyWidthR/255.0f,
-                                                 gRDP.keyWidthG/255.0f,
-                                                 gRDP.keyWidthB/255.0f);
+        pglUniform3f( saveType.chromaKeyWidthLoc, gRDP.keyWidthR/255.0f,
+                                                  gRDP.keyWidthG/255.0f,
+                                                  gRDP.keyWidthB/255.0f);
         OPENGL_CHECK_ERRORS
     }
 
     if( saveType.lodFracLoc != CC_INACTIVE_UNIFORM ) {
-        glUniform1f( saveType.lodFracLoc, gRDP.LODFrac/255.0f );
+        pglUniform1f( saveType.lodFracLoc, gRDP.LODFrac/255.0f );
         OPENGL_CHECK_ERRORS
     }
 
     if( saveType.primLodFracLoc != CC_INACTIVE_UNIFORM ) {
-        glUniform1f( saveType.primLodFracLoc, gRDP.primLODFrac/255.0f );
+        pglUniform1f( saveType.primLodFracLoc, gRDP.primLODFrac/255.0f );
         OPENGL_CHECK_ERRORS
     }
 
     if( saveType.k5Loc != CC_INACTIVE_UNIFORM ) {
-        glUniform1f( saveType.k5Loc, gRDP.K5/255.0f );
+        pglUniform1f( saveType.k5Loc, gRDP.K5/255.0f );
         OPENGL_CHECK_ERRORS
     }
 
     if( saveType.k4Loc != CC_INACTIVE_UNIFORM ) {
-        glUniform1f( saveType.k4Loc, gRDP.K4/255.0f );
+        pglUniform1f( saveType.k4Loc, gRDP.K4/255.0f );
         OPENGL_CHECK_ERRORS
     }
 
     if( saveType.tex0Loc != CC_INACTIVE_UNIFORM ) {
-        glUniform1i( saveType.tex0Loc,0 );
+        pglUniform1i( saveType.tex0Loc,0 );
         OPENGL_CHECK_ERRORS
     }
 
     if( saveType.tex1Loc != CC_INACTIVE_UNIFORM ) {
-        glUniform1i( saveType.tex1Loc,1 );
+        pglUniform1i( saveType.tex1Loc,1 );
         OPENGL_CHECK_ERRORS
     }
 
     if( saveType.fogColorLoc != CC_INACTIVE_UNIFORM ) {
-        glUniform4f( saveType.fogColorLoc, gRDP.fvFogColor[0],
-                                           gRDP.fvFogColor[1],
-                                           gRDP.fvFogColor[2],
-                                           gRDP.fvFogColor[3]);
+        pglUniform4f( saveType.fogColorLoc, gRDP.fvFogColor[0],
+                                            gRDP.fvFogColor[1],
+                                            gRDP.fvFogColor[2],
+                                            gRDP.fvFogColor[3]);
         OPENGL_CHECK_ERRORS;
     }
 }
@@ -1320,20 +1320,20 @@ void COGLColorCombiner::StoreUniformLocations( ShaderSaveType &saveType )
 {
     assert( saveType.program != CC_NULL_PROGRAM );
 
-    saveType.fogMaxMinLoc       = glGetUniformLocation( saveType.program, "uFogMinMax"       );
-    saveType.blendColorLoc      = glGetUniformLocation( saveType.program, "uBlendColor"      );
-    saveType.primColorLoc       = glGetUniformLocation( saveType.program, "uPrimColor"       );
-    saveType.envColorLoc        = glGetUniformLocation( saveType.program, "uEnvColor"        );
-    saveType.chromaKeyCenterLoc = glGetUniformLocation( saveType.program, "uChromaKeyCenter" );
-    saveType.chromaKeyScaleLoc  = glGetUniformLocation( saveType.program, "uChromaKeyScale"  );
-    saveType.chromaKeyWidthLoc  = glGetUniformLocation( saveType.program, "uChromaKeyWidth"  );
-    saveType.lodFracLoc         = glGetUniformLocation( saveType.program, "uLodFrac"         );
-    saveType.primLodFracLoc     = glGetUniformLocation( saveType.program, "uPrimLodFrac"     );
-    saveType.k5Loc              = glGetUniformLocation( saveType.program, "uK5"              );
-    saveType.k4Loc              = glGetUniformLocation( saveType.program, "uK4"              );
-    saveType.tex0Loc            = glGetUniformLocation( saveType.program, "uTex0"            );
-    saveType.tex1Loc            = glGetUniformLocation( saveType.program, "uTex1"            );
-    saveType.fogColorLoc        = glGetUniformLocation( saveType.program, "uFogColor"        );
+    saveType.fogMaxMinLoc       = pglGetUniformLocation( saveType.program, "uFogMinMax"       );
+    saveType.blendColorLoc      = pglGetUniformLocation( saveType.program, "uBlendColor"      );
+    saveType.primColorLoc       = pglGetUniformLocation( saveType.program, "uPrimColor"       );
+    saveType.envColorLoc        = pglGetUniformLocation( saveType.program, "uEnvColor"        );
+    saveType.chromaKeyCenterLoc = pglGetUniformLocation( saveType.program, "uChromaKeyCenter" );
+    saveType.chromaKeyScaleLoc  = pglGetUniformLocation( saveType.program, "uChromaKeyScale"  );
+    saveType.chromaKeyWidthLoc  = pglGetUniformLocation( saveType.program, "uChromaKeyWidth"  );
+    saveType.lodFracLoc         = pglGetUniformLocation( saveType.program, "uLodFrac"         );
+    saveType.primLodFracLoc     = pglGetUniformLocation( saveType.program, "uPrimLodFrac"     );
+    saveType.k5Loc              = pglGetUniformLocation( saveType.program, "uK5"              );
+    saveType.k4Loc              = pglGetUniformLocation( saveType.program, "uK4"              );
+    saveType.tex0Loc            = pglGetUniformLocation( saveType.program, "uTex0"            );
+    saveType.tex1Loc            = pglGetUniformLocation( saveType.program, "uTex1"            );
+    saveType.fogColorLoc        = pglGetUniformLocation( saveType.program, "uFogColor"        );
 }
 
 // Return a shader id that match the current state in the current compiled shader "database".
@@ -1391,7 +1391,7 @@ int COGLColorCombiner::FindCompiledShaderId()
 void COGLColorCombiner::useProgram( const GLuint &program )
 {
     if( program != m_currentProgram ) {
-        glUseProgram( program );
+        pglUseProgram( program );
         OPENGL_CHECK_ERRORS
         m_currentProgram = program;
     }

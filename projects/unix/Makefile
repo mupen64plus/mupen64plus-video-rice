@@ -338,11 +338,6 @@ SOURCE = \
 	$(SRCDIR)/VectorMath.cpp \
 	$(SRCDIR)/Video.cpp
 
-ifeq ($(USE_GLES), 1)
-	SOURCE += \
-		$(SRCDIR)/OGLES2FragmentShaders.cpp
-endif
-
 ifeq ($(OS),MINGW)
 SOURCE += \
 	$(SRCDIR)/osal_dynamiclib_win32.c \

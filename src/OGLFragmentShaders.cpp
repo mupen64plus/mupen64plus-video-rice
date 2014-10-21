@@ -35,7 +35,7 @@ COGL_FragmentProgramCombiner::~COGL_FragmentProgramCombiner()
     for (int i=0; i<size; i++)
     {
         GLuint ID = m_vCompiledShaders[i].programID;
-        pglDeleteProgramsARB(1, &ID);
+        pglDeleteProgram(ID);
         OPENGL_CHECK_ERRORS;
         m_vCompiledShaders[i].programID = 0;
     }

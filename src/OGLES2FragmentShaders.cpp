@@ -143,78 +143,78 @@ COGL_FragmentProgramCombiner::COGL_FragmentProgramCombiner(CRender *pRender)
     //Create shaders for fill and copy
     GLint success;
     GLuint vs,fs;
-    copyProgram = glCreateProgram();
-    vs = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vs,1,&vertexShader,NULL);
-    glCompileShader(vs);
+    copyProgram = pglCreateProgram();
+    vs = pglCreateShader(GL_VERTEX_SHADER);
+    pglShaderSource(vs,1,&vertexShader,NULL);
+    pglCompileShader(vs);
 
-    glGetShaderiv(vs,GL_COMPILE_STATUS,&success);
+    pglGetShaderiv(vs,GL_COMPILE_STATUS,&success);
     if(!success)
     {
         char log[1024];
-        glGetShaderInfoLog(vs,1024,NULL,log);
+        pglGetShaderInfoLog(vs,1024,NULL,log);
         printf("%s\n",log);
     }
 
-    fs = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fs,1,&fragmentCopy,NULL);
-    glCompileShader(fs);
+    fs = pglCreateShader(GL_FRAGMENT_SHADER);
+    pglShaderSource(fs,1,&fragmentCopy,NULL);
+    pglCompileShader(fs);
 
-    glGetShaderiv(fs,GL_COMPILE_STATUS,&success);
+    pglGetShaderiv(fs,GL_COMPILE_STATUS,&success);
     if(!success)
     {
         char log[1024];
-        glGetShaderInfoLog(fs,1024,NULL,log);
+        pglGetShaderInfoLog(fs,1024,NULL,log);
         printf("%s\n",log);
     }
 
-    glAttachShader(copyProgram,vs);
-    glAttachShader(copyProgram,fs);
+    pglAttachShader(copyProgram,vs);
+    pglAttachShader(copyProgram,fs);
 
-    glBindAttribLocation(copyProgram,VS_TEXCOORD0,"aTexCoord0");
+    pglBindAttribLocation(copyProgram,VS_TEXCOORD0,"aTexCoord0");
     OPENGL_CHECK_ERRORS;
-    glBindAttribLocation(copyProgram,VS_POSITION,"aPosition");
+    pglBindAttribLocation(copyProgram,VS_POSITION,"aPosition");
     OPENGL_CHECK_ERRORS;
 
-    glLinkProgram(copyProgram);
-    copyAlphaLocation = glGetUniformLocation(copyProgram,"AlphaRef");
-    glGetProgramiv(copyProgram,GL_LINK_STATUS,&success);
+    pglLinkProgram(copyProgram);
+    copyAlphaLocation = pglGetUniformLocation(copyProgram,"AlphaRef");
+    pglGetProgramiv(copyProgram,GL_LINK_STATUS,&success);
     if(!success)
     {
         char log[1024];
-        glGetProgramInfoLog(copyProgram,1024,NULL,log);
+        pglGetProgramInfoLog(copyProgram,1024,NULL,log);
         printf("%s\n",log);
     }
 
-    glDeleteShader(fs);
+    pglDeleteShader(fs);
 
     //Fill shader
-    fs = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fs,1,&fragmentFill,NULL);
-    glCompileShader(fs);
+    fs = pglCreateShader(GL_FRAGMENT_SHADER);
+    pglShaderSource(fs,1,&fragmentFill,NULL);
+    pglCompileShader(fs);
 
-    glGetShaderiv(fs,GL_COMPILE_STATUS,&success);
+    pglGetShaderiv(fs,GL_COMPILE_STATUS,&success);
     if(!success)
     {
         char log[1024];
-        glGetShaderInfoLog(fs,1024,NULL,log);
+        pglGetShaderInfoLog(fs,1024,NULL,log);
         printf("%s\n",log);
     }
 
-    fillProgram = glCreateProgram();
-    glAttachShader(fillProgram,vs);
-    glAttachShader(fillProgram,fs);
+    fillProgram = pglCreateProgram();
+    pglAttachShader(fillProgram,vs);
+    pglAttachShader(fillProgram,fs);
 
-    glBindAttribLocation(fillProgram,VS_POSITION,"aPosition");
+    pglBindAttribLocation(fillProgram,VS_POSITION,"aPosition");
     OPENGL_CHECK_ERRORS;
 
-    glLinkProgram(fillProgram);
+    pglLinkProgram(fillProgram);
 
 
-    fillColorLocation = glGetUniformLocation(fillProgram,"uColor");
+    fillColorLocation = pglGetUniformLocation(fillProgram,"uColor");
 
-    glDeleteShader(fs);
-    glDeleteShader(vs);
+    pglDeleteShader(fs);
+    pglDeleteShader(vs);
 }
 COGL_FragmentProgramCombiner::~COGL_FragmentProgramCombiner()
 {
@@ -222,7 +222,7 @@ COGL_FragmentProgramCombiner::~COGL_FragmentProgramCombiner()
     for (int i=0; i<size; i++)
     {
         GLuint ID = m_vCompiledShaders[i].programID;
-        glDeleteProgram(ID);
+        pglDeleteProgram(ID);
 
         OPENGL_CHECK_ERRORS;
         m_vCompiledShaders[i].programID = 0;
@@ -258,18 +258,18 @@ void COGL_FragmentProgramCombiner::InitCombinerCycleCopy(void)
 {
     m_pOGLRender->DisableMultiTexture();
     m_pOGLRender->EnableTexUnit(0,TRUE);
-    glUseProgram(copyProgram);
-    glUniform1f(copyAlphaLocation,m_AlphaRef);
+    pglUseProgram(copyProgram);
+    pglUniform1f(copyAlphaLocation,m_AlphaRef);
     OPENGL_CHECK_ERRORS;
-    glEnableVertexAttribArray(VS_POSITION);
+    pglEnableVertexAttribArray(VS_POSITION);
     OPENGL_CHECK_ERRORS;
-    glEnableVertexAttribArray(VS_TEXCOORD0);
+    pglEnableVertexAttribArray(VS_TEXCOORD0);
     OPENGL_CHECK_ERRORS;
-    glDisableVertexAttribArray(VS_COLOR);
+    pglDisableVertexAttribArray(VS_COLOR);
     OPENGL_CHECK_ERRORS;
-    glDisableVertexAttribArray(VS_TEXCOORD1);
+    pglDisableVertexAttribArray(VS_TEXCOORD1);
     OPENGL_CHECK_ERRORS;
-    glDisableVertexAttribArray(VS_FOG);
+    pglDisableVertexAttribArray(VS_FOG);
     OPENGL_CHECK_ERRORS;
     COGLTexture* pTexture = g_textures[gRSP.curTile].m_pCOGLTexture;
     if( pTexture )
@@ -281,8 +281,8 @@ void COGL_FragmentProgramCombiner::InitCombinerCycleCopy(void)
 
 void COGL_FragmentProgramCombiner::InitCombinerCycleFill(void)
 {
-    glUseProgram(fillProgram);
-    glUniform4f(fillColorLocation,((gRDP.fillColor>>16)&0xFF)/255.0f,((gRDP.fillColor>>8)&0xFF)/255.0f,((gRDP.fillColor)&0xFF)/255.0f,((gRDP.fillColor>>24)&0xFF)/255.0f);
+    pglUseProgram(fillProgram);
+    pglUniform4f(fillColorLocation,((gRDP.fillColor>>16)&0xFF)/255.0f,((gRDP.fillColor>>8)&0xFF)/255.0f,((gRDP.fillColor)&0xFF)/255.0f,((gRDP.fillColor>>24)&0xFF)/255.0f);
     OPENGL_CHECK_ERRORS;
 }
 
@@ -450,10 +450,10 @@ int COGL_FragmentProgramCombiner::ParseDecodedMux()
 
     if(vertexProgram == 9999)
     {
-        vertexProgram = res.vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(res.vertexShaderID, 1, &vertexShader,NULL);
+        vertexProgram = res.vertexShaderID = pglCreateShader(GL_VERTEX_SHADER);
+        pglShaderSource(res.vertexShaderID, 1, &vertexShader,NULL);
         OPENGL_CHECK_ERRORS;
-        glCompileShader(res.vertexShaderID);
+        pglCompileShader(res.vertexShaderID);
         OPENGL_CHECK_ERRORS;
     }
     else
@@ -469,7 +469,7 @@ int COGL_FragmentProgramCombiner::ParseDecodedMux()
     {
         for(int fog = 0;fog < 2;fog++)
         {
-        res.fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+        res.fragmentShaderID = pglCreateShader(GL_FRAGMENT_SHADER);
 
         char* tmpShader = (char*)malloc(sizeof(char) * 4096);
         strcpy(tmpShader,"#version " GLSL_VERSION "\n");
@@ -488,78 +488,78 @@ int COGL_FragmentProgramCombiner::ParseDecodedMux()
         res.alphaTest = alphaTest == 1;
         strcat(tmpShader,oglNewFP);
 
-        glShaderSource(res.fragmentShaderID, 1,(const char**) &tmpShader,NULL);
+        pglShaderSource(res.fragmentShaderID, 1,(const char**) &tmpShader,NULL);
         free(tmpShader);
 
 
         OPENGL_CHECK_ERRORS;
-        glCompileShader(res.fragmentShaderID);
+        pglCompileShader(res.fragmentShaderID);
 
-        glGetShaderiv(res.fragmentShaderID, GL_COMPILE_STATUS, &success);
+        pglGetShaderiv(res.fragmentShaderID, GL_COMPILE_STATUS, &success);
         if (!success)
         {
             char Log[1024];
             GLint nLength;
-            glGetShaderInfoLog(res.fragmentShaderID, 1024, &nLength, Log);
+            pglGetShaderInfoLog(res.fragmentShaderID, 1024, &nLength, Log);
             printf("Error compiling shader!\n %s",oglNewFP);
             printf("%s", Log);
         }
 
-        res.programID = glCreateProgram();
-        glAttachShader(res.programID,res.vertexShaderID);
-        glAttachShader(res.programID,res.fragmentShaderID);
+        res.programID = pglCreateProgram();
+        pglAttachShader(res.programID,res.vertexShaderID);
+        pglAttachShader(res.programID,res.fragmentShaderID);
 
         //Bind Attributes
-        glBindAttribLocation(res.programID,VS_COLOR,"aColor");
+        pglBindAttribLocation(res.programID,VS_COLOR,"aColor");
         OPENGL_CHECK_ERRORS;
-        glBindAttribLocation(res.programID,VS_TEXCOORD0,"aTexCoord0");
+        pglBindAttribLocation(res.programID,VS_TEXCOORD0,"aTexCoord0");
         OPENGL_CHECK_ERRORS;
-        glBindAttribLocation(res.programID,VS_TEXCOORD1,"aTexCoord1");
+        pglBindAttribLocation(res.programID,VS_TEXCOORD1,"aTexCoord1");
         OPENGL_CHECK_ERRORS;
-        glBindAttribLocation(res.programID,VS_POSITION,"aPosition");
+        pglBindAttribLocation(res.programID,VS_POSITION,"aPosition");
         OPENGL_CHECK_ERRORS;
-        glBindAttribLocation(res.programID,VS_FOG,"aFogCoord");
-        OPENGL_CHECK_ERRORS;
-
-        glLinkProgram(res.programID);
+        pglBindAttribLocation(res.programID,VS_FOG,"aFogCoord");
         OPENGL_CHECK_ERRORS;
 
-        glGetProgramiv(res.programID, GL_LINK_STATUS, &success);
+        pglLinkProgram(res.programID);
+        OPENGL_CHECK_ERRORS;
+
+        pglGetProgramiv(res.programID, GL_LINK_STATUS, &success);
         if (!success)
         {
             char Log[1024];
             GLint nLength;
-            glGetShaderInfoLog(res.fragmentShaderID, 1024, &nLength, Log);
+            pglGetShaderInfoLog(res.fragmentShaderID, 1024, &nLength, Log);
             printf("Error linking program!\n");
             printf("%s\n",Log);
         }
 
-        glUseProgram(res.programID);
+        pglUseProgram(res.programID);
         OPENGL_CHECK_ERRORS;
 
         //Bind texture samplers
-        GLint tex0 = glGetUniformLocation(res.programID,"uTex0");
-        GLint tex1 = glGetUniformLocation(res.programID,"uTex1");
+        GLint tex0 = pglGetUniformLocation(res.programID,"uTex0");
+        GLint tex1 = pglGetUniformLocation(res.programID,"uTex1");
 
         if(tex0 != -1)
-            glUniform1i(tex0,0);
+            pglUniform1i(tex0,0);
         if(tex1 != -1)
-            glUniform1i(tex1,1);
+            pglUniform1i(tex1,1);
 
         //Bind Uniforms
-        res.PrimColorLocation = glGetUniformLocation(res.programID,"PrimColor");
+        res.PrimColorLocation = pglGetUniformLocation(res.programID,"PrimColor");
         OPENGL_CHECK_ERRORS;
-        res.EnvColorLocation = glGetUniformLocation(res.programID,"EnvColor");
+        res.EnvColorLocation = pglGetUniformLocation(res.programID,"EnvColor");
         OPENGL_CHECK_ERRORS;
-        res.PrimFracLocation = glGetUniformLocation(res.programID,"PrimFrac");
+        res.PrimFracLocation = pglGetUniformLocation(res.programID,"PrimFrac");
         OPENGL_CHECK_ERRORS;
-        res.EnvFracLocation = glGetUniformLocation(res.programID,"EnvFrac");
+        res.EnvFracLocation = pglGetUniformLocation(res.programID,"EnvFrac");
         OPENGL_CHECK_ERRORS;
-        res.AlphaRefLocation = glGetUniformLocation(res.programID,"AlphaRef");
+        res.AlphaRefLocation = pglGetUniformLocation(res.programID,"AlphaRef");
         OPENGL_CHECK_ERRORS;
-        res.FogColorLocation = glGetUniformLocation(res.programID,"FogColor");
+        res.FogColorLocation = pglGetUniformLocation(res.programID,"FogColor");
         OPENGL_CHECK_ERRORS;
-        res.FogMinMaxLocation = glGetUniformLocation(res.programID,"FogMinMax");
+        res.FogMinMaxLocation = pglGetUniformLocation(res.programID,"FogMinMax");
         OPENGL_CHECK_ERRORS;
 
         res.dwMux0 = m_pDecodedMux->m_dwMux0;
@@ -577,30 +577,30 @@ void COGL_FragmentProgramCombiner::GenerateCombinerSetting(int index)
 {
     GLuint ID = m_vCompiledShaders[index].programID;
 
-    glUseProgram(ID);
-    glEnableVertexAttribArray(VS_POSITION);
+    pglUseProgram(ID);
+    pglEnableVertexAttribArray(VS_POSITION);
     OPENGL_CHECK_ERRORS;
-    glVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][0]));
-    OPENGL_CHECK_ERRORS;
-
-    glEnableVertexAttribArray(VS_TEXCOORD0);
-    OPENGL_CHECK_ERRORS;
-    glVertexAttribPointer(VS_TEXCOORD0,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[0].u));
+    pglVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][0]));
     OPENGL_CHECK_ERRORS;
 
-    glEnableVertexAttribArray(VS_TEXCOORD1);
+    pglEnableVertexAttribArray(VS_TEXCOORD0);
     OPENGL_CHECK_ERRORS;
-    glVertexAttribPointer(VS_TEXCOORD1,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[1].u));
-    OPENGL_CHECK_ERRORS;
-
-    glEnableVertexAttribArray(VS_COLOR);
-    OPENGL_CHECK_ERRORS;
-    glVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_TRUE, sizeof(uint8)*4, &(g_oglVtxColors[0][0]) );
+    pglVertexAttribPointer(VS_TEXCOORD0,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[0].u));
     OPENGL_CHECK_ERRORS;
 
-    glEnableVertexAttribArray(VS_FOG);
+    pglEnableVertexAttribArray(VS_TEXCOORD1);
     OPENGL_CHECK_ERRORS;
-    glVertexAttribPointer(VS_FOG,1,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][4]));
+    pglVertexAttribPointer(VS_TEXCOORD1,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[1].u));
+    OPENGL_CHECK_ERRORS;
+
+    pglEnableVertexAttribArray(VS_COLOR);
+    OPENGL_CHECK_ERRORS;
+    pglVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_TRUE, sizeof(uint8)*4, &(g_oglVtxColors[0][0]) );
+    OPENGL_CHECK_ERRORS;
+
+    pglEnableVertexAttribArray(VS_FOG);
+    OPENGL_CHECK_ERRORS;
+    pglVertexAttribPointer(VS_FOG,1,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][4]));
     OPENGL_CHECK_ERRORS;
 }
 
@@ -608,7 +608,7 @@ void COGL_FragmentProgramCombiner::GenerateCombinerSettingConstants(int index)
 {
     OGLShaderCombinerSaveType prog = m_vCompiledShaders[index];
 
-    glUseProgram(prog.programID);
+    pglUseProgram(prog.programID);
     float *pf;
     if(prog.EnvColorLocation != -1)
     {
@@ -642,19 +642,19 @@ void COGL_FragmentProgramCombiner::GenerateCombinerSettingConstants(int index)
 
     if(prog.FogColorLocation != -1)
     {
-        glUniform4f(prog.FogColorLocation, gRDP.fvFogColor[0],gRDP.fvFogColor[1],gRDP.fvFogColor[2], gRDP.fvFogColor[3]);
+        pglUniform4f(prog.FogColorLocation, gRDP.fvFogColor[0],gRDP.fvFogColor[1],gRDP.fvFogColor[2], gRDP.fvFogColor[3]);
         OPENGL_CHECK_ERRORS;
     }
 
     if(prog.FogMinMaxLocation != -1)
     {
-        glUniform2f(prog.FogMinMaxLocation,gRSPfFogMin,gRSPfFogMax);
+        pglUniform2f(prog.FogMinMaxLocation,gRSPfFogMin,gRSPfFogMax);
         OPENGL_CHECK_ERRORS;
     }
 
     if(prog.AlphaRefLocation != -1)
     {
-        glUniform1f(prog.AlphaRefLocation,m_AlphaRef);
+        pglUniform1f(prog.AlphaRefLocation,m_AlphaRef);
         OPENGL_CHECK_ERRORS;
     }
 }

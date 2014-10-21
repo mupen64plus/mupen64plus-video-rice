@@ -22,50 +22,37 @@
 #if !defined(OSAL_OPENGL_H)
 #define OSAL_OPENGL_H
 
-#define GL_GLEXT_PROTOTYPES 1
 #include <SDL_config.h>
+
+// Vertex shader params
+#define VS_POSITION             0
+#define VS_COLOR                1
+#define VS_TEXCOORD0            2
+#define VS_TEXCOORD1            3
+#define VS_FOG                  4
 
 #if SDL_VIDEO_OPENGL
 #include <SDL_opengl.h>
 #define GLSL_VERSION "120"
 
-
-// Vertex shader params
-#define VS_POSITION                         0
-#define VS_COLOR                            1
-#define VS_TEXCOORD0                        2
-#define VS_TEXCOORD1                        3
-#define VS_FOG                              4
-
-#define glReadBuffer(x)
-#define glTexEnvi(x,y,z)
-
 #elif SDL_VIDEO_OPENGL_ES2
 #include <SDL_opengles2.h>
 #define GLSL_VERSION "100"
 
-
-// Vertex shader params
-#define VS_POSITION                         0
-#define VS_COLOR                            1
-#define VS_TEXCOORD0                        2
-#define VS_TEXCOORD1                        3
-#define VS_FOG                              4
-
 // Constant substitutions
-#define GL_CLAMP                            GL_CLAMP_TO_EDGE
-#define GL_MAX_TEXTURE_UNITS                GL_MAX_TEXTURE_IMAGE_UNITS
-#define GL_MIRRORED_REPEAT_ARB              GL_MIRRORED_REPEAT
+#define GL_CLAMP                GL_CLAMP_TO_EDGE
+#define GL_MAX_TEXTURE_UNITS    GL_MAX_TEXTURE_IMAGE_UNITS
+#define GL_MIRRORED_REPEAT_ARB  GL_MIRRORED_REPEAT
 
-#define GL_ADD                              0x0104
-#define GL_MODULATE                         0x2100
-#define GL_INTERPOLATE                      0x8575
-#define GL_CONSTANT                         0x8576
-#define GL_PREVIOUS                         0x8578
+#define GL_ADD                  0x0104
+#define GL_MODULATE             0x2100
+#define GL_INTERPOLATE          0x8575
+#define GL_CONSTANT             0x8576
+#define GL_PREVIOUS             0x8578
 
 // Function substitutions
-#define glClearDepth                        glClearDepthf
-#define pglActiveTexture                    glActiveTexture
+#define glClearDepth            glClearDepthf
+#define pglActiveTexture        glActiveTexture
 
 // No-op substitutions (unavailable in GLES2)
 #define glReadBuffer(x)
