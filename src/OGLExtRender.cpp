@@ -33,6 +33,10 @@ void COGLExtRender::Initialize(void)
     glGetIntegerv(GL_MAX_TEXTURE_UNITS,&m_maxTexUnits);
     OPENGL_CHECK_ERRORS;
 
+    /* limited by size 8 arrays like m_maxTexUnits, mtex, m_texUnitEnabled... */
+    if (m_maxTexUnits > 8)
+        m_maxTexUnits = 8;
+
     for( int i=0; i<8; i++ )
         m_textureUnitMap[i] = -1;
     m_textureUnitMap[0] = 0;    // T0 is usually using texture unit 0
