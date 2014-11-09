@@ -122,8 +122,6 @@ void COGLTexture::EndUpdate(DrawInfo *di)
 #ifndef USE_GLES
         // Tell to hardware to generate mipmap (himself) when glTexImage2D is called
         glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-#else
-        glGenerateMipmap(GL_TEXTURE_2D);
 #endif
         OPENGL_CHECK_ERRORS;
     }
@@ -139,6 +137,9 @@ void COGLTexture::EndUpdate(DrawInfo *di)
 #else
     //GL_BGRA_IMG works on adreno but not inside profiler.
     glTexImage2D(GL_TEXTURE_2D, 0, m_glFmt, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_pTexture);
+
+    if(options.mipmapping)
+        glGenerateMipmap(GL_TEXTURE_2D);
 #endif
     OPENGL_CHECK_ERRORS;
 }
