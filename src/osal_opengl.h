@@ -24,16 +24,12 @@
 
 #include <SDL_config.h>
 
-#if SDL_VIDEO_OPENGL
-#include <SDL_opengl.h>
-#define GLSL_VERSION "120"
+#ifdef USE_GLES
 
-// Extension names
-#define OSAL_GL_ARB_TEXTURE_ENV_ADD         "GL_ARB_texture_env_add"
+#ifndef SDL_VIDEO_OPENGL_ES2
+#error SDL is not build with OpenGL ES2 support. Try USE_GLES=0
+#endif
 
-
-
-#elif SDL_VIDEO_OPENGL_ES2
 #include <SDL_opengles2.h>
 #define GLSL_VERSION "100"
 
@@ -71,6 +67,18 @@
 #define glTexEnvfv(x,y,z)
 #define glTexCoord2f(u,v)
 
-#endif // SDL_VIDEO_OPENGL*
+#else // USE_GLES
+
+#ifndef SDL_VIDEO_OPENGL
+#error SDL is not build with OpenGL support. Try USE_GLES=1
+#endif
+
+#include <SDL_opengl.h>
+#define GLSL_VERSION "120"
+
+// Extension names
+#define OSAL_GL_ARB_TEXTURE_ENV_ADD         "GL_ARB_texture_env_add"
+
+#endif // USE_GLES
 
 #endif // OSAL_OPENGL_H
