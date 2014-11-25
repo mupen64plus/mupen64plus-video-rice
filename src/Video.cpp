@@ -983,7 +983,7 @@ EXPORT void CALL ReadScreen2(void *dest, int *width, int *height, int bFront)
     if (dest == NULL)
         return;
 
-#if SDL_VIDEO_OPENGL
+#ifndef USE_GLES
     GLint oldMode;
     glGetIntegerv( GL_READ_BUFFER, &oldMode );
     if (bFront)
