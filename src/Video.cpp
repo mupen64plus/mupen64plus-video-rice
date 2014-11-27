@@ -993,6 +993,28 @@ EXPORT void CALL ReadScreen2(void *dest, int *width, int *height, int bFront)
     glReadPixels( 0, 0, windowSetting.uDisplayWidth, windowSetting.uDisplayHeight,
                  GL_RGB, GL_UNSIGNED_BYTE, dest );
     glReadBuffer( oldMode );
+#else
+    unsigned char * line = (unsigned char *)dest;
+
+    unsigned char *frameBuffer = (unsigned char *)malloc((*width)*(*height)*4);
+
+    glReadPixels( 0, 0, windowSetting.uDisplayWidth, windowSetting.uDisplayHeight,
+                 GL_RGBA, GL_UNSIGNED_BYTE, frameBuffer );
+    //Convert RGBA to RGB
+    for (Uint32 y=0; y<windowSetting.uDisplayHeight; y++)
+    {
+        unsigned char *ptr = (unsigned char *) frameBuffer + (windowSetting.uDisplayWidth * 4 * y);
+        for (Uint32 x=0; x<windowSetting.uDisplayWidth; x++)
+        {
+            line[x*3] = ptr[0]; // red
+            line[x*3+1] = ptr[1]; // green
+            line[x*3+2] = ptr[2]; // blue
+            ptr += 4;
+        }
+        line += windowSetting.uDisplayWidth * 3;
+    }
+
+    free(frameBuffer);
 #endif
 }
     
