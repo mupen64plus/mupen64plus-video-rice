@@ -18,9 +18,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "osal_opengl.h"
 
-#if SDL_VIDEO_OPENGL
+#ifndef USE_GLES
 #include "OGLExtensions.h"
-#elif SDL_VIDEO_OPENGL_ES2
+#else
 #include "OGLES2FragmentShaders.h"
 #endif
 #include "OGLRender.h"

@@ -18,9 +18,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "osal_opengl.h"
 
-#if SDL_VIDEO_OPENGL
+#ifndef USE_GLES
 #include "OGLExtensions.h"
-#elif SDL_VIDEO_OPENGL_ES2
+#else
 #include "OGLES2FragmentShaders.h"
 #endif
 #include "OGLDebug.h"
@@ -186,7 +186,7 @@ void OGLRender::ApplyTextureFilter()
 
 void OGLRender::SetShadeMode(RenderShadeMode mode)
 {
-#if SDL_VIDEO_OPENGL
+#ifndef USE_GLES
     if( mode == SHADE_SMOOTH )
         glShadeModel(GL_SMOOTH);
     else
@@ -312,7 +312,7 @@ void OGLRender::SetAlphaRef(uint32 dwAlpha)
     if (m_dwAlpha != dwAlpha)
     {
         m_dwAlpha = dwAlpha;
-#if SDL_VIDEO_OPENGL
+#ifndef USE_GLES
         //glAlphaFunc(GL_GEQUAL, (float)dwAlpha);
         OPENGL_CHECK_ERRORS;
 #endif
@@ -322,18 +322,18 @@ void OGLRender::SetAlphaRef(uint32 dwAlpha)
 // TODO: Remove this functions as alpha clip is done in Color Combiner 
 void OGLRender::ForceAlphaRef(uint32 dwAlpha)
 {
-#if SDL_VIDEO_OPENGL
+#ifndef USE_GLES
     //float ref = dwAlpha/255.0f;
     //glAlphaFunc(GL_GEQUAL, ref);
     OPENGL_CHECK_ERRORS;
-#elif SDL_VIDEO_OPENGL_ES2
+#else
     m_dwAlpha = dwAlpha;
 #endif
 }
 
 void OGLRender::SetFillMode(FillMode mode)
 {
-#if SDL_VIDEO_OPENGL
+#ifndef USE_GLES
     if( mode == RICE_FILLMODE_WINFRAME )
     {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -643,7 +643,7 @@ bool OGLRender::RenderFillRect(uint32 dwColor, float depth)
 
 bool OGLRender::RenderLine3D()
 {
-#if SDL_VIDEO_OPENGL
+#ifndef USE_GLES
     ApplyZBias(0);  // disable z offsets
 
     glBegin(GL_TRIANGLE_FAN);
@@ -874,7 +874,7 @@ void OGLRender::RenderReset()
 // TODO: Remove this functions as it's now handled by the Color Combiner
 void OGLRender::SetAlphaTestEnable(BOOL bAlphaTestEnable)
 {
-#if SDL_VIDEO_OPENGL
+#ifndef USE_GLES
   /*#ifdef DEBUGGER
     if( bAlphaTestEnable && debuggerEnableAlphaTest )
   #else
@@ -883,7 +883,7 @@ void OGLRender::SetAlphaTestEnable(BOOL bAlphaTestEnable)
         glEnable(GL_ALPHA_TEST);
     else
         glDisable(GL_ALPHA_TEST);*/
-#elif SDL_VIDEO_OPENGL_ES2
+#else
     ((COGL_FragmentProgramCombiner*)m_pColorCombiner)->SetAlphaTestState(bAlphaTestEnable);
 #endif
     OPENGL_CHECK_ERRORS;
@@ -987,13 +987,13 @@ void OGLRender::ApplyScissorWithClipRatio(bool force)
 // TODO: Remove this function as its now handled by the Color Combiner
 void OGLRender::TurnFogOnOff(bool flag)
 {
-#if SDL_VIDEO_OPENGL
+#ifndef USE_GLES
     /*if( flag )
         glEnable(GL_FOG);
     else
         glDisable(GL_FOG);
     OPENGL_CHECK_ERRORS;*/
-#elif SDL_VIDEO_OPENGL_ES2
+#else
     ((COGL_FragmentProgramCombiner*)m_pColorCombiner)->SetFogState(flag);
     OPENGL_CHECK_ERRORS;
 #endif
@@ -1006,7 +1006,7 @@ void OGLRender::SetFogColor(uint32 r, uint32 g, uint32 b, uint32 a)
     gRDP.fvFogColor[1] = g/255.0f;      //g
     gRDP.fvFogColor[2] = b/255.0f;      //b
     gRDP.fvFogColor[3] = a/255.0f;      //a
-#if SDL_VIDEO_OPENGL
+#ifndef USE_GLES
     //glFogfv(GL_FOG_COLOR, gRDP.fvFogColor); // Set Fog Color
 #endif
     OPENGL_CHECK_ERRORS;
@@ -1027,7 +1027,7 @@ void OGLRender::DisableMultiTexture()
 
 void OGLRender::EndRendering(void)
 {
-#if SDL_VIDEO_OPENGL
+#ifndef USE_GLES
     glFlush();
     OPENGL_CHECK_ERRORS;
 #endif
