@@ -65,9 +65,10 @@
 #define pglActiveTexture        glActiveTexture
 
 // No-op substitutions (unavailable in GLES2)
+#define glLoadIdentity()
 #define glReadBuffer(x)
 #define glTexEnvi(x,y,z)
 
-#endif // SDL_VIDEO_OPENGL*
+#endif // !USE_GLES
 
 #endif // OSAL_OPENGL_H
