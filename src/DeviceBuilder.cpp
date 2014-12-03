@@ -26,11 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "OGLRender.h"
 #include "OGLGraphicsContext.h"
 #include "OGLTexture.h"
-#ifndef USE_GLES
 #include "OGLExtensions.h"
-#else
-#include "OGLES2FragmentShaders.h"
-#endif
 
 //========================================================================
 CDeviceBuilder*     CDeviceBuilder::m_pInstance         = NULL;
@@ -220,8 +216,6 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
         {
             m_deviceType = (SupportedDeviceType)options.OpenglRenderSetting;
 
-#ifndef USE_GLES
-
             if( m_deviceType == OGL_DEVICE )    // Best fit
             {
                 m_pColorCombiner = new COGLColorCombiner(pRender);
@@ -241,12 +235,6 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
                     break;
                 }
             }
-
-#else
-            m_pColorCombiner = new COGL_FragmentProgramCombiner(pRender);
-            bColorCombinerFound = true;
-            DebugMessage(M64MSG_VERBOSE, "OpenGL Combiner: Fragment Program");
-#endif
         }
 
         if (!bColorCombinerFound)

@@ -18,11 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "osal_opengl.h"
 
-#ifndef USE_GLES
 #include "OGLExtensions.h"
-#else
-#include "OGLES2FragmentShaders.h"
-#endif
 #include "OGLDebug.h"
 #include "OGLRender.h"
 #include "OGLGraphicsContext.h"
@@ -878,7 +874,6 @@ void OGLRender::RenderReset()
 // TODO: Remove this functions as it's now handled by the Color Combiner
 void OGLRender::SetAlphaTestEnable(BOOL bAlphaTestEnable)
 {
-#ifndef USE_GLES
   /*#ifdef DEBUGGER
     if( bAlphaTestEnable && debuggerEnableAlphaTest )
   #else
@@ -886,11 +881,8 @@ void OGLRender::SetAlphaTestEnable(BOOL bAlphaTestEnable)
   #endif
         glEnable(GL_ALPHA_TEST);
     else
-        glDisable(GL_ALPHA_TEST);*/
-#else
-    ((COGL_FragmentProgramCombiner*)m_pColorCombiner)->SetAlphaTestState(bAlphaTestEnable);
-#endif
-    OPENGL_CHECK_ERRORS;
+        glDisable(GL_ALPHA_TEST);
+    OPENGL_CHECK_ERRORS;*/
 }
 
 void OGLRender::BindTexture(GLuint texture, int unitno)
@@ -991,16 +983,11 @@ void OGLRender::ApplyScissorWithClipRatio(bool force)
 // TODO: Remove this function as its now handled by the Color Combiner
 void OGLRender::TurnFogOnOff(bool flag)
 {
-#ifndef USE_GLES
     /*if( flag )
         glEnable(GL_FOG);
     else
         glDisable(GL_FOG);
     OPENGL_CHECK_ERRORS;*/
-#else
-    ((COGL_FragmentProgramCombiner*)m_pColorCombiner)->SetFogState(flag);
-    OPENGL_CHECK_ERRORS;
-#endif
 }
 
 void OGLRender::SetFogColor(uint32 r, uint32 g, uint32 b, uint32 a)
@@ -1010,10 +997,6 @@ void OGLRender::SetFogColor(uint32 r, uint32 g, uint32 b, uint32 a)
     gRDP.fvFogColor[1] = g/255.0f;      //g
     gRDP.fvFogColor[2] = b/255.0f;      //b
     gRDP.fvFogColor[3] = a/255.0f;      //a
-#ifndef USE_GLES
-    //glFogfv(GL_FOG_COLOR, gRDP.fvFogColor); // Set Fog Color
-#endif
-    OPENGL_CHECK_ERRORS;
 }
 
 void OGLRender::DisableMultiTexture()

@@ -49,6 +49,9 @@
 #include <SDL_opengles2.h>
 #define GLSL_VERSION "100"
 
+// SDL_opengles2.h define GL_APIENTRYP instead of APIENTRYP
+#define APIENTRYP GL_APIENTRYP
+
 // Constant substitutions
 #define GL_CLAMP                GL_CLAMP_TO_EDGE
 #define GL_MAX_TEXTURE_UNITS    GL_MAX_TEXTURE_IMAGE_UNITS
@@ -62,7 +65,7 @@
 
 // Function substitutions
 #define glClearDepth            glClearDepthf
-#define pglActiveTexture        glActiveTexture
+#define glDepthRange            glDepthRangef
 
 // No-op substitutions (unavailable in GLES2)
 #define glLoadIdentity()

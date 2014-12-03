@@ -18,11 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "osal_opengl.h"
 
-#ifndef USE_GLES
 #include "OGLExtensions.h"
-#else
-#include "OGLES2FragmentShaders.h"
-#endif
 #include "OGLRender.h"
 
 extern Matrix g_MtxReal;
