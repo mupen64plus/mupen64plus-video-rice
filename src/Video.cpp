@@ -48,7 +48,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 static void (*l_DebugCallback)(void *, int, const char *) = NULL;
 static void *l_DebugCallContext = NULL;
 static int l_PluginInit = 0;
-static unsigned char frameBuffer[2048*2048*4];
 
 //=======================================================
 // global variables
