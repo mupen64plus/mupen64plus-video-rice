@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 COGLTexture::COGLTexture(uint32 dwWidth, uint32 dwHeight, TextureUsage usage) :
     CTexture(dwWidth,dwHeight,usage),
-    m_glFmt(GL_RGBA)
+    m_glInternalFmt(GL_RGBA)
 {
     // FIXME: If usage is AS_RENDER_TARGET, we need to create pbuffer instead of regular texture
 
@@ -55,19 +55,19 @@ COGLTexture::COGLTexture(uint32 dwWidth, uint32 dwHeight, TextureUsage usage) :
     {
     case TXT_QUALITY_DEFAULT:
         if( options.colorQuality == TEXTURE_FMT_A4R4G4B4 ) 
-            m_glFmt = GL_RGBA4;
+            m_glInternalFmt = GL_RGBA4;
         break;
     case TXT_QUALITY_32BIT:
         break;
     case TXT_QUALITY_16BIT:
-            m_glFmt = GL_RGBA4;
+            m_glInternalFmt = GL_RGBA4;
         break;
     };
     LOG_TEXTURE(TRACE2("New texture: (%d, %d)", dwWidth, dwHeight));
     
     // We create the OGL texture here and will use glTexSubImage2D to increase performance.
     glBindTexture(GL_TEXTURE_2D, m_dwTextureName);
-    glTexImage2D(GL_TEXTURE_2D, 0, m_glFmt, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, m_glInternalFmt, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, 0, m_glFmt, m_glType, NULL);
 
 }
 
@@ -129,8 +129,8 @@ void COGLTexture::EndUpdate(DrawInfo *di)
 #ifndef USE_GLES
         // Tell to hardware to generate mipmap (himself) when glTexImage2D is called
         glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-#endif
         OPENGL_CHECK_ERRORS;
+#endif
     }
     else
     {
@@ -139,16 +139,14 @@ void COGLTexture::EndUpdate(DrawInfo *di)
     }
 
     // Copy the image data from main memory to video card texture memory
-#ifndef USE_GLES
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, GL_BGRA_EXT, GL_UNSIGNED_INT_8_8_8_8_REV, m_pTexture);
-#else
-    //GL_BGRA_IMG works on adreno but not inside profiler.
-    glTexImage2D(GL_TEXTURE_2D, 0, m_glFmt, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_pTexture);
 
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, m_glFmt, m_glType, m_pTexture);
+    OPENGL_CHECK_ERRORS;
+
+#ifdef USE_GLES
     if(options.mipmapping)
         glGenerateMipmap(GL_TEXTURE_2D);
 #endif
-    OPENGL_CHECK_ERRORS;
 }
 
 
