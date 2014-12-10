@@ -401,6 +401,9 @@ void COGLGraphicsContext::UpdateFrame(bool swaponly)
 
    CoreVideo_GL_SwapBuffers();
    
+   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+   glClear(GL_COLOR_BUFFER_BIT);
+   
    /*if(options.bShowFPS)
      {
     static unsigned int lastTick=0;
