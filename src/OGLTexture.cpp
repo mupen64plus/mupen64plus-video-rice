@@ -97,7 +97,7 @@ void COGLTexture::EndUpdate(DrawInfo *di)
 {
     COGLGraphicsContext *pcontext = (COGLGraphicsContext *)(CGraphicsContext::g_pGraphicsContext); // we need this to check if the GL extension is avaible
 
-    pglActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE0);
     OPENGL_CHECK_ERRORS;
 
     glBindTexture(GL_TEXTURE_2D, m_dwTextureName);
