@@ -97,6 +97,9 @@ void COGLTexture::EndUpdate(DrawInfo *di)
 {
     COGLGraphicsContext *pcontext = (COGLGraphicsContext *)(CGraphicsContext::g_pGraphicsContext); // we need this to check if the GL extension is avaible
 
+    glActiveTexture(GL_TEXTURE0);
+    OPENGL_CHECK_ERRORS;
+
     glBindTexture(GL_TEXTURE_2D, m_dwTextureName);
     OPENGL_CHECK_ERRORS;
 
@@ -141,6 +144,9 @@ void COGLTexture::EndUpdate(DrawInfo *di)
     if(options.mipmapping)
         glGenerateMipmap(GL_TEXTURE_2D);
 #endif
+    OPENGL_CHECK_ERRORS;
+
+    glBindTexture(GL_TEXTURE_2D, 0);
     OPENGL_CHECK_ERRORS;
 }
 
