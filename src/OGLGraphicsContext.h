@@ -24,8 +24,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 class COGLGraphicsContext : public CGraphicsContext
 {
-    friend class OGLRender;
-    friend class COGLRenderTexture;
 public:
     virtual ~COGLGraphicsContext();
 
@@ -37,11 +35,10 @@ public:
     void UpdateFrame(bool swaponly=false);
     int ToggleFullscreen();     // return 0 as the result is windowed
 
-    bool IsExtensionSupported(const char* pExtName);
-
     //Get methods (TODO, remove all friend class and use get methods instead)
-    bool IsSupportAnisotropicFiltering();
-    int  getMaxAnisotropicFiltering();
+    inline bool IsSupportAnisotropicFiltering() { return m_bSupportAnisotropicFiltering; };
+    inline int  getMaxAnisotropicFiltering() { return m_maxAnisotropicFiltering; };
+    inline bool IsSupportTextureFormatBRGA() { return m_bSupportTextureFormatBRGA; };
 
 protected:
     friend class OGLDeviceBuilder;
@@ -51,14 +48,14 @@ protected:
     bool SetFullscreenMode();
     bool SetWindowMode();
 
-    // Optional OGL extension features;
+private:
+    const unsigned char* m_pExtensionStr;
+
+    // Optional OGL extension features
+    bool IsExtensionSupported(const char* pExtName);
     bool m_bSupportAnisotropicFiltering;
     int  m_maxAnisotropicFiltering;
-
-    const unsigned char* m_pVendorStr;
-    const unsigned char* m_pRenderStr;
-    const unsigned char* m_pExtensionStr;
-    const unsigned char* m_pVersionStr;
+    bool m_bSupportTextureFormatBRGA;
 };
 
 #endif

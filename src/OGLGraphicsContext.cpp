@@ -32,10 +32,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "version.h"
 
 COGLGraphicsContext::COGLGraphicsContext() :
-    m_pVendorStr(NULL),
-    m_pRenderStr(NULL),
-    m_pExtensionStr(NULL),
-    m_pVersionStr(NULL)
+    m_pExtensionStr(NULL)
 {
 }
 
@@ -130,11 +127,15 @@ bool COGLGraphicsContext::Initialize(uint32 dwWidth, uint32 dwHeight, BOOL bWind
     CoreVideo_SetCaption(caption);
     SetWindowMode();
 
+    m_pExtensionStr = glGetString(GL_EXTENSIONS);
+    
+    const unsigned char* renderStr  = glGetString(GL_RENDERER);
+    const unsigned char* versionStr = glGetString(GL_VERSION);
+    const unsigned char* vendorStr  = glGetString(GL_VENDOR);
+    DebugMessage(M64MSG_INFO, "Using OpenGL: %.60s - %.128s : %.60s", renderStr, versionStr, vendorStr);
+
     InitState();
     InitOGLExtension();
-    sprintf(m_strDeviceStats, "%.60s - %.128s : %.60s", m_pVendorStr, m_pRenderStr, m_pVersionStr);
-    TRACE0(m_strDeviceStats);
-    DebugMessage(M64MSG_INFO, "Using OpenGL: %s", m_strDeviceStats);
 
     Unlock();
 
@@ -203,11 +204,6 @@ bool COGLGraphicsContext::ResizeInitialize(uint32 dwWidth, uint32 dwHeight, BOOL
 
 void COGLGraphicsContext::InitState(void)
 {
-    m_pRenderStr    = glGetString(GL_RENDERER);
-    m_pExtensionStr = glGetString(GL_EXTENSIONS);
-    m_pVersionStr   = glGetString(GL_VERSION);
-    m_pVendorStr    = glGetString(GL_VENDOR);
-
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     OPENGL_CHECK_ERRORS;
     glClearDepth(1.0f);
@@ -283,6 +279,8 @@ void COGLGraphicsContext::InitOGLExtension(void)
         if((uint32) m_maxAnisotropicFiltering > options.anisotropicFiltering)
         m_maxAnisotropicFiltering = options.anisotropicFiltering;
     }
+
+    m_bSupportTextureFormatBRGA = IsExtensionSupported("GL_EXT_texture_format_BGRA8888");
 }
 
 bool COGLGraphicsContext::IsExtensionSupported(const char* pExtName)
@@ -440,15 +438,4 @@ int COGLGraphicsContext::ToggleFullscreen()
     }
 
     return m_bWindowed?0:1;
-}
-
-// Get methods
-bool COGLGraphicsContext::IsSupportAnisotropicFiltering()
-{
-    return m_bSupportAnisotropicFiltering;
-}
-
-int COGLGraphicsContext::getMaxAnisotropicFiltering()
-{
-    return m_maxAnisotropicFiltering;
 }

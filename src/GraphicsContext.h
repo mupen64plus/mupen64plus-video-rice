@@ -62,15 +62,12 @@ protected:
     bool                m_bWindowed;
     RECT                m_rcWindowBounds;
 
-    char                m_strDeviceStats[256];
-
     virtual ~CGraphicsContext();
     CGraphicsContext();
     
 public:
     static CGraphicsContext *g_pGraphicsContext;
     static CGraphicsContext * Get(void);
-    inline const char* GetDeviceStr() {return m_strDeviceStats;}
     static bool needCleanScene;
 };
 
