@@ -63,12 +63,21 @@ COGLTexture::COGLTexture(uint32 dwWidth, uint32 dwHeight, TextureUsage usage) :
             m_glInternalFmt = GL_RGBA4;
         break;
     };
+
+    #ifndef USE_GLES
+    m_glFmt = GL_BGRA;
+    m_glType = GL_UNSIGNED_INT_8_8_8_8_REV;
+    #else
+    COGLGraphicsContext *pcontext = (COGLGraphicsContext *)(CGraphicsContext::g_pGraphicsContext);
+    m_glFmt = pcontext->IsSupportTextureFormatBRGA() ? GL_BGRA_EXT : GL_RGBA;
+    m_glType = GL_UNSIGNED_BYTE;
+    #endif
+
     LOG_TEXTURE(TRACE2("New texture: (%d, %d)", dwWidth, dwHeight));
     
     // We create the OGL texture here and will use glTexSubImage2D to increase performance.
     glBindTexture(GL_TEXTURE_2D, m_dwTextureName);
     glTexImage2D(GL_TEXTURE_2D, 0, m_glInternalFmt, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, 0, m_glFmt, m_glType, NULL);
-
 }
 
 COGLTexture::~COGLTexture()

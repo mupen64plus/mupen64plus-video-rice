@@ -33,7 +33,6 @@ public:
     void EndUpdate(DrawInfo *di);
 
     GLuint m_dwTextureName;
-    GLuint m_glInternalFmt;
 
 protected:
     friend class OGLDeviceBuilder;
@@ -45,13 +44,9 @@ private:
      * GLenum format, type;
      * glGetInternalformativ(GL_TEXTURE_2D, GL_RGBA, GL_TEXTURE_IMAGE_FORMAT, 1, &format);
      * glGetInternalformativ(GL_TEXTURE_2D, GL_RGBA, GL_TEXTURE_IMAGE_TYPE, 1, &type); */
-    #ifndef USE_GLES
-    static const GLuint m_glFmt = GL_BGRA_EXT;
-    static const GLuint m_glType = GL_UNSIGNED_INT_8_8_8_8_REV;
-    #else
-    static const GLuint m_glFmt = GL_RGBA;
-    static const GLuint m_glType = GL_UNSIGNED_BYTE;
-    #endif
+    GLuint m_glInternalFmt;
+    GLuint m_glFmt;
+    GLuint m_glType;
 };
 
 
