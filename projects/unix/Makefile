@@ -313,12 +313,10 @@ SOURCE = \
 	$(SRCDIR)/ConvertImage.cpp \
 	$(SRCDIR)/ConvertImage16.cpp \
 	$(SRCDIR)/Debugger.cpp \
-	$(SRCDIR)/DecodedMux.cpp \
 	$(SRCDIR)/DeviceBuilder.cpp \
 	$(SRCDIR)/FrameBuffer.cpp \
 	$(SRCDIR)/GraphicsContext.cpp \
 	$(SRCDIR)/OGLCombiner.cpp \
-	$(SRCDIR)/OGLDecodedMux.cpp \
 	$(SRCDIR)/OGLExtensions.cpp \
 	$(SRCDIR)/OGLGraphicsContext.cpp \
 	$(SRCDIR)/OGLRender.cpp \

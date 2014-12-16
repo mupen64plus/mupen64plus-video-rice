@@ -418,9 +418,9 @@ bool CRender::FillRect(int nX0, int nY0, int nX1, int nY1, uint32 dwColor)
     if( options.bWinFrameMode ) SetFillMode(RICE_FILLMODE_WINFRAME );
 
     DEBUGGER_PAUSE_AND_DUMP_COUNT_N( NEXT_FILLRECT, {DebuggerAppendMsg("FillRect: X0=%d, Y0=%d, X1=%d, Y1=%d, Color=0x%08X", nX0, nY0, nX1, nY1, dwColor);
-            DebuggerAppendMsg("Pause after FillRect: Color=%08X\n", dwColor);if( logCombiners ) m_pColorCombiner->DisplayMuxString();});
+            DebuggerAppendMsg("Pause after FillRect: Color=%08X\n", dwColor);});
     DEBUGGER_PAUSE_AND_DUMP_COUNT_N( NEXT_FLUSH_TRI, {DebuggerAppendMsg("FillRect: X0=%d, Y0=%d, X1=%d, Y1=%d, Color=0x%08X", nX0, nY0, nX1, nY1, dwColor);
-            DebuggerAppendMsg("Pause after FillRect: Color=%08X\n", dwColor);if( logCombiners ) m_pColorCombiner->DisplayMuxString();});
+            DebuggerAppendMsg("Pause after FillRect: Color=%08X\n", dwColor);});
 
     return res;
 }
@@ -842,7 +842,6 @@ bool CRender::TexRect(int nX0, int nY0, int nX1, int nY1, float fS0, float fT0, 
         }
         DebuggerAppendMsg("color=%08X\n", g_texRectTVtx[0].dcDiffuse);
         DebuggerAppendMsg("Pause after TexRect\n");
-        if( logCombiners ) m_pColorCombiner->DisplayMuxString();
     });
 
     return res;
@@ -926,7 +925,6 @@ bool CRender::TexRectFlip(int nX0, int nY0, int nX1, int nY1, float fS0, float f
         DebuggerAppendMsg("       : x0=%f, y0=%f, x1=%f, y1=%f\n",  g_texRectTVtx[0].x, g_texRectTVtx[0].y, g_texRectTVtx[2].x, g_texRectTVtx[2].y);
         DebuggerAppendMsg("   Tex0: u0=%f, v0=%f, u1=%f, v1=%f\n",  g_texRectTVtx[0].tcord[0].u, g_texRectTVtx[0].tcord[0].v, g_texRectTVtx[2].tcord[0].u, g_texRectTVtx[2].tcord[0].v);
         TRACE0("Pause after TexRectFlip\n");
-        if( logCombiners ) m_pColorCombiner->DisplayMuxString();
     });
 
     return res;
@@ -1304,7 +1302,6 @@ bool CRender::DrawTriangles()
 
     DEBUGGER_PAUSE_AND_DUMP_COUNT_N(NEXT_FLUSH_TRI, {
         TRACE0("Pause after DrawTriangles\n");
-        if( logCombiners ) m_pColorCombiner->DisplayMuxString();
     });
 
     if( !gRDP.bFogEnableInBlender && gRSP.bFogEnabled )

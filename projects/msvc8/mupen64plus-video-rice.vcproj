@@ -220,10 +220,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\DecodedMux.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\DeviceBuilder.cpp"
 				>
 			</File>
@@ -244,10 +240,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\OGLDecodedMux.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\OGLExtCombiner.cpp"
 				>
 			</File>
@@ -257,10 +249,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\OGLExtRender.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\OGLFragmentShaders.cpp"
 				>
 			</File>
 			<File
@@ -406,10 +394,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\DecodedMux.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\DeviceBuilder.h"
 				>
 			</File>
@@ -450,10 +434,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\OGLDecodedMux.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\OGLExtCombiner.h"
 				>
 			</File>
@@ -463,10 +443,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\OGLExtRender.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\OGLFragmentShaders.h"
 				>
 			</File>
 			<File

@@ -103,17 +103,14 @@
     <ClCompile Include="..\..\src\ConvertImage.cpp" />
     <ClCompile Include="..\..\src\ConvertImage16.cpp" />
     <ClCompile Include="..\..\src\Debugger.cpp" />
-    <ClCompile Include="..\..\src\DecodedMux.cpp" />
     <ClCompile Include="..\..\src\DeviceBuilder.cpp" />
     <ClCompile Include="..\..\src\FrameBuffer.cpp" />
     <ClCompile Include="..\..\src\GeneralCombiner.cpp" />
     <ClCompile Include="..\..\src\GraphicsContext.cpp" />
     <ClCompile Include="..\..\src\OGLCombiner.cpp" />
-    <ClCompile Include="..\..\src\OGLDecodedMux.cpp" />
     <ClCompile Include="..\..\src\OGLExtCombiner.cpp" />
     <ClCompile Include="..\..\src\OGLExtensions.cpp" />
     <ClCompile Include="..\..\src\OGLExtRender.cpp" />
-    <ClCompile Include="..\..\src\OGLFragmentShaders.cpp" />
     <ClCompile Include="..\..\src\OGLGraphicsContext.cpp" />
     <ClCompile Include="..\..\src\OGLRender.cpp" />
     <ClCompile Include="..\..\src\OGLRenderExt.cpp" />
@@ -150,7 +147,6 @@
     <ClInclude Include="..\..\src\CritSect.h" />
     <ClInclude Include="..\..\src\CSortedList.h" />
     <ClInclude Include="..\..\src\Debugger.h" />
-    <ClInclude Include="..\..\src\DecodedMux.h" />
     <ClInclude Include="..\..\src\DeviceBuilder.h" />
     <ClInclude Include="..\..\src\ExtendedRender.h" />
     <ClInclude Include="..\..\src\FrameBuffer.h" />
@@ -161,11 +157,9 @@
     <ClInclude Include="..\..\src\liblinux\jpegrw.h" />
     <ClInclude Include="..\..\src\OGLCombiner.h" />
     <ClInclude Include="..\..\src\OGLDebug.h" />
-    <ClInclude Include="..\..\src\OGLDecodedMux.h" />
     <ClInclude Include="..\..\src\OGLExtCombiner.h" />
     <ClInclude Include="..\..\src\OGLExtensions.h" />
     <ClInclude Include="..\..\src\OGLExtRender.h" />
-    <ClInclude Include="..\..\src\OGLFragmentShaders.h" />
     <ClInclude Include="..\..\src\OGLGraphicsContext.h" />
     <ClInclude Include="..\..\src\OGLRender.h" />
     <ClInclude Include="..\..\src\OGLTexture.h" />

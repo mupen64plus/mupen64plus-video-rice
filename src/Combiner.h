@@ -23,7 +23,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "typedefs.h"
 #include "CombinerDefs.h"
 #include "CSortedList.h"
-#include "DecodedMux.h"
 
 class CRender;
 
@@ -38,21 +37,14 @@ public:
 
     virtual bool Initialize(void)=0;
     virtual void CleanUp(void) {};
-    virtual void UpdateCombiner(uint32 dwMux0, uint32 dwMux1); // TODO: Remove this but it still have a lot of hacks that could be interesting.
     virtual void SetCombineMode(uint32 dwMux0, uint32 dwMux1);
     virtual void InitCombinerBlenderForSimpleTextureDraw(uint32 tile=0)=0;
     virtual void DisableCombiner(void)=0;
     bool    m_bLODFracEnabled; // TODO: Find a way to remove that.
 
-#ifdef DEBUGGER
-    virtual void DisplaySimpleMuxString(void);
-    virtual void DisplayMuxString(void);
-#endif
-
-    DecodedMux *m_pDecodedMux;
 protected:
     CColorCombiner(CRender *pRender) : 
-        m_pDecodedMux(NULL), m_bTex0Enabled(false),m_bTex1Enabled(false),m_bTexelsEnable(false),
+        m_bTex0Enabled(false),m_bTex1Enabled(false),m_bTexelsEnable(false),
         m_bCycleChanged(false),m_pRender(pRender)
     {
     }
@@ -91,8 +83,6 @@ protected:
     bool   m_bCycleChanged;    // A flag will be set if cycle is changed to FILL or COPY
 
     CRender *m_pRender;
-
-    CSortedList<uint64, DecodedMux> m_DecodedMuxList;
 
 private:
     static const SourceIndex color_indices[8];

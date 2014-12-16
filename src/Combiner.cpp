@@ -92,14 +92,6 @@ const CColorCombiner::SourceIndex CColorCombiner::alpha_indices[8] = {
 
 void CColorCombiner::InitCombinerMode(void)
 {
-#ifdef DEBUGGER
-    LOG_UCODE(cycleTypeStrs[gRDP.otherMode.cycle_type]);
-    if( debuggerDropDecodedMux )
-    {
-        UpdateCombiner(m_pDecodedMux->m_dwMux0, m_pDecodedMux->m_dwMux1);
-    }
-#endif
-
     if( currentRomOptions.bNormalCombiner )
     {
         DisableCombiner();
@@ -122,83 +114,7 @@ void CColorCombiner::InitCombinerMode(void)
     }
 }
 
-
 bool bConkerHideShadow=false;
-void CColorCombiner::UpdateCombiner(uint32 dwMux0, uint32 dwMux1)
-{
-#ifdef DEBUGGER
-    if( debuggerDropDecodedMux )
-    {
-        debuggerDropDecodedMux = false;
-        m_pDecodedMux->m_dwMux0 = m_pDecodedMux->m_dwMux1 = 0;
-        m_DecodedMuxList.clear();
-    }
-#endif
-
-    DecodedMux &m_decodedMux = *m_pDecodedMux;
-    if( m_decodedMux.m_dwMux0 != dwMux0 || m_decodedMux.m_dwMux1 != dwMux1 )
-    {
-        if( options.enableHackForGames == HACK_FOR_DR_MARIO )
-        {
-            // Hack for Dr. Mario
-            if( dwMux1 == 0xfffcf239 && 
-                ((m_decodedMux.m_dwMux0 == dwMux0 && dwMux0 == 0x00ffffff && 
-                m_decodedMux.m_dwMux1 != dwMux1 && m_decodedMux.m_dwMux1 == 0xfffcf279 ) || 
-                (m_decodedMux.m_dwMux0 == 0x00ffb3ff && m_decodedMux.m_dwMux1 == 0xff64fe7f && dwMux0 == 0x00ffffff ) ))
-            {
-                //dwMux1 = 0xffcf23A;
-                dwMux1 = 0xfffcf438;
-            }
-        }
-        uint64 mux64 = (((uint64)dwMux1)<<32)+dwMux0;
-        int index=m_DecodedMuxList.find(mux64);
-
-        if( options.enableHackForGames == HACK_FOR_CONKER )
-        {
-            // Conker's shadow, to disable the shadow
-            //Mux=0x00ffe9ff    Used in CONKER BFD
-            //Color0: (0 - 0) * 0 + SHADE
-            //Color1: (0 - 0) * 0 + SHADE
-            //Alpha0: (1 - TEXEL0) * SHADE + 0
-            //Alpha1: (1 - TEXEL0) * SHADE + 0              
-            if( dwMux1 == 0xffd21f0f && dwMux0 == 0x00ffe9ff )
-            {
-                bConkerHideShadow = true;
-            }
-            else
-            {
-                bConkerHideShadow = false;
-            }
-        }
-
-        if( index >= 0 )
-        {
-            m_decodedMux = m_DecodedMuxList[index];
-        }
-        else
-        {
-            m_decodedMux.Decode(dwMux0, dwMux1);
-            m_decodedMux.splitType[0] = CM_FMT_TYPE_NOT_CHECKED;
-            m_decodedMux.splitType[1] = CM_FMT_TYPE_NOT_CHECKED;
-            m_decodedMux.splitType[2] = CM_FMT_TYPE_NOT_CHECKED;
-            m_decodedMux.splitType[3] = CM_FMT_TYPE_NOT_CHECKED;
-
-            m_decodedMux.Hack();
-
-            m_decodedMux.Simplify();
-            
-            m_DecodedMuxList.add(m_decodedMux.m_u64Mux, *m_pDecodedMux);
-#ifdef DEBUGGER
-            if( logCombiners ) 
-            {
-                TRACE0("Add a new mux");
-                DisplayMuxString();
-            }
-#endif
-        }
-    }
-}
-
 // rgb0   = (A0 - B0) * C0 + D0
 // rgb1   = (A1 - B1) * C1 + D1
 // alpha0 = (a0 - b0) * c0 + d0
@@ -282,27 +198,22 @@ void CColorCombiner::SetCombineMode(uint32 dwMux0, uint32 dwMux1)
             m_sources[CS_COLOR_C1] = CCMUX_TEXEL0;
         }
     }
-}
 
-
-#ifdef DEBUGGER
-void CColorCombiner::DisplayMuxString(void)
-{
-    if( gRDP.otherMode.cycle_type == CYCLE_TYPE_COPY)
+    if( options.enableHackForGames == HACK_FOR_CONKER )
     {
-        TRACE0("COPY Mode\n");
-    }   
-    else if( gRDP.otherMode.cycle_type == CYCLE_TYPE_FILL)
-    {
-        TRACE0("FILL Mode\n");
+        // Conker's shadow, to disable the shadow
+        //Mux=0x00ffe9ff    Used in CONKER BFD
+        //Color0: (0 - 0) * 0 + SHADE
+        //Color1: (0 - 0) * 0 + SHADE
+        //Alpha0: (1 - TEXEL0) * SHADE + 0
+        //Alpha1: (1 - TEXEL0) * SHADE + 0              
+        if( dwMux1 == 0xffd21f0f && dwMux0 == 0x00ffe9ff )
+        {
+            bConkerHideShadow = true;
+        }
+        else
+        {
+            bConkerHideShadow = false;
+        }
     }
-
-    m_pDecodedMux->DisplayMuxString("Used");
 }
-
-void CColorCombiner::DisplaySimpleMuxString(void)
-{
-    m_pDecodedMux->DisplaySimpliedMuxString("Used");
-}
-#endif
-
