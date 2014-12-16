@@ -54,7 +54,6 @@
 
 // Constant substitutions
 #define GL_CLAMP                GL_CLAMP_TO_EDGE
-#define GL_MAX_TEXTURE_UNITS    GL_MAX_TEXTURE_IMAGE_UNITS
 #define GL_MIRRORED_REPEAT_ARB  GL_MIRRORED_REPEAT
 
 #define GL_ADD                  0x0104
