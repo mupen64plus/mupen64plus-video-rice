@@ -201,6 +201,10 @@ typedef struct {
     int     OpenglRenderSetting;
     uint32  colorQuality;
 
+    BOOL    bForcePolygonOffset;
+    float   polygonOffsetFactor;
+    float   polygonOffsetUnits;
+
     int rotate;
 
     HACK_FOR_GAMES  enableHackForGames;
