@@ -61,66 +61,45 @@ ConvertFunction     gConvertTlutFunctions[ 8 ][ 4 ] =
 
 extern bool conkerSwapHack;
 
+// Super Mario 64, Zelda OOT
 void ConvertRGBA16(CTexture *pTexture, const TxtrInfo &tinfo)
 {
     DrawInfo dInfo;
 
     // Copy of the base pointer
-    uint16 * pSrc = (uint16*)(tinfo.pPhysicalAddress);
+    uint8 * pByteSrc = (uint8 *)(tinfo.pPhysicalAddress);
 
-    uint8 * pByteSrc = (uint8 *)pSrc;
     if (!pTexture->StartUpdate(&dInfo))
         return;
 
-    uint32 nFiddle;
+    // is only setted if the texture is swapped
+    uint32 nFiddle = 0x2;
 
-    if (tinfo.bSwapped)
+    for (uint32 y = 0; y < tinfo.HeightToLoad; y++)
     {
-        for (uint32 y = 0; y < tinfo.HeightToLoad; y++)
+        if (tinfo.bSwapped) // Super Smash Bros N64 logo
         {
-            if ((y&1) == 0)
-                nFiddle = 0x2;
+            if (y&1)
+                nFiddle = 0x2 | 0x4; // only odd lines are swapped
             else
-                nFiddle = 0x2 | 0x4;
-
-            // dwDst points to start of destination row
-            uint32 * dwDst = (uint32 *)((uint8 *)dInfo.lpSurface + y*dInfo.lPitch);
-
-            // DWordOffset points to the current dword we're looking at
-            // (process 2 pixels at a time). May be a problem if we don't start on even pixel
-            uint32 dwWordOffset = ((y+tinfo.TopToLoad) * tinfo.Pitch) + (tinfo.LeftToLoad * 2);
-
-            for (uint32 x = 0; x < tinfo.WidthToLoad; x++)
-            {
-                uint16 w = *(uint16 *)&pByteSrc[dwWordOffset ^ nFiddle];
-
-                dwDst[x] = Convert555ToRGBA(w);
-                
-                // Increment word offset to point to the next two pixels
-                dwWordOffset += 2;
-            }
+                nFiddle = 0x2;
         }
-    }
-    else
-    {
-        for (uint32 y = 0; y < tinfo.HeightToLoad; y++)
+
+        // dwDst points to start of destination row
+        uint32 * dwDst = (uint32 *)((uint8 *)dInfo.lpSurface + y*dInfo.lPitch);
+
+        // DWordOffset points to the current dword we're looking at
+        // (process 2 pixels at a time). May be a problem if we don't start on even pixel
+        uint32 dwWordOffset = ((y+tinfo.TopToLoad) * tinfo.Pitch) + (tinfo.LeftToLoad * 2);
+
+        for (uint32 x = 0; x < tinfo.WidthToLoad; x++)
         {
-            // dwDst points to start of destination row
-            uint32 * dwDst = (uint32 *)((uint8 *)dInfo.lpSurface + y*dInfo.lPitch);
+            uint16 w = *(uint16 *)&pByteSrc[dwWordOffset ^ nFiddle];
 
-            // DWordOffset points to the current dword we're looking at
-            // (process 2 pixels at a time). May be a problem if we don't start on even pixel
-            uint32 dwWordOffset = ((y+tinfo.TopToLoad) * tinfo.Pitch) + (tinfo.LeftToLoad * 2);
+            dwDst[x] = Convert555ToRGBA(w);
 
-            for (uint32 x = 0; x < tinfo.WidthToLoad; x++)
-            {
-                uint16 w = *(uint16 *)&pByteSrc[dwWordOffset ^ 0x2];
-
-                dwDst[x] = Convert555ToRGBA(w);
-                
-                // Increment word offset to point to the next two pixels
-                dwWordOffset += 2;
-            }
+            // Increment word offset to point to the next two pixels
+            dwWordOffset += 2;
         }
     }
 
