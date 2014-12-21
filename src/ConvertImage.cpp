@@ -107,13 +107,16 @@ void ConvertRGBA16(CTexture *pTexture, const TxtrInfo &tinfo)
     pTexture->SetOthersVariables();
 }
 
+// N64 32 bit textures are in R8G8B8A8 format. On little endian processors,
+// components are reverted during transfer to GPU. So RGBA is send as ABGR
+// which is not supported. We need to convert RGBA to ARGB (A8R8G8B8) because
+// ARGB will be BGRA on GPU.
 void ConvertRGBA32(CTexture *pTexture, const TxtrInfo &tinfo)
 {
     DrawInfo dInfo;
+
     if (!pTexture->StartUpdate(&dInfo))
         return;
-
-    uint32 * pSrc = (uint32*)(tinfo.pPhysicalAddress);
 
     if( options.bUseFullTMEM )
     {
@@ -146,60 +149,38 @@ void ConvertRGBA32(CTexture *pTexture, const TxtrInfo &tinfo)
     }
     else
     {
-        if (tinfo.bSwapped)
-        {
-            for (uint32 y = 0; y < tinfo.HeightToLoad; y++)
-            {
-                if ((y%2) == 0)
-                {
-                    uint8 *pDst = (uint8 *)dInfo.lpSurface + y * dInfo.lPitch;
-                    uint8 *pS = (uint8 *)pSrc + (y+tinfo.TopToLoad) * tinfo.Pitch + (tinfo.LeftToLoad*4);
+        // Copy of the base pointer
+        uint8 * pByteSrc = (uint8 *)tinfo.pPhysicalAddress;
 
-                    for (uint32 x = 0; x < tinfo.WidthToLoad; x++)
-                    {
-                        pDst[0] = pS[1];    // Blue
-                        pDst[1] = pS[2];    // Green
-                        pDst[2] = pS[3];    // Red
-                        pDst[3] = pS[0];    // Alpha
-                        pS+=4;
-                        pDst+=4;
-                    }
-                }
+        // is only setted if the texture is swapped
+        uint32 nFiddle = 0x0;
+
+        for (uint32 y = 0; y < tinfo.HeightToLoad; y++)
+        {
+            // non swapped: Banjo Tooie Title screen
+            // swapped: Super Smash Bros N64 logo
+            if (tinfo.bSwapped)
+            {
+                if (y&1)
+                    nFiddle = 0x8; // only odd lines are swapped
                 else
-                {
-                    uint32 *pDst = (uint32 *)((uint8 *)dInfo.lpSurface + y * dInfo.lPitch);
-                    uint8 *pS = (uint8 *)pSrc;
-                    int n;
-
-                    n = (y+tinfo.TopToLoad) * tinfo.Pitch + (tinfo.LeftToLoad*4);
-                    for (uint32 x = 0; x < tinfo.WidthToLoad; x++)
-                    {
-                        *pDst++ = COLOR_RGBA(pS[(n+3)^0x8],
-                            pS[(n+2)^0x8],
-                            pS[(n+1)^0x8],
-                            pS[(n+0)^0x8]);
-
-                        n += 4;
-                    }
-                }
+                    nFiddle = 0x0;
             }
-        }
-        else
-        {
-            for (uint32 y = 0; y < tinfo.HeightToLoad; y++)
-            {
-                uint8 *pDst = (uint8 *)dInfo.lpSurface + y * dInfo.lPitch;
-                uint8 *pS = (uint8 *)pSrc + (y+tinfo.TopToLoad) * tinfo.Pitch + (tinfo.LeftToLoad*4);
 
-                for (uint32 x = 0; x < tinfo.WidthToLoad; x++)
-                {
-                    pDst[0] = pS[1];    // Blue
-                    pDst[1] = pS[2];    // Green
-                    pDst[2] = pS[3];    // Red
-                    pDst[3] = pS[0];    // Alpha
-                    pS+=4;
-                    pDst+=4;
-                }
+            // dwDst points to start of destination row
+            uint32 * dwDst = (uint32 *)((uint8 *)dInfo.lpSurface + y*dInfo.lPitch);
+
+            // offset in byte to the start of the current row
+            uint32 byteOffset = ((y+tinfo.TopToLoad) * tinfo.Pitch) + (tinfo.LeftToLoad * 4);
+
+            for (uint32 x = 0; x < tinfo.WidthToLoad; x++)
+            {
+                uint32 dw = *(uint32 *)&pByteSrc[byteOffset^nFiddle];
+
+                dwDst[x] = RGBA_TO_ARGB(dw);
+
+                // move to the next pixel
+                byteOffset += 4;
             }
         }
     }

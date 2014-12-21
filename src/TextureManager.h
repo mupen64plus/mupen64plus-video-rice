@@ -58,7 +58,7 @@ public:
     uint32 TLutFmt;
     uint32 Palette;
     
-    BOOL  bSwapped;
+    BOOL  bSwapped; // if true: odd lines are WORD swapped
     
     uint32 maskS;
     uint32 maskT;
