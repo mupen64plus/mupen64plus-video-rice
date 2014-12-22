@@ -128,10 +128,18 @@ bool COGLGraphicsContext::Initialize(uint32 dwWidth, uint32 dwHeight, BOOL bWind
     SetWindowMode();
 
     m_pExtensionStr = glGetString(GL_EXTENSIONS);
-    
+
     const unsigned char* renderStr  = glGetString(GL_RENDERER);
     const unsigned char* versionStr = glGetString(GL_VERSION);
     const unsigned char* vendorStr  = glGetString(GL_VENDOR);
+
+    if (renderStr == NULL or versionStr == NULL or vendorStr == NULL)
+    {
+        DebugMessage(M64MSG_ERROR, "Can't get OpenGL informations. It's maybe a problem with your driver.");
+        CoreVideo_Quit();
+        return false;
+    }
+
     DebugMessage(M64MSG_INFO, "Using OpenGL: %.60s - %.128s : %.60s", renderStr, versionStr, vendorStr);
 
     InitState();
@@ -143,7 +151,7 @@ bool COGLGraphicsContext::Initialize(uint32 dwWidth, uint32 dwHeight, BOOL bWind
     UpdateFrame();
     Clear(CLEAR_COLOR_AND_DEPTH_BUFFER);
     UpdateFrame();
-    
+
     m_bReady = true;
 
     return true;
