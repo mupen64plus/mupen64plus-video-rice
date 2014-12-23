@@ -78,13 +78,14 @@ COGLTexture::COGLTexture(uint32 dwWidth, uint32 dwHeight, TextureUsage usage) :
     // We create the OGL texture here and will use glTexSubImage2D to increase performance.
     glBindTexture(GL_TEXTURE_2D, m_dwTextureName);
     glTexImage2D(GL_TEXTURE_2D, 0, m_glInternalFmt, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, 0, m_glFmt, m_glType, NULL);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 COGLTexture::~COGLTexture()
 {
     // FIXME: If usage is AS_RENDER_TARGET, we need to destroy the pbuffer
 
-    glDeleteTextures(1, &m_dwTextureName );
+    glDeleteTextures(1, &m_dwTextureName);
     OPENGL_CHECK_ERRORS;
     free(m_pTexture);
     m_pTexture = NULL;
@@ -148,7 +149,8 @@ void COGLTexture::EndUpdate(DrawInfo *di)
     }
 
     // Copy the image data from main memory to video card texture memory
-
+    // On little-endian systems (x86 and many others), ARGB datas send in BGRA order
+    // and RGBA datas are send as ABGR (something we try to avoid).
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, m_glFmt, m_glType, m_pTexture);
     OPENGL_CHECK_ERRORS;
 
@@ -156,6 +158,8 @@ void COGLTexture::EndUpdate(DrawInfo *di)
     if(options.mipmapping)
         glGenerateMipmap(GL_TEXTURE_2D);
 #endif
+
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 
