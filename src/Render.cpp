@@ -397,10 +397,6 @@ bool CRender::FillRect(int nX0, int nY0, int nX1, int nY1, uint32 dwColor)
         {
             ZBufferEnable(FALSE);
         }
-        else
-        {
-            dwColor = gRDP.primitiveColor;
-        }
 
         float depth = (gRDP.otherMode.depth_source == 1 ? gRDP.fPrimitiveDepth : 0 );
 
