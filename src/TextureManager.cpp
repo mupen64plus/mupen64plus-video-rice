@@ -505,11 +505,6 @@ TxtrCacheEntry * CTextureManager::CreateNewCacheEntry(uint32 dwAddr, uint32 dwWi
             _VIDEO_DisplayTemporaryMessage("Error to create an texture");
             TRACE2("Warning, unable to create %d x %d texture!", dwWidth, dwHeight);
         }
-        else
-        {
-            pEntry->pTexture->m_bScaledS = false;
-            pEntry->pTexture->m_bScaledT = false;
-        }
     }
     
     // Initialize
@@ -708,14 +703,10 @@ TxtrCacheEntry * CTextureManager::GetTexture(TxtrInfo * pgti, bool fromTMEM, boo
             if( pEntry->pTexture->m_dwCreatedTextureWidth < pgti->WidthToCreate )
             {
                 pEntry->ti.WidthToLoad = pEntry->pTexture->m_dwCreatedTextureWidth;
-                pEntry->pTexture->m_bScaledS = false;
-                pEntry->pTexture->m_bScaledT = false;
             }
             if( pEntry->pTexture->m_dwCreatedTextureHeight < pgti->HeightToCreate )
             {
                 pEntry->ti.HeightToLoad = pEntry->pTexture->m_dwCreatedTextureHeight;
-                pEntry->pTexture->m_bScaledT = false;
-                pEntry->pTexture->m_bScaledS = false;
             }
             
             TextureFmt dwType = pEntry->pTexture->GetSurfaceFormat();
@@ -747,9 +738,7 @@ TxtrCacheEntry * CTextureManager::GetTexture(TxtrInfo * pgti, bool fromTMEM, boo
                 {
                     LOG_TEXTURE(TRACE0("   Load new texture from RDRAM:\n"));
                     if (dwType == TEXTURE_FMT_A8R8G8B8)
-                    {
                         ConvertTexture(pEntry, fromTMEM);
-                    }
                     else
                         ConvertTexture_16(pEntry, fromTMEM);
                     SAFE_DELETE(pEntry->pEnhancedTexture);
@@ -784,7 +773,6 @@ TxtrCacheEntry * CTextureManager::GetTexture(TxtrInfo * pgti, bool fromTMEM, boo
                 }
                 DebuggerAppendMsg("W:%d, H:%d, RealW:%d, RealH:%d, D3DW:%d, D3DH: %d", pEntry->ti.WidthToCreate, pEntry->ti.HeightToCreate,
                     pEntry->ti.WidthToLoad, pEntry->ti.HeightToLoad, pEntry->pTexture->m_dwCreatedTextureWidth, pEntry->pTexture->m_dwCreatedTextureHeight);
-                DebuggerAppendMsg("ScaledS:%s, ScaledT:%s, CRC=%08X", pEntry->pTexture->m_bScaledS?"T":"F", pEntry->pTexture->m_bScaledT?"T":"F", pEntry->dwCRC);
                 DebuggerPause();
                 CRender::g_pRender->SetCurrentTexture( 0, NULL, 64, 64, NULL);
             }
@@ -821,7 +809,9 @@ extern ConvertFunction  gConvertTlutFunctions_16[ 8 ][ 4 ];
 void CTextureManager::ConvertTexture(TxtrCacheEntry * pEntry, bool fromTMEM)
 {
     static uint32 dwCount = 0;
-    
+
+    // We first figure out which convert function to use in the various
+    // function pointer arrays.
     ConvertFunction pF;
     if( options.bUseFullTMEM && fromTMEM && status.bAllowLoadFromTMEM )
     {
@@ -845,6 +835,7 @@ void CTextureManager::ConvertTexture(TxtrCacheEntry * pEntry, bool fromTMEM)
         }
     }
 
+    // Once we found it we simply execute it on the texture.
     if( pF )
     {
         pF( pEntry->pTexture, pEntry->ti );

@@ -104,7 +104,6 @@ void ConvertRGBA16(CTexture *pTexture, const TxtrInfo &tinfo)
     }
 
     pTexture->EndUpdate(&dInfo);
-    pTexture->SetOthersVariables();
 }
 
 // N64 32 bit textures are in R8G8B8A8 format. On little endian processors,
@@ -186,7 +185,6 @@ void ConvertRGBA32(CTexture *pTexture, const TxtrInfo &tinfo)
     }
 
     pTexture->EndUpdate(&dInfo);
-    pTexture->SetOthersVariables();
 }
 
 // E.g. Dear Mario text
@@ -290,7 +288,6 @@ void ConvertIA4(CTexture *pTexture, const TxtrInfo &tinfo)
     }
 
     pTexture->EndUpdate(&dInfo);
-    pTexture->SetOthersVariables();
 
 }
 
@@ -361,7 +358,6 @@ void ConvertIA8(CTexture *pTexture, const TxtrInfo &tinfo)
     }   
     
     pTexture->EndUpdate(&dInfo);
-    pTexture->SetOthersVariables();
 
 }
 
@@ -429,7 +425,6 @@ void ConvertIA16(CTexture *pTexture, const TxtrInfo &tinfo)
 
 
     pTexture->EndUpdate(&dInfo);
-    pTexture->SetOthersVariables();
 }
 
 
@@ -545,7 +540,6 @@ void ConvertI4(CTexture *pTexture, const TxtrInfo &tinfo)
     }
 
     pTexture->EndUpdate(&dInfo);
-    pTexture->SetOthersVariables();
 }
 
 // Used by MarioKart
@@ -607,7 +601,6 @@ void ConvertI8(CTexture *pTexture, const TxtrInfo &tinfo)
     }
 
     pTexture->EndUpdate(&dInfo);
-    pTexture->SetOthersVariables();
 
 }
 
@@ -744,7 +737,6 @@ void ConvertCI4_RGBA16(CTexture *pTexture, const TxtrInfo &tinfo)
         }
     }
     pTexture->EndUpdate(&dInfo);
-    pTexture->SetOthersVariables();
 }
 
 // Used by Starfox intro
@@ -851,7 +843,6 @@ void ConvertCI4_IA16(CTexture *pTexture, const TxtrInfo &tinfo)
         }
     }
     pTexture->EndUpdate(&dInfo);
-    pTexture->SetOthersVariables();
 }
 
 
@@ -925,7 +916,6 @@ void ConvertCI8_RGBA16(CTexture *pTexture, const TxtrInfo &tinfo)
     }
 
     pTexture->EndUpdate(&dInfo);
-    pTexture->SetOthersVariables();
 
 }
 
@@ -999,7 +989,6 @@ void ConvertCI8_IA16(CTexture *pTexture, const TxtrInfo &tinfo)
     }
 
     pTexture->EndUpdate(&dInfo);
-    pTexture->SetOthersVariables();
 }
 
 void ConvertYUV(CTexture *pTexture, const TxtrInfo &tinfo)
@@ -1103,7 +1092,6 @@ void ConvertYUV(CTexture *pTexture, const TxtrInfo &tinfo)
     }
 
     pTexture->EndUpdate(&dInfo);
-    pTexture->SetOthersVariables();
 }
 
 uint32 ConvertYUV16ToR8G8B8(int Y, int U, int V)
@@ -1254,7 +1242,6 @@ void Convert4b(CTexture *pTexture, const TxtrInfo &tinfo)
     }
 
     pTexture->EndUpdate(&dInfo);
-    pTexture->SetOthersVariables();
 }
 
 void Convert8b(CTexture *pTexture, const TxtrInfo &tinfo)
@@ -1355,7 +1342,6 @@ void Convert8b(CTexture *pTexture, const TxtrInfo &tinfo)
     }
 
     pTexture->EndUpdate(&dInfo);
-    pTexture->SetOthersVariables();
 }
 
 
@@ -1425,6 +1411,5 @@ void Convert16b(CTexture *pTexture, const TxtrInfo &tinfo)
     }
 
     pTexture->EndUpdate(&dInfo);
-    pTexture->SetOthersVariables();
 }
 

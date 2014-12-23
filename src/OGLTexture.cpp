@@ -97,15 +97,13 @@ bool COGLTexture::StartUpdate(DrawInfo *di)
 {
     if (m_pTexture == NULL)
         return false;
-    
+
     di->dwHeight = (uint16)m_dwHeight;
     di->dwWidth = (uint16)m_dwWidth;
     di->dwCreatedHeight = m_dwCreatedTextureHeight;
     di->dwCreatedWidth = m_dwCreatedTextureWidth;
     di->lpSurface = m_pTexture;
     di->lPitch = GetPixelSize()*m_dwCreatedTextureWidth;
-    
-    
 
     return true;
 }
@@ -161,9 +159,3 @@ void COGLTexture::EndUpdate(DrawInfo *di)
 
     glBindTexture(GL_TEXTURE_2D, 0);
 }
-
-
-// Keep in mind that the real texture is not scaled to fix the created opengl texture yet.
-// when the image is need to be scaled, ScaleImageToSurface in CTexure will be called to 
-// scale the image automatically
-
