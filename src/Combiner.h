@@ -44,9 +44,13 @@ public:
 
 protected:
     CColorCombiner(CRender *pRender) : 
-        m_bTex0Enabled(false),m_bTex1Enabled(false),m_bTexelsEnable(false),
+        m_combineMode1(0),m_combineMode2(0),m_bTex0Enabled(false),m_bTex1Enabled(false),m_bTexelsEnable(false),
         m_bCycleChanged(false),m_pRender(pRender)
     {
+            for(int i=0; i<16; i++)
+            {
+                m_sources[i] = -1;
+            }
     }
 
     virtual void InitCombinerCycleCopy(void)=0;

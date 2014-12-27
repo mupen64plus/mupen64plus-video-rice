@@ -89,7 +89,11 @@ void OGLRender::Initialize(void)
         m_maxTexUnits = 8;
 
     for( int i=0; i<8; i++ )
+    {
+        m_texUnitEnabled[i] = FALSE;
         m_textureUnitMap[i] = -1;
+        m_curBoundTex[i]    = -1;
+    }
     m_textureUnitMap[0] = 0;    // T0 is usually using texture unit 0
     m_textureUnitMap[1] = 1;    // T1 is usually using texture unit 1
 }
@@ -919,6 +923,7 @@ void OGLRender::DisBindTexture(GLuint texture, int unitno)
     OPENGL_CHECK_ERRORS;
     glBindTexture(GL_TEXTURE_2D, 0);    //Not to bind any texture
     OPENGL_CHECK_ERRORS;
+    m_curBoundTex[unitno] = 0;
 }
 
 void OGLRender::EnableTexUnit(int unitno, BOOL flag)
