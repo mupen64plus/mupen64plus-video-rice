@@ -78,7 +78,6 @@ COGLTexture::COGLTexture(uint32 dwWidth, uint32 dwHeight, TextureUsage usage) :
     // We create the OGL texture here and will use glTexSubImage2D to increase performance.
     glBindTexture(GL_TEXTURE_2D, m_dwTextureName);
     glTexImage2D(GL_TEXTURE_2D, 0, m_glInternalFmt, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, 0, m_glFmt, m_glType, NULL);
-    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 COGLTexture::~COGLTexture()
@@ -156,6 +155,4 @@ void COGLTexture::EndUpdate(DrawInfo *di)
     if(options.mipmapping)
         glGenerateMipmap(GL_TEXTURE_2D);
 #endif
-
-    glBindTexture(GL_TEXTURE_2D, 0);
 }
