@@ -112,45 +112,41 @@ void OGLRender::ApplyTextureFilter()
 
     int iMinFilter, iMagFilter;
 
+    //Compute iMinFilter and iMagFilter
+    if(m_dwMinFilter == FILTER_LINEAR) //Texture will use filtering
+    {
+        iMagFilter = GL_LINEAR;
+
+        //Texture filtering method user want
+        switch(options.mipmapping)
+        {
+        case TEXTURE_BILINEAR_FILTER:
+            iMinFilter = GL_LINEAR_MIPMAP_NEAREST;
+            break;
+        case TEXTURE_TRILINEAR_FILTER:
+            iMinFilter = GL_LINEAR_MIPMAP_LINEAR;
+            break;
+        case TEXTURE_NO_FILTER:
+            iMinFilter = GL_NEAREST_MIPMAP_NEAREST;
+            break;
+        case TEXTURE_NO_MIPMAP:
+        default:
+            //Bilinear without mipmap
+            iMinFilter = GL_LINEAR;
+        }
+    }
+    else    //dont use filtering, all is nearest
+    {
+        iMagFilter = GL_NEAREST;
+
+        if(options.mipmapping)
+            iMinFilter = GL_NEAREST_MIPMAP_NEAREST;
+        else
+            iMinFilter = GL_NEAREST;
+    }
+
     for( int i=0; i<m_maxTexUnits; i++ )
     {
-        //Compute iMinFilter and iMagFilter
-        if(m_dwMinFilter == FILTER_LINEAR) //Texture will use filtering
-        {
-            iMagFilter = GL_LINEAR;
-
-            //Texture filtering method user want
-            switch(options.mipmapping)
-            {
-            case TEXTURE_BILINEAR_FILTER:
-                iMinFilter = GL_LINEAR_MIPMAP_NEAREST;
-                break;
-            case TEXTURE_TRILINEAR_FILTER:
-                iMinFilter = GL_LINEAR_MIPMAP_LINEAR;
-                break;
-            case TEXTURE_NO_FILTER:
-                iMinFilter = GL_NEAREST_MIPMAP_NEAREST;
-                break;
-            case TEXTURE_NO_MIPMAP:
-            default:
-                //Bilinear without mipmap
-                iMinFilter = GL_LINEAR;
-            }
-        }
-        else    //dont use filtering, all is nearest
-        {
-            iMagFilter = GL_NEAREST;
-
-            if(options.mipmapping)
-            {
-                iMinFilter = GL_NEAREST_MIPMAP_NEAREST;
-            }
-            else
-            {
-                iMinFilter = GL_NEAREST;
-            }
-        }
-
         if( m_texUnitEnabled[i] )
         {
             if( mtex[i] != m_curBoundTex[i] )
