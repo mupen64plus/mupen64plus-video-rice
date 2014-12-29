@@ -684,11 +684,6 @@ extern FiddledVtx * g_pVtxBase;
 // OpenGL internal transform
 bool OGLRender::RenderFlushTris()
 {
-    if( !gRDP.bFogEnableInBlender && gRSP.bFogEnabled )
-    {
-        TurnFogOnOff(false);
-    }
-
     ApplyZBias(m_dwZBias);  // set the bias factors
 
     glViewportWrapper(windowSetting.vpLeftW, windowSetting.uDisplayHeight-windowSetting.vpTopW-windowSetting.vpHeightW+windowSetting.statusBarHeightToUse, windowSetting.vpWidthW, windowSetting.vpHeightW, false);
@@ -730,11 +725,6 @@ bool OGLRender::RenderFlushTris()
         glEnableClientState( GL_VERTEX_ARRAY );
     }
 */
-
-    if( !gRDP.bFogEnableInBlender && gRSP.bFogEnabled )
-    {
-        TurnFogOnOff(true);
-    }
     return true;
 }
 
@@ -992,16 +982,6 @@ void OGLRender::ApplyScissorWithClipRatio(bool force)
     OPENGL_CHECK_ERRORS;
 
     status.curScissor = RSP_SCISSOR;
-}
-
-// TODO: Remove this function as its now handled by the Color Combiner
-void OGLRender::TurnFogOnOff(bool flag)
-{
-    /*if( flag )
-        glEnable(GL_FOG);
-    else
-        glDisable(GL_FOG);
-    OPENGL_CHECK_ERRORS;*/
 }
 
 void OGLRender::SetFogColor(uint32 r, uint32 g, uint32 b, uint32 a)

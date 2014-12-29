@@ -401,9 +401,7 @@ bool CRender::FillRect(int nX0, int nY0, int nX1, int nY1, uint32 dwColor)
         float depth = (gRDP.otherMode.depth_source == 1 ? gRDP.fPrimitiveDepth : 0 );
 
         ApplyRDPScissor();
-        TurnFogOnOff(false);
         res = RenderFillRect(dwColor, depth);
-        TurnFogOnOff(gRSP.bFogEnabled);
 
         if( gRDP.otherMode.cycle_type  >= CYCLE_TYPE_COPY )
         {
@@ -794,7 +792,6 @@ bool CRender::TexRect(int nX0, int nY0, int nX1, int nY1, float fS0, float fT0, 
 
 
     bool res;
-    TurnFogOnOff(false);
     if( TileUFlags[gRSP.curTile]==TEXTURE_UV_FLAG_CLAMP && TileVFlags[gRSP.curTile]==TEXTURE_UV_FLAG_CLAMP && options.forceTextureFilter == FORCE_DEFAULT_FILTER )
     {
         TextureFilter dwFilter = m_dwMagFilter;
@@ -820,7 +817,6 @@ bool CRender::TexRect(int nX0, int nY0, int nX1, int nY1, float fS0, float fT0, 
         ApplyRDPScissor();
         res = RenderTexRect();
     }
-    TurnFogOnOff(gRSP.bFogEnabled);
 
     if( gRDP.otherMode.cycle_type  >= CYCLE_TYPE_COPY || !gRDP.otherMode.z_cmp  )
     {
@@ -906,11 +902,8 @@ bool CRender::TexRectFlip(int nX0, int nY0, int nX1, int nY1, float fS0, float f
     SetVertexTextureUVCoord(g_texRectTVtx[2], t0u1, t0v1);
     SetVertexTextureUVCoord(g_texRectTVtx[3], t0u1, t0v0);
 
-    TurnFogOnOff(false);
     ApplyRDPScissor();
     bool res = RenderTexRect();
-
-    TurnFogOnOff(gRSP.bFogEnabled);
 
     // Restore state
     ZBufferEnable( m_savedZBufferFlag );
@@ -1187,11 +1180,6 @@ bool CRender::DrawTriangles()
         }
     }
 
-    if( !gRDP.bFogEnableInBlender && gRSP.bFogEnabled )
-    {
-        TurnFogOnOff(false);
-    }
-
     for( int t=0; t<2; t++ )
     {
         float halfscaleS = 1;
@@ -1299,11 +1287,6 @@ bool CRender::DrawTriangles()
     DEBUGGER_PAUSE_AND_DUMP_COUNT_N(NEXT_FLUSH_TRI, {
         TRACE0("Pause after DrawTriangles\n");
     });
-
-    if( !gRDP.bFogEnableInBlender && gRSP.bFogEnabled )
-    {
-        TurnFogOnOff(true);
-    }
 
     return res;
 }

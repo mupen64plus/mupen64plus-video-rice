@@ -90,7 +90,6 @@ public:
         DEBUGGER_IF_DUMP( (gRSP.bFogEnabled != bEnable && logFog ), TRACE1("Set Fog %s", bEnable? "enable":"disable"));
         gRSP.bFogEnabled = bEnable&&(options.fogMethod > 0);
     }
-    virtual void TurnFogOnOff(bool flag)=0;
 
     virtual void SetFogColor(uint32 r, uint32 g, uint32 b, uint32 a) 
     { 

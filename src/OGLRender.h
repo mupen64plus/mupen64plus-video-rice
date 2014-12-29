@@ -75,7 +75,6 @@ public:
     void DrawObjBGCopy(uObjBg &info);
     void DrawText(const char* str, RECT *rect);
 
-    void TurnFogOnOff(bool flag);
     void SetFogColor(uint32 r, uint32 g, uint32 b, uint32 a);
 
     void DisableMultiTexture();
