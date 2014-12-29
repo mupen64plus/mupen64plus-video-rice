@@ -114,9 +114,6 @@ void COGLTexture::EndUpdate(DrawInfo *di)
     glBindTexture(GL_TEXTURE_2D, m_dwTextureName);
     OPENGL_CHECK_ERRORS;
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    OPENGL_CHECK_ERRORS;
-
     // mipmap support
     if(options.mipmapping)
     {
@@ -129,20 +126,11 @@ void COGLTexture::EndUpdate(DrawInfo *di)
             OPENGL_CHECK_ERRORS;
         }
 
-        // Set Mipmap
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-        OPENGL_CHECK_ERRORS;
-
 #ifndef USE_GLES
         // Tell to hardware to generate mipmap (himself) when glTexImage2D is called
         glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
         OPENGL_CHECK_ERRORS;
 #endif
-    }
-    else
-    {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        OPENGL_CHECK_ERRORS;
     }
 
     // Copy the image data from main memory to video card texture memory
