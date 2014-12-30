@@ -81,8 +81,7 @@ void OGLRender::Initialize(void)
     OPENGL_CHECK_ERRORS;
 
     // Initialize multitexture
-    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS,&m_maxTexUnits);
-    OPENGL_CHECK_ERRORS;
+    m_maxTexUnits = COGLGraphicsContext::Get()->getMaxTextureImageUnits();
 
     /* limited by size 8 arrays like m_maxTexUnits, mtex, m_texUnitEnabled... */
     if (m_maxTexUnits > 8)

@@ -40,11 +40,13 @@ public:
     //Get methods (TODO, remove all friend class and use get methods instead)
     inline bool IsSupportAnisotropicFiltering() { return m_bSupportAnisotropicFiltering; };
     inline int  getMaxAnisotropicFiltering() { return m_maxAnisotropicFiltering; };
+    inline int  getMaxTextureImageUnits() { return m_maxTextureImageUnits; };
     inline bool IsSupportTextureFormatBRGA() { return m_bSupportTextureFormatBRGA; };
 
 protected:
     friend class OGLDeviceBuilder;
     COGLGraphicsContext();
+    void InitLimits(void);
     void InitState(void);
     void InitOGLExtension(void);
     bool SetFullscreenMode();
@@ -52,6 +54,9 @@ protected:
 
 private:
     const unsigned char* m_pExtensionStr;
+
+    // OpenGL limits
+    int m_maxTextureImageUnits;
 
     // Optional OGL extension features
     bool IsExtensionSupported(const char* pExtName);

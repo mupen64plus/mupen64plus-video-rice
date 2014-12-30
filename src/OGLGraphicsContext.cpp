@@ -210,6 +210,13 @@ bool COGLGraphicsContext::ResizeInitialize(uint32 dwWidth, uint32 dwHeight, BOOL
     return true;
 }
 
+// Init limiting OpenGL values
+void COGLGraphicsContext::InitLimits(void)
+{
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS,&m_maxTextureImageUnits);
+    OPENGL_CHECK_ERRORS;
+}
+
 void COGLGraphicsContext::InitState(void)
 {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
