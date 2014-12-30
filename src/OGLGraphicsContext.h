@@ -27,6 +27,8 @@ class COGLGraphicsContext : public CGraphicsContext
 public:
     virtual ~COGLGraphicsContext();
 
+    static inline COGLGraphicsContext* Get(void) { return (COGLGraphicsContext*)CGraphicsContext::m_pGraphicsContext; };
+
     bool Initialize(uint32 dwWidth, uint32 dwHeight, BOOL bWindowed );
     bool ResizeInitialize(uint32 dwWidth, uint32 dwHeight, BOOL bWindowed );
     void CleanUp();

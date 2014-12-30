@@ -99,7 +99,6 @@ void CDeviceBuilder::DeleteBuilder(void)
 
 CDeviceBuilder::CDeviceBuilder() :
     m_pRender(NULL),
-    m_pGraphicsContext(NULL),
     m_pColorCombiner(NULL),
     m_pAlphaBlender(NULL)
 {
@@ -115,10 +114,10 @@ CDeviceBuilder::~CDeviceBuilder()
 
 void CDeviceBuilder::DeleteGraphicsContext(void)
 {
-    if( m_pGraphicsContext != NULL )
+    if( !CGraphicsContext::IsNull() )
     {
-        delete m_pGraphicsContext;
-        CGraphicsContext::g_pGraphicsContext = m_pGraphicsContext = NULL;
+        delete CGraphicsContext::m_pGraphicsContext;
+        CGraphicsContext::m_pGraphicsContext = NULL;
     }
 
     SAFE_DELETE(g_pFrameBufferManager);
@@ -157,22 +156,22 @@ void CDeviceBuilder::DeleteAlphaBlender(void)
 
 CGraphicsContext * OGLDeviceBuilder::CreateGraphicsContext(void)
 {
-    if( m_pGraphicsContext == NULL )
+    if( CGraphicsContext::IsNull() )
     {
-        m_pGraphicsContext = new COGLGraphicsContext();
-        SAFE_CHECK(m_pGraphicsContext);
-        CGraphicsContext::g_pGraphicsContext = m_pGraphicsContext;
+        CGraphicsContext::m_pGraphicsContext = new COGLGraphicsContext();
+        SAFE_CHECK(CGraphicsContext::m_pGraphicsContext);
     }
 
     g_pFrameBufferManager = new FrameBufferManager;
-    return m_pGraphicsContext;
+
+    return CGraphicsContext::m_pGraphicsContext;
 }
 
 CRender * OGLDeviceBuilder::CreateRender(void)
 {
     if( m_pRender == NULL )
     {
-        if( CGraphicsContext::g_pGraphicsContext == NULL && CGraphicsContext::g_pGraphicsContext->Ready() )
+        if( CGraphicsContext::IsNull() || !CGraphicsContext::Get()->IsReady() )
         {
             DebugMessage(M64MSG_ERROR, "Can not create ColorCombiner before creating and initializing GraphicsContext");
             m_pRender = NULL;
@@ -207,8 +206,8 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
 
     if( m_pColorCombiner == NULL )
     {
-        if(    CGraphicsContext::g_pGraphicsContext == NULL
-            && CGraphicsContext::g_pGraphicsContext->Ready() )
+        if(    CGraphicsContext::Get() == NULL
+            && CGraphicsContext::Get()->IsReady() )
         {
             DebugMessage(M64MSG_ERROR, "Can not create ColorCombiner before creating and initializing GraphicsContext");
         }

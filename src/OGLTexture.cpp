@@ -68,8 +68,7 @@ COGLTexture::COGLTexture(uint32 dwWidth, uint32 dwHeight, TextureUsage usage) :
     m_glFmt = GL_BGRA;
     m_glType = GL_UNSIGNED_INT_8_8_8_8_REV;
     #else
-    COGLGraphicsContext *pcontext = (COGLGraphicsContext *)(CGraphicsContext::g_pGraphicsContext);
-    m_glFmt = pcontext->IsSupportTextureFormatBRGA() ? GL_BGRA_EXT : GL_RGBA;
+    m_glFmt  = COGLGraphicsContext::Get()->IsSupportTextureFormatBRGA() ? GL_BGRA_EXT : GL_RGBA;
     m_glType = GL_UNSIGNED_BYTE;
     #endif
 
@@ -109,20 +108,18 @@ bool COGLTexture::StartUpdate(DrawInfo *di)
 
 void COGLTexture::EndUpdate(DrawInfo *di)
 {
-    COGLGraphicsContext *pcontext = (COGLGraphicsContext *)(CGraphicsContext::g_pGraphicsContext); // we need this to check if the GL extension is avaible
-
     glBindTexture(GL_TEXTURE_2D, m_dwTextureName);
     OPENGL_CHECK_ERRORS;
 
     // mipmap support
     if(options.mipmapping)
     {
-        int m_maximumAnistropy = pcontext->getMaxAnisotropicFiltering(); //if getMaxAnisotropicFiltering() return more than 0, so aniso is supported and maxAnisotropicFiltering is set
+        int maximumAnistropy = COGLGraphicsContext::Get()->getMaxAnisotropicFiltering(); //if getMaxAnisotropicFiltering() return more than 0, so aniso is supported and maxAnisotropicFiltering is set
 
         // Set Anisotropic filtering (mipmapping have to be activated, aniso filtering is not effective without)
-        if( m_maximumAnistropy )
+        if( maximumAnistropy )
         {
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, m_maximumAnistropy);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, maximumAnistropy);
             OPENGL_CHECK_ERRORS;
         }
 

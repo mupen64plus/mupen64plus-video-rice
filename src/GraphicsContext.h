@@ -42,8 +42,10 @@ class CGraphicsContext : public CCritSect
     friend class CDeviceBuilder;
     
 public:
-    bool Ready() { return m_bReady; }
-    bool IsWindowed() {return m_bWindowed;}
+    static inline bool IsNull() { return m_pGraphicsContext == NULL; };
+    static inline CGraphicsContext* Get() { return m_pGraphicsContext; };
+    inline bool IsReady() const { return m_bReady; };
+    inline bool IsWindowed() const { return m_bWindowed; };
 
     virtual bool Initialize(uint32 dwWidth, uint32 dwHeight, BOOL bWindowed );
     virtual bool ResizeInitialize(uint32 dwWidth, uint32 dwHeight, BOOL bWindowed );
@@ -53,22 +55,16 @@ public:
     virtual void UpdateFrame(bool swaponly=false) = 0;
     virtual int ToggleFullscreen()=0;       // return 0 as the result is windowed
 
+    static bool needCleanScene;
+
 protected:
-    static  bool        m_deviceCapsIsInitialized;
+    static CGraphicsContext* m_pGraphicsContext; // only the DeviceBuilder should modify this
 
     bool                m_bReady;
-    bool                m_bActive;
-    
     bool                m_bWindowed;
-    RECT                m_rcWindowBounds;
 
     virtual ~CGraphicsContext();
     CGraphicsContext();
-    
-public:
-    static CGraphicsContext *g_pGraphicsContext;
-    static CGraphicsContext * Get(void);
-    static bool needCleanScene;
 };
 
 #endif

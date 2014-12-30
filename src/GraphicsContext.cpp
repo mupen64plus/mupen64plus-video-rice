@@ -26,18 +26,11 @@
 #include "OGLGraphicsContext.h"
 #include "Video.h"
 
-CGraphicsContext* CGraphicsContext::g_pGraphicsContext = NULL;
-bool CGraphicsContext::m_deviceCapsIsInitialized = false;
+CGraphicsContext* CGraphicsContext::m_pGraphicsContext = NULL;
 bool CGraphicsContext::needCleanScene = false;
-
-CGraphicsContext * CGraphicsContext::Get(void)
-{   
-    return CGraphicsContext::g_pGraphicsContext;
-}
     
 CGraphicsContext::CGraphicsContext() :
     m_bReady(false),
-    m_bActive(false),
     m_bWindowed(true)
 {
 }
@@ -61,7 +54,6 @@ bool CGraphicsContext::ResizeInitialize(uint32 dwWidth, uint32 dwHeight, BOOL bW
 
 void CGraphicsContext::CleanUp()
 {
-    m_bActive = false;
     m_bReady  = false;
 }
 

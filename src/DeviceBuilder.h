@@ -57,7 +57,6 @@ protected:
     static CDeviceBuilder* m_pInstance;
 
     CRender* m_pRender;
-    CGraphicsContext* m_pGraphicsContext;
     CColorCombiner* m_pColorCombiner;
     CBlender* m_pAlphaBlender;
 };

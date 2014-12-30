@@ -78,7 +78,7 @@ void RSP_S2DEX_OBJ_RECTANGLE(Gfx *gfx)
             debuggerPause = true;
             TRACE3("Paused at RSP_S2DEX_OBJ_RECTANGLE\nptr=%08X, img=%08X, Tmem=%08X",
                 dwAddr,objtx.txtr.block.image, ptr->imageAdrs);
-            CGraphicsContext::g_pGraphicsContext->UpdateFrame();
+            CGraphicsContext::Get()->UpdateFrame();
         }
     }
 #endif
@@ -115,7 +115,7 @@ void RSP_S2DEX_OBJ_SPRITE(Gfx *gfx)
         eventToPause = false;
         debuggerPause = true;
         TRACE0("Paused at RSP_S2DEX_OBJ_SPRITE");
-        CGraphicsContext::g_pGraphicsContext->UpdateFrame();
+        CGraphicsContext::Get()->UpdateFrame();
     }
 #endif
 }
