@@ -57,8 +57,9 @@ public:
 
     static bool needCleanScene;
 
-protected:
     static CGraphicsContext* m_pGraphicsContext; // only the DeviceBuilder should modify this
+
+protected:
 
     bool                m_bReady;
     bool                m_bWindowed;
