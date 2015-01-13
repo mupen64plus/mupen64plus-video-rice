@@ -70,14 +70,12 @@ public:
 
     void DrawSimple2DTexture(float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, COLOR dif, float z, float rhw);
     void DrawSimpleRect(int nX0, int nY0, int nX1, int nY1, uint32 dwColor, float depth, float rhw);
-    void InitCombinerBlenderForSimpleRectDraw(uint32 tile=0);
     void DrawSpriteR_Render();
     void DrawObjBGCopy(uObjBg &info);
     void DrawText(const char* str, RECT *rect);
 
     void SetFogColor(uint32 r, uint32 g, uint32 b, uint32 a);
 
-    void DisableMultiTexture();
     void EndRendering(void);
 
     void glViewportWrapper(GLint x, GLint y, GLsizei width, GLsizei height, bool flag=true);
@@ -94,7 +92,6 @@ protected:
     bool RenderLine3D();
 
     GLuint  m_curBoundTex[8];
-    BOOL    m_texUnitEnabled[8];
 
     GLint m_maxTexUnits;
     int m_textureUnitMap[8];

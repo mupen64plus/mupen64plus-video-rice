@@ -259,7 +259,6 @@ void COGLColorCombiner::InitCombinerCycleCopy(void)
     const GLuint &program = m_generatedPrograms[shaderId].program;
     useProgram( program );
 
-    m_pOGLRender->DisableMultiTexture();
     m_pOGLRender->EnableTexUnit(0,TRUE);
 
     GenerateCombinerSetting();
@@ -1438,7 +1437,6 @@ void COGLBlender::Disable()
 
 void COGLColorCombiner::InitCombinerBlenderForSimpleTextureDraw(uint32 tile)
 {
-    m_pOGLRender->DisableMultiTexture();
     if( g_textures[tile].m_pCTexture )
     {
         m_pOGLRender->EnableTexUnit(0,TRUE);

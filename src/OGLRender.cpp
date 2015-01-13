@@ -83,13 +83,12 @@ void OGLRender::Initialize(void)
     // Initialize multitexture
     m_maxTexUnits = COGLGraphicsContext::Get()->getMaxTextureImageUnits();
 
-    /* limited by size 8 arrays like m_maxTexUnits, mtex, m_texUnitEnabled... */
+    /* limited by size 8 arrays like m_maxTexUnits, mtex... */
     if (m_maxTexUnits > 8)
         m_maxTexUnits = 8;
 
     for( int i=0; i<8; i++ )
     {
-        m_texUnitEnabled[i] = FALSE;
         m_textureUnitMap[i] = -1;
         m_curBoundTex[i]    = -1;
     }
@@ -146,38 +145,35 @@ void OGLRender::ApplyTextureFilter()
 
     for( int i=0; i<m_maxTexUnits; i++ )
     {
-        if( m_texUnitEnabled[i] )
+        if( mtex[i] != m_curBoundTex[i] )
         {
-            if( mtex[i] != m_curBoundTex[i] )
+            mtex[i] = m_curBoundTex[i];
+            pglActiveTexture(GL_TEXTURE0+i);
+            OPENGL_CHECK_ERRORS;
+            minflag[i] = m_dwMinFilter;
+            magflag[i] = m_dwMagFilter;
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, iMinFilter);
+            OPENGL_CHECK_ERRORS;
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, iMagFilter);
+            OPENGL_CHECK_ERRORS;
+        }
+        else
+        {
+            if( minflag[i] != (unsigned int)m_dwMinFilter )
             {
-                mtex[i] = m_curBoundTex[i];
+                minflag[i] = m_dwMinFilter;
                 pglActiveTexture(GL_TEXTURE0+i);
                 OPENGL_CHECK_ERRORS;
-                minflag[i] = m_dwMinFilter;
-                magflag[i] = m_dwMagFilter;
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, iMinFilter);
+                OPENGL_CHECK_ERRORS;
+            }
+            if( magflag[i] != (unsigned int)m_dwMagFilter )
+            {
+                magflag[i] = m_dwMagFilter;
+                pglActiveTexture(GL_TEXTURE0+i);
                 OPENGL_CHECK_ERRORS;
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, iMagFilter);
                 OPENGL_CHECK_ERRORS;
-            }
-            else
-            {
-                if( minflag[i] != (unsigned int)m_dwMinFilter )
-                {
-                    minflag[i] = m_dwMinFilter;
-                    pglActiveTexture(GL_TEXTURE0+i);
-                    OPENGL_CHECK_ERRORS;
-                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, iMinFilter);
-                    OPENGL_CHECK_ERRORS;
-                }
-                if( magflag[i] != (unsigned int)m_dwMagFilter )
-                {
-                    magflag[i] = m_dwMagFilter;
-                    pglActiveTexture(GL_TEXTURE0+i);
-                    OPENGL_CHECK_ERRORS;
-                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, iMagFilter);
-                    OPENGL_CHECK_ERRORS;
-                }
             }
         }
     }
@@ -850,18 +846,6 @@ void OGLRender::DrawSimpleRect(int nX0, int nY0, int nX1, int nY1, uint32 dwColo
     OPENGL_CHECK_ERRORS;
 }
 
-void OGLRender::InitCombinerBlenderForSimpleRectDraw(uint32 tile)
-{
-    //glEnable(GL_CULL_FACE);
-    EnableTexUnit(0,FALSE);
-    OPENGL_CHECK_ERRORS;
-    glEnable(GL_BLEND);
-    OPENGL_CHECK_ERRORS;
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    OPENGL_CHECK_ERRORS;
-    //glEnable(GL_ALPHA_TEST);
-}
-
 void OGLRender::SetViewportRender()
 {
     glViewportWrapper(windowSetting.vpLeftW, windowSetting.uDisplayHeight-windowSetting.vpTopW-windowSetting.vpHeightW+windowSetting.statusBarHeightToUse, windowSetting.vpWidthW, windowSetting.vpHeightW);
@@ -911,19 +895,16 @@ void OGLRender::DisBindTexture(GLuint texture, int unitno)
     m_curBoundTex[unitno] = 0;
 }
 
+// This function was intent to activate of disable texture of given OpenGL
+// texture unit. This has no sense anymore as the combiner use GLSL to use a
+// texture or not.
+// Technically, we don't need this function anymore but a side effect of it was
+// it activate a given texture unit and this side effect as some important
+// scope at some places (in SetTextureUFlag for example) so we let it for now.
 void OGLRender::EnableTexUnit(int unitno, BOOL flag)
 {
-    if( m_texUnitEnabled[unitno] != flag )
-    {
-        m_texUnitEnabled[unitno] = flag;
-        pglActiveTexture(GL_TEXTURE0+unitno);
-        OPENGL_CHECK_ERRORS;
-        if( flag == TRUE )
-            glEnable(GL_TEXTURE_2D);
-        else
-            glDisable(GL_TEXTURE_2D);
-        OPENGL_CHECK_ERRORS;
-    }
+    pglActiveTexture(GL_TEXTURE0+unitno);
+    OPENGL_CHECK_ERRORS;
 }
 
 void OGLRender::UpdateScissor()
@@ -990,19 +971,6 @@ void OGLRender::SetFogColor(uint32 r, uint32 g, uint32 b, uint32 a)
     gRDP.fvFogColor[1] = g/255.0f;      //g
     gRDP.fvFogColor[2] = b/255.0f;      //b
     gRDP.fvFogColor[3] = a/255.0f;      //a
-}
-
-void OGLRender::DisableMultiTexture()
-{
-    pglActiveTexture(GL_TEXTURE1);
-    OPENGL_CHECK_ERRORS;
-    EnableTexUnit(1,FALSE);
-    pglActiveTexture(GL_TEXTURE0);
-    OPENGL_CHECK_ERRORS;
-    EnableTexUnit(0,FALSE);
-    pglActiveTexture(GL_TEXTURE0);
-    OPENGL_CHECK_ERRORS;
-    EnableTexUnit(0,TRUE);
 }
 
 void OGLRender::EndRendering(void)
