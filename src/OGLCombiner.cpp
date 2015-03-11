@@ -899,7 +899,7 @@ GLuint COGLColorCombiner::GenerateCycle12Program()
                         strcat(newFrgStr, "CColor = uChromaKeyScale;\n");
                         break;
                     case CCMUX_COMBINED_ALPHA : // 7
-                        strcat(newFrgStr, "CColor = vec3(cycle1Color.a);\n");
+                        strcat(newFrgStr, "CColor = vec3(cycle1Alpha);\n");
                         break;
                     case CCMUX_TEXEL0_ALPHA : // 8
                         strcat(newFrgStr, "CColor = vec3(texture2D(uTex0,vertexTexCoord0).a);\n");
