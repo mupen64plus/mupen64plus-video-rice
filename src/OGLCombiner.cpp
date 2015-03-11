@@ -135,31 +135,43 @@ static GLuint createShader( GLenum shaderType, const char* shaderSrc )
 {
     assert( shaderSrc != NULL );
 
-    GLuint shader = pglCreateShader( shaderType ); // GL_VERTEX_SHADER, GL_FRAGMENT_SHADER
+    GLuint shader = pglCreateShader( shaderType ); OPENGL_CHECK_ERRORS // GL_VERTEX_SHADER, GL_FRAGMENT_SHADER
 
-    pglShaderSource(shader, 1, &shaderSrc, NULL);
-    pglCompileShader(shader);
+    pglShaderSource(shader, 1, &shaderSrc, NULL); OPENGL_CHECK_ERRORS
+    pglCompileShader(shader); OPENGL_CHECK_ERRORS
 
     GLint status;
-    pglGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+    pglGetShaderiv(shader, GL_COMPILE_STATUS, &status); OPENGL_CHECK_ERRORS
     if (status == GL_FALSE)
     {
-        GLint infoLogLength;
-        pglGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
+        printf("Compile shader failed:\n");
+        printf("Shader type: ");
 
-        GLchar strInfoLog[ infoLogLength ];
-        pglGetShaderInfoLog(shader, infoLogLength, NULL, strInfoLog);
-
-        const char *strShaderType = NULL;
-        switch(shader)
+        switch(shaderType)
         {
-        case GL_VERTEX_SHADER: strShaderType = "vertex"; break;
-        //case GL_GEOMETRY_SHADER: strShaderType = "geometry"; break;
-        case GL_FRAGMENT_SHADER: strShaderType = "fragment"; break;
+            case GL_VERTEX_SHADER :
+                printf("Vertex\n");
+                break;
+            case GL_FRAGMENT_SHADER :
+                printf("Fragment\n");
+                break;
+            default:
+                printf("Unknown?\n");
+                break;
         }
 
-        printf( "Compile failure in %s shader:\n%s\n", strShaderType, strInfoLog);
-        printf( "GLSL code:\n%s\n", shaderSrc);
+        GLint param = 0;
+        pglGetShaderiv(shader, GL_INFO_LOG_LENGTH, &param); OPENGL_CHECK_ERRORS
+
+        GLsizei infoLogLength = (GLsizei) param;
+        assert( infoLogLength >= 0 );
+        GLchar infoLog[ infoLogLength ];
+        pglGetShaderInfoLog(shader, infoLogLength, NULL, infoLog); OPENGL_CHECK_ERRORS
+
+        printf("Info log:\n%s\n", infoLog);
+        printf("GLSL code:\n%s\n", shaderSrc);
+
+        pglDeleteShader(shader); OPENGL_CHECK_ERRORS
     }
 
     return shader;
@@ -170,33 +182,40 @@ static GLuint createProgram(const GLuint vShader, GLuint fShader)
     assert( vShader > CC_NULL_SHADER );
     assert( fShader > CC_NULL_SHADER );
 
-    GLuint program = pglCreateProgram();
+    GLuint program = pglCreateProgram(); OPENGL_CHECK_ERRORS
 
-    pglAttachShader(program, vShader);
-    pglAttachShader(program, fShader);
+    pglAttachShader(program, vShader); OPENGL_CHECK_ERRORS
+    pglAttachShader(program, fShader); OPENGL_CHECK_ERRORS
 
-    pglBindAttribLocation(program,VS_POSITION,"inPosition");
-    pglBindAttribLocation(program,VS_TEXCOORD0,"inTexCoord0");
-    pglBindAttribLocation(program,VS_TEXCOORD1,"inTexCoord1");
-    pglBindAttribLocation(program,VS_FOG,"inFog");
-    pglBindAttribLocation(program,VS_COLOR,"inShadeColor");
+    pglBindAttribLocation(program,VS_POSITION,"inPosition"); OPENGL_CHECK_ERRORS
+    pglBindAttribLocation(program,VS_TEXCOORD0,"inTexCoord0"); OPENGL_CHECK_ERRORS
+    pglBindAttribLocation(program,VS_TEXCOORD1,"inTexCoord1"); OPENGL_CHECK_ERRORS
+    pglBindAttribLocation(program,VS_FOG,"inFog"); OPENGL_CHECK_ERRORS
+    pglBindAttribLocation(program,VS_COLOR,"inShadeColor"); OPENGL_CHECK_ERRORS
 
     pglLinkProgram(program);
 
     GLint status;
-    pglGetProgramiv(program, GL_LINK_STATUS, &status);
+    pglGetProgramiv(program, GL_LINK_STATUS, &status); OPENGL_CHECK_ERRORS
     if (status == GL_FALSE)
     {
-        GLint infoLogLength;
-        pglGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
+        printf("Program link failed.\n");
 
-        GLchar strInfoLog[ infoLogLength ];
-        pglGetProgramInfoLog(program, infoLogLength, NULL, strInfoLog);
-        printf("Linker failure: %s\n", strInfoLog);
+        GLint param = 0;
+        pglGetProgramiv(program, GL_INFO_LOG_LENGTH, &param); OPENGL_CHECK_ERRORS
+
+        GLsizei infoLogLength = (GLsizei) param;
+        assert( infoLogLength >= 0 );
+        GLchar infoLog[ infoLogLength ];
+
+        pglGetProgramInfoLog(program, infoLogLength, NULL, infoLog); OPENGL_CHECK_ERRORS
+        printf("Info log:\n%s\n", infoLog);
+
+        pglDeleteProgram(program); OPENGL_CHECK_ERRORS
     }
 
-    pglDetachShader(program, vShader);
-    pglDetachShader(program, fShader);
+    pglDetachShader(program, vShader); OPENGL_CHECK_ERRORS
+    pglDetachShader(program, fShader); OPENGL_CHECK_ERRORS
 
     return program;
 }
@@ -211,10 +230,8 @@ COGLColorCombiner::COGLColorCombiner(CRender *pRender) :
     // Generate Fill program
     GLuint frgShaderFill = createShader( GL_FRAGMENT_SHADER, fragmentFill );
     m_fillProgram  = createProgram(m_vtxShader, frgShaderFill);
-    m_fillColorLoc = pglGetUniformLocation(m_fillProgram,"uFillColor");
-    OPENGL_CHECK_ERRORS
-    pglDeleteShader( frgShaderFill );
-    OPENGL_CHECK_ERRORS
+    m_fillColorLoc = pglGetUniformLocation(m_fillProgram,"uFillColor"); OPENGL_CHECK_ERRORS
+    pglDeleteShader( frgShaderFill ); OPENGL_CHECK_ERRORS
 }
 
 COGLColorCombiner::~COGLColorCombiner()
