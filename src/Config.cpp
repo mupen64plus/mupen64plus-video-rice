@@ -969,11 +969,19 @@ BOOL ReadIniFile()
     char readinfo[100];
     const char *ini_filepath = ConfigGetSharedDataFilepath(szIniFileName);
 
-    DebugMessage(M64MSG_VERBOSE, "Reading .ini file: %s", ini_filepath);
+    DebugMessage(M64MSG_VERBOSE, "Reading .ini file: %s", szIniFileName);
+
+    if (ini_filepath == NULL)
+    {
+        DebugMessage(M64MSG_ERROR, "Could not find .ini file: %s", szIniFileName);
+        return FALSE;
+    }
+
     inifile.open(ini_filepath);
 
     if (inifile.fail())
     {
+        DebugMessage(M64MSG_ERROR, "Could not open .ini file: %s", szIniFileName);
         return FALSE;
     }
 
