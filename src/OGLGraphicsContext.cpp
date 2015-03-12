@@ -295,7 +295,7 @@ void COGLGraphicsContext::InitOGLExtension(void)
         m_maxAnisotropicFiltering = options.anisotropicFiltering;
     }
 
-    m_bSupportTextureFormatBRGA = IsExtensionSupported("GL_EXT_texture_format_BGRA8888");
+    m_bSupportTextureFormatBGRA = IsExtensionSupported("GL_EXT_texture_format_BGRA8888");
 }
 
 bool COGLGraphicsContext::IsExtensionSupported(const char* pExtName)

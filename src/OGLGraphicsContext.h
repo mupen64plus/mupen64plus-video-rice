@@ -41,7 +41,7 @@ public:
     inline bool IsSupportAnisotropicFiltering() { return m_bSupportAnisotropicFiltering; };
     inline int  getMaxAnisotropicFiltering() { return m_maxAnisotropicFiltering; };
     inline int  getMaxTextureImageUnits() { return m_maxTextureImageUnits; };
-    inline bool IsSupportTextureFormatBRGA() { return m_bSupportTextureFormatBRGA; };
+    inline bool IsSupportTextureFormatBGRA() { return m_bSupportTextureFormatBGRA; };
 
 protected:
     friend class OGLDeviceBuilder;
@@ -62,7 +62,7 @@ private:
     bool IsExtensionSupported(const char* pExtName);
     bool m_bSupportAnisotropicFiltering;
     int  m_maxAnisotropicFiltering;
-    bool m_bSupportTextureFormatBRGA;
+    bool m_bSupportTextureFormatBGRA;
 };
 
 #endif
