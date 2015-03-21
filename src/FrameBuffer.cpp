@@ -484,8 +484,8 @@ void TexRectToFrameBuffer_8b(uint32 dwXL, uint32 dwYL, uint32 dwXH, uint32 dwYH,
     uint32 dwLeft = dwXL;
     uint32 dwTop = dwYL;
 
-    dwWidth = min(dwWidth, maxW-dwLeft);
-    dwHeight = min(dwHeight, maxH-dwTop);
+    dwWidth = std::min(dwWidth, maxW-dwLeft);
+    dwHeight = std::min(dwHeight, maxH-dwTop);
     
     if( maxH <= dwTop )
         return;
@@ -541,8 +541,8 @@ void TexRectToN64FrameBuffer_16b(uint32 x0, uint32 y0, uint32 width, uint32 heig
 
 #define FAST_CRC_CHECKING_INC_X 13
 #define FAST_CRC_CHECKING_INC_Y 11
-#define FAST_CRC_MIN_Y_INC      2
-#define FAST_CRC_MIN_X_INC      2
+#define FAST_CRC_MIN_Y_INC      2u
+#define FAST_CRC_MIN_X_INC      2u
 #define FAST_CRC_MAX_X_INC      7
 #define FAST_CRC_MAX_Y_INC      3
 extern uint32 dwAsmHeight;
@@ -562,7 +562,7 @@ uint32 CalculateRDRAMCRC(void *pPhysicalAddress, uint32 left, uint32 top, uint32
         uint32 xinc = realWidthInDWORD / FAST_CRC_CHECKING_INC_X;   
         if( xinc < FAST_CRC_MIN_X_INC )
         {
-            xinc = min(FAST_CRC_MIN_X_INC, width);
+            xinc = std::min(FAST_CRC_MIN_X_INC, width);
         }
         if( xinc > FAST_CRC_MAX_X_INC )
         {
@@ -572,7 +572,7 @@ uint32 CalculateRDRAMCRC(void *pPhysicalAddress, uint32 left, uint32 top, uint32
         uint32 yinc = height / FAST_CRC_CHECKING_INC_Y; 
         if( yinc < FAST_CRC_MIN_Y_INC ) 
         {
-            yinc = min(FAST_CRC_MIN_Y_INC, height);
+            yinc = std::min(FAST_CRC_MIN_Y_INC, height);
         }
         if( yinc > FAST_CRC_MAX_Y_INC )
         {

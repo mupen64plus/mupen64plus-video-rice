@@ -301,7 +301,7 @@ void OGLRender::ApplyZBias(int bias)
         }
         else
         {
-            f1 = -3.0f;  // z offset = -3.0 * max(abs(dz/dx),abs(dz/dy)) per pixel delta z slope
+            f1 = -3.0f;  // z offset = -3.0 * std::max(abs(dz/dx),abs(dz/dy)) per pixel delta z slope
             f2 = -3.0f;  // z offset += -3.0 * 1 bit
         }
         glEnable(GL_POLYGON_OFFSET_FILL);  // enable z offsets

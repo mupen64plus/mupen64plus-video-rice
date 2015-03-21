@@ -326,7 +326,7 @@ int COGLColorCombiner4::ParseDecodedMux()
         }
     }
         
-    res.numOfUnits = min(m_maxTexUnits, max(unitNos[0],unitNos[1]));
+    res.numOfUnits = std::min(m_maxTexUnits, std::max(unitNos[0],unitNos[1]));
 
     if( unitNos[0]>m_maxTexUnits || unitNos[1]>m_maxTexUnits ) 
     {

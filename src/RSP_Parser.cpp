@@ -1316,12 +1316,12 @@ void DLParser_FillRect(Gfx *gfx)
     {
         if( !status.bCIBufferIsRendered ) g_pFrameBufferManager->ActiveTextureBuffer();
 
-        status.leftRendered = status.leftRendered<0 ? x0 : min((int)x0,status.leftRendered);
-        status.topRendered = status.topRendered<0 ? y0 : min((int)y0,status.topRendered);
-        status.rightRendered = status.rightRendered<0 ? x1 : max((int)x1,status.rightRendered);
-        status.bottomRendered = status.bottomRendered<0 ? y1 : max((int)y1,status.bottomRendered);
+        status.leftRendered = status.leftRendered<0 ? x0 : std::min((int)x0,status.leftRendered);
+        status.topRendered = status.topRendered<0 ? y0 : std::min((int)y0,status.topRendered);
+        status.rightRendered = status.rightRendered<0 ? x1 : std::max((int)x1,status.rightRendered);
+        status.bottomRendered = status.bottomRendered<0 ? y1 : std::max((int)y1,status.bottomRendered);
 
-        g_pRenderTextureInfo->maxUsedHeight = max(g_pRenderTextureInfo->maxUsedHeight,(int)y1);
+        g_pRenderTextureInfo->maxUsedHeight = std::max(g_pRenderTextureInfo->maxUsedHeight,(int)y1);
 
         if( status.bDirectWriteIntoRDRAM || ( x0==0 && y0==0 && (x1 == g_pRenderTextureInfo->N64Width || x1 == g_pRenderTextureInfo->N64Width-1 ) ) )
         {
@@ -1393,10 +1393,10 @@ void DLParser_FillRect(Gfx *gfx)
         {
             if( !status.bCIBufferIsRendered ) g_pFrameBufferManager->ActiveTextureBuffer();
 
-            status.leftRendered = status.leftRendered<0 ? x0 : min((int)x0,status.leftRendered);
-            status.topRendered = status.topRendered<0 ? y0 : min((int)y0,status.topRendered);
-            status.rightRendered = status.rightRendered<0 ? x1 : max((int)x1,status.rightRendered);
-            status.bottomRendered = status.bottomRendered<0 ? y1 : max((int)y1,status.bottomRendered);
+            status.leftRendered = status.leftRendered<0 ? x0 : std::min((int)x0,status.leftRendered);
+            status.topRendered = status.topRendered<0 ? y0 : std::min((int)y0,status.topRendered);
+            status.rightRendered = status.rightRendered<0 ? x1 : std::max((int)x1,status.rightRendered);
+            status.bottomRendered = status.bottomRendered<0 ? y1 : std::max((int)y1,status.bottomRendered);
         }
 
         if( gRDP.otherMode.cycle_type == CYCLE_TYPE_FILL )

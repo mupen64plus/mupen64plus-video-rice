@@ -867,7 +867,7 @@ int CGeneralCombiner::ParseDecodedMux()
         stages[i] = n;
     }
 
-    gci.nStages = max(stages[0], stages[1]);
+    gci.nStages = std::max(stages[0], stages[1]);
     if( gci.nStages > m_dwGeneralMaxStages )
     {
         resultIsGood = false;

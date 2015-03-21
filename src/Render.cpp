@@ -42,13 +42,6 @@ extern char* right (const char * src, int nchars);
   #define strcasecmp _stricmp
 #endif
 
-#ifdef min
-#undef min
-#endif
-#ifdef max
-#undef max
-#endif
-
 //========================================================================
 CRender * CRender::GetRender(void)
 {

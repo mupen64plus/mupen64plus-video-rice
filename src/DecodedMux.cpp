@@ -698,7 +698,7 @@ void DecodedMux::Reformat(bool do_complement)
         m_n64Combiners[3].d = MUX_COMBINED;
     }
     
-    mType = max(max(max(splitType[0], splitType[1]),splitType[2]),splitType[3]);
+    mType = std::max(std::max(std::max(splitType[0], splitType[1]),splitType[2]),splitType[3]);
 }
 
 const char* MuxGroupStr[4] =
@@ -792,7 +792,7 @@ int DecodedMux::CountTexels(void)
     for( int i=0; i<4; i++ )
     {
         N64CombinerType &m = m_n64Combiners[i];
-        count = max(count, ::CountTexel1Cycle(m));
+        count = std::max(count, ::CountTexel1Cycle(m));
         if( count == 2 ) 
             break;
     }
@@ -986,7 +986,7 @@ void DecodedMux::UseShadeForConstant(void)
 
     bool forceToUsed = constants>m_maxConstants;
 
-    if( !isUsedInColorChannel(MUX_SHADE) && (forceToUsed || max(splitType[0], splitType[2]) >= CM_FMT_TYPE_A_MOD_C_ADD_D) )
+    if( !isUsedInColorChannel(MUX_SHADE) && (forceToUsed || std::max(splitType[0], splitType[2]) >= CM_FMT_TYPE_A_MOD_C_ADD_D) )
     {
         int countEnv = Count(MUX_ENV, N64Cycle0RGB, mask) + Count(MUX_ENV, N64Cycle1RGB, mask);
         int countPrim = Count(MUX_PRIM, N64Cycle0RGB, mask) + Count(MUX_PRIM, N64Cycle1RGB, mask);
@@ -1022,8 +1022,8 @@ void DecodedMux::UseShadeForConstant(void)
         int countEnv = Count(MUX_ENV|MUX_ALPHAREPLICATE, N64Cycle0RGB, mask) + Count(MUX_ENV|MUX_ALPHAREPLICATE, N64Cycle1RGB, mask);
         int countPrim = Count(MUX_PRIM|MUX_ALPHAREPLICATE, N64Cycle0RGB, mask) + Count(MUX_PRIM|MUX_ALPHAREPLICATE, N64Cycle1RGB, mask);
 
-        if( forceToUsed || max(splitType[1], splitType[3]) >= CM_FMT_TYPE_A_MOD_C_ADD_D ||
-            (max(splitType[0], splitType[2]) >= CM_FMT_TYPE_A_MOD_C_ADD_D && countEnv+countPrim > 0 ) )
+        if( forceToUsed || std::max(splitType[1], splitType[3]) >= CM_FMT_TYPE_A_MOD_C_ADD_D ||
+            (std::max(splitType[0], splitType[2]) >= CM_FMT_TYPE_A_MOD_C_ADD_D && countEnv+countPrim > 0 ) )
         {
             countEnv = Count(MUX_ENV, N64Cycle0Alpha) + Count(MUX_ENV, N64Cycle1Alpha) +
                             Count(MUX_ENV|MUX_ALPHAREPLICATE, N64Cycle0RGB, mask) + Count(MUX_ENV|MUX_ALPHAREPLICATE, N64Cycle1RGB, mask);

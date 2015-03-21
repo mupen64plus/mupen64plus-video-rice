@@ -27,7 +27,7 @@ void COGLDecodedMux::Simplify(void)
 void COGLDecodedMux::Reformat(void)
 {
     DecodedMux::Reformat();
-    mType = max(max(max(splitType[0], splitType[1]),splitType[2]),splitType[3]);
+    mType = std::max(std::max(std::max(splitType[0], splitType[1]),splitType[2]),splitType[3]);
 }
 
 void COGLExtDecodedMux::Simplify(void)
