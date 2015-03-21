@@ -18,14 +18,28 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 #include <SDL.h>
+#include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include <algorithm>
 
+#include "Config.h"
 #include "ConvertImage.h"
+#include "Debugger.h"
 #include "GraphicsContext.h"
+#include "RSP_Parser.h"
+#include "RSP_S2DEX.h"
 #include "Render.h"
+#include "RenderBase.h"
 #include "RenderTexture.h"
+#include "TextureManager.h"
+#include "Timing.h"
+#include "UcodeDefs.h"
+#include "VectorMath.h"
 #include "Video.h"
+#include "m64p_plugin.h"
+#include "osal_preproc.h"
+#include "typedefs.h"
 #include "ucode.h"
 
 //////////////////////////////////////////////////////////

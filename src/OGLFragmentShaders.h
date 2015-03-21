@@ -19,12 +19,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _OGL_FRAGMENT_SHADER_H_
 #define _OGL_FRAGMENT_SHADER_H_
 
-#include <SDL_opengl.h>
 #include <vector>
 
 #include "GeneralCombiner.h"
 #include "OGLCombiner.h"
 #include "OGLExtCombiner.h"
+#include "osal_opengl.h"
+#include "typedefs.h"
+
+class CRender;
 
 typedef struct {
     uint32  dwMux0;

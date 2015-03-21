@@ -22,8 +22,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "Debugger.h"
 #include "RSP_Parser.h"
+#include "VectorMath.h"
 #include "Video.h"
 #include "osal_preproc.h"
+#include "typedefs.h"
 
 /*
  *  Global variables defined in this file were moved out of Render class

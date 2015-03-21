@@ -16,12 +16,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+#include <stdio.h>
+#include <string.h>
 #include <algorithm>
 
 #include "Combiner.h"
+#include "CombinerDefs.h"
 #include "Config.h"
+#include "Debugger.h"
+#include "DecodedMux.h"
 #include "GeneralCombiner.h"
+#include "RSP_Parser.h"
 #include "RenderBase.h"
+#include "typedefs.h"
 
 #define ALLOW_USE_TEXTURE_FOR_CONSTANTS
 

@@ -17,13 +17,24 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+#include <stdlib.h>
+
+#include "Blender.h"
+#include "Combiner.h"
+#include "Debugger.h"
 #include "DeviceBuilder.h"
 #include "FrameBuffer.h"
+#include "GraphicsContext.h"
 #include "OGLCombiner.h"
 #include "OGLDebug.h"
+#include "OGLExtCombiner.h"
 #include "OGLExtRender.h"
 #include "OGLGraphicsContext.h"
 #include "OGLTexture.h"
+#include "Render.h"
+#include "TextureManager.h"
+#include "Video.h"
+#include "m64p_types.h"
 #include "osal_opengl.h"
 #ifndef USE_GLES
 #include "OGLExtensions.h"

@@ -29,8 +29,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 
 #include <string.h>
+#include <exception>
 
 #include "Texture.h"
+#include "Video.h"
+#include "m64p_types.h"
+#include "osal_preproc.h"
 #include "typedefs.h"
 
 #define absi(x)     ((x)>=0?(x):(-x))

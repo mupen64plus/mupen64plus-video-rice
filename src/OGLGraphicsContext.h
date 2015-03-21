@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define _OGL_CONTEXT_H_
 
 #include "GraphicsContext.h"
+#include "osal_preproc.h"
 #include "typedefs.h"
 
 class COGLGraphicsContext : public CGraphicsContext

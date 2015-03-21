@@ -19,8 +19,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 #include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <vector>
 
+#include "CritSect.h"
+#include "RenderBase.h"
 #include "osal_opengl.h"
 
 #define M64P_PLUGIN_PROTOTYPES 1

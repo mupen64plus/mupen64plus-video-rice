@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "m64p_config.h"
 #include "m64p_plugin.h"
 #include "m64p_vidext.h"
+#include "osal_preproc.h"
 #include "typedefs.h"
 
 typedef struct {

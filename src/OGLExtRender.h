@@ -21,6 +21,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "OGLRender.h"
 #include "osal_opengl.h"
+#include "osal_preproc.h"
+#include "typedefs.h"
 
 class COGLExtRender : public OGLRender
 {

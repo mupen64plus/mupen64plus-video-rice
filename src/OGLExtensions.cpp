@@ -20,9 +20,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 /* This is only necessary because Windows does not contain development support for OpenGL versions beyond 1.1 */
 
 #include <SDL_opengl.h>
+#include <stddef.h>
 
 #include "OGLExtensions.h"
 #include "Video.h"
+#include "m64p_types.h"
 
 static void APIENTRY EmptyFunc(void) { return; }
 

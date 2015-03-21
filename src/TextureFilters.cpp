@@ -17,9 +17,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+#include "CSortedList.h"
+#include "Debugger.h"
+#include "RSP_Parser.h"
+#include "RenderBase.h"
+#include "TextureManager.h"
+#include "liblinux/BMGImage.h"
+#include "liblinux/pngrw.h"
+#include "m64p_types.h"
 #include "osal_files.h"
+#include "osal_preproc.h"
 
 #define M64P_PLUGIN_PROTOTYPES 1
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <algorithm>
 

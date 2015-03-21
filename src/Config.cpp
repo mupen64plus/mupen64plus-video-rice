@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 #include <stdlib.h>
+#include <string.h>
 #include <fstream>
 #include <vector>
 
@@ -26,6 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "Debugger.h"
 #include "DeviceBuilder.h"
 #include "RenderBase.h"
+#include "Texture.h"
 #include "TextureManager.h"
 #include "Video.h"
 #include "m64p_config.h"

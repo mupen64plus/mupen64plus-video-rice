@@ -19,14 +19,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 // ===========================================================================
 
+#include <string.h>
+#include <algorithm>
 #include <vector>
 
+#include "Config.h"
 #include "ConvertImage.h"
+#include "Debugger.h"
 #include "DeviceBuilder.h"
 #include "FrameBuffer.h"
+#include "GraphicsContext.h"
 #include "RSP_Parser.h"
 #include "Render.h"
+#include "RenderBase.h"
 #include "UcodeDefs.h"
+#include "Video.h"
+#include "m64p_plugin.h"
 
 extern TMEMLoadMapInfo g_tmemLoadAddrMap[0x200];    // Totally 4KB TMEM;
 

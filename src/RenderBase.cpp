@@ -17,14 +17,28 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+#include <string.h>
+#include <algorithm>
 #include <cmath>
 #include <vector>
 
+#include "Combiner.h"
+#include "CombinerDefs.h"
+#include "Config.h"
+#include "Debugger.h"
+#include "DecodedMux.h"
 #include "DeviceBuilder.h"
+#include "IColor.h"
+#include "RSP_Parser.h"
 #include "Render.h"
+#include "RenderBase.h"
 #include "Timing.h"
+#include "VectorMath.h"
+#include "Video.h"
 #include "float.h"
+#include "m64p_plugin.h"
 #include "osal_preproc.h"
+#include "typedefs.h"
 
 extern FiddledVtx * g_pVtxBase;
 
