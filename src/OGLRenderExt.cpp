@@ -16,9 +16,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include "osal_opengl.h"
-
 #include "OGLRender.h"
+#include "osal_opengl.h"
 
 extern Matrix g_MtxReal;
 extern uObjMtxReal gObjMtxReal;

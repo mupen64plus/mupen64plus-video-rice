@@ -17,15 +17,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 #include <algorithm>
+
 #include "osal_opengl.h"
 
 #ifndef USE_GLES
 #include "OGLExtensions.h"
 #endif
 #include "OGLDebug.h"
+#include "OGLDecodedMux.h"
 #include "OGLExtCombiner.h"
 #include "OGLExtRender.h"
-#include "OGLDecodedMux.h"
 #include "OGLGraphicsContext.h"
 #include "OGLTexture.h"
 

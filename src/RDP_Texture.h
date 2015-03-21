@@ -19,9 +19,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 // Texture related ucode
 
+#include <stdlib.h>
 #include <algorithm>
 
-#include <stdlib.h>
 #include "Render.h"
 
 uint32 g_TmemFlag[16];

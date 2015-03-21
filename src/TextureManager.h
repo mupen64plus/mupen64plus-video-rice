@@ -30,8 +30,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <string.h>
 
-#include "typedefs.h"
 #include "Texture.h"
+#include "typedefs.h"
+
 #define absi(x)     ((x)>=0?(x):(-x))
 #define S_FLAG  0
 #define T_FLAG  1

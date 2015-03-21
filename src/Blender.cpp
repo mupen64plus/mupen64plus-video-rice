@@ -309,13 +309,6 @@ Possible Blending Factors:
             break;
         }
 
-#ifdef DEBUGGER
-        //if( (blendmode_1>>2) != blendmode_2 )
-        //{
-        //  DebuggerAppendMsg("Warning: in 1 cycle mode, blend1!=blend2");
-        //}
-#endif
-
         switch ( blendmode_1 )
         //switch ( blendmode_2<<2 )
         {

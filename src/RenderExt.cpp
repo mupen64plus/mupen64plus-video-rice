@@ -17,10 +17,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-#include "osal_opengl.h"
-#include "OGLDebug.h"
 #include "FrameBuffer.h"
+#include "OGLDebug.h"
 #include "Render.h"
+#include "osal_opengl.h"
 
 extern uObjMtxReal gObjMtxReal;
 extern Matrix g_MtxReal;

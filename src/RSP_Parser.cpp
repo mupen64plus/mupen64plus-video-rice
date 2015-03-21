@@ -17,8 +17,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-#include <algorithm>
 #include <SDL.h>
+#include <time.h>
+#include <algorithm>
 
 #include "ConvertImage.h"
 #include "GraphicsContext.h"
@@ -26,7 +27,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "RenderTexture.h"
 #include "Video.h"
 #include "ucode.h"
-#include <time.h>
 
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
@@ -258,13 +258,13 @@ uint16  g_wRDPTlut[0x200];
 uint32  g_dwRDPPalCrc[16];
 
 #include "FrameBuffer.h"
+#include "RDP_Texture.h"
 #include "RSP_GBI0.h"
 #include "RSP_GBI1.h"
 #include "RSP_GBI2.h"
 #include "RSP_GBI2_ext.h"
 #include "RSP_GBI_Others.h"
 #include "RSP_GBI_Sprite2D.h"
-#include "RDP_Texture.h"
 
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////

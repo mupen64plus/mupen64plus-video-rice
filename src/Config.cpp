@@ -17,23 +17,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-#include <vector>
-#include <fstream>
-
 #include <stdlib.h>
+#include <fstream>
+#include <vector>
 
 #define M64P_PLUGIN_PROTOTYPES 1
-#include "osal_preproc.h"
-#include "m64p_types.h"
-#include "m64p_plugin.h"
-#include "m64p_config.h"
-
 #include "Config.h"
 #include "Debugger.h"
 #include "DeviceBuilder.h"
 #include "RenderBase.h"
 #include "TextureManager.h"
 #include "Video.h"
+#include "m64p_config.h"
+#include "m64p_plugin.h"
+#include "m64p_types.h"
+#include "osal_preproc.h"
 
 #define INI_FILE        "RiceVideoLinux.ini"
 

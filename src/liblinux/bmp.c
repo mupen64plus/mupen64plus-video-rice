@@ -25,11 +25,12 @@
 // POSSESSION, USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include "BMGDLL.h"
-#include "BMGUtils.h"
+#include <setjmp.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <setjmp.h>
+
+#include "BMGDLL.h"
+#include "BMGUtils.h"
 
 #ifndef _WIN32
 #include <string.h>

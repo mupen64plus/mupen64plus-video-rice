@@ -19,14 +19,13 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.          *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include "osal_opengl.h"
-
 #include "OGLCombiner.h"
 #include "OGLDebug.h"
-#include "OGLRender.h"
-#include "OGLGraphicsContext.h"
 #include "OGLDecodedMux.h"
+#include "OGLGraphicsContext.h"
+#include "OGLRender.h"
 #include "OGLTexture.h"
+#include "osal_opengl.h"
 
 //========================================================================
 uint32 DirectX_OGL_BlendFuncMaps [] =

@@ -20,18 +20,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "osal_files.h"
 
 #define M64P_PLUGIN_PROTOTYPES 1
-#include "m64p_plugin.h"
-#include "typedefs.h"
-#include "ConvertImage.h"
-#include "DeviceBuilder.h"
-#include "TextureFilters.h"
-#include "Render.h"
-#include "Video.h"
-
-#include "liblinux/BMGLibPNG.h"
-#include "liblinux/BMGDLL.h"
 #include <sys/types.h>
 #include <algorithm>
+
+#include "ConvertImage.h"
+#include "DeviceBuilder.h"
+#include "Render.h"
+#include "TextureFilters.h"
+#include "Video.h"
+#include "liblinux/BMGDLL.h"
+#include "liblinux/BMGLibPNG.h"
+#include "m64p_plugin.h"
+#include "typedefs.h"
 
 #ifdef min
 #undef min
