@@ -37,6 +37,7 @@
 #error SDL is not build with OpenGL support. Try USE_GLES=1
 #endif
 
+#define GL_GLEXT_PROTOTYPES
 #include <SDL_opengl.h>
 #define GLSL_VERSION "120"
 

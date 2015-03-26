@@ -30,7 +30,7 @@ void OGLExtensions_Init(void);
 /* The function pointer types are defined here because as of 2009 some OpenGL drivers under Linux do 'incorrect' things which
    mess up the SDL_opengl.h header, resulting in no function pointer typedefs at all, and thus compilation errors.
 */
-typedef void      (APIENTRYP PFUNCGLACTIVETEXTUREPROC) (GLenum texture);
+/*typedef void      (APIENTRYP PFUNCGLACTIVETEXTUREPROC) (GLenum texture);
 typedef void      (APIENTRYP PFUNCGLDELETEPROGRAMSARBPROC) (GLsizei n, const GLuint *programs);
 typedef void      (APIENTRYP PFUNCGLPROGRAMSTRINGARBPROC) (GLenum target, GLenum format, GLsizei len, const GLvoid *string);
 typedef void      (APIENTRYP PFUNCGLBINDPROGRAMARBPROC) (GLenum target, GLuint program);
@@ -97,7 +97,7 @@ extern PFUNCGLUNIFORM3FPROC                 pglUniform3f;
 extern PFUNCGLUNIFORM2FPROC                 pglUniform2f;
 extern PFUNCGLUNIFORM1FPROC                 pglUniform1f;
 extern PFUNCGLUNIFORM1IPROC                 pglUniform1i;
-extern PFUNCGLUSEPROGRAMPROC                pglUseProgram;
+extern PFUNCGLUSEPROGRAMPROC                pglUseProgram;*/
 
 
 #endif  // OGL_EXTENSIONS_H

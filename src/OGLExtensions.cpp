@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 static void APIENTRY EmptyFunc(void) { return; }
 
-PFUNCGLACTIVETEXTUREPROC             pglActiveTexture = (PFUNCGLACTIVETEXTUREPROC) EmptyFunc;
+/*PFUNCGLACTIVETEXTUREPROC             pglActiveTexture = (PFUNCGLACTIVETEXTUREPROC) EmptyFunc;
 PFUNCGLPROGRAMSTRINGARBPROC          pglProgramStringARB = (PFUNCGLPROGRAMSTRINGARBPROC) EmptyFunc;
 PFUNCGLBINDPROGRAMARBPROC            pglBindProgramARB = (PFUNCGLBINDPROGRAMARBPROC) EmptyFunc;
 PFUNCGLGENPROGRAMSARBPROC            pglGenProgramsARB = (PFUNCGLGENPROGRAMSARBPROC) EmptyFunc;
@@ -57,7 +57,7 @@ PFUNCGLUNIFORM3FPROC                 pglUniform3f = (PFUNCGLUNIFORM3FPROC) Empty
 PFUNCGLUNIFORM2FPROC                 pglUniform2f = (PFUNCGLUNIFORM2FPROC) EmptyFunc;
 PFUNCGLUNIFORM1FPROC                 pglUniform1f = (PFUNCGLUNIFORM1FPROC) EmptyFunc;
 PFUNCGLUNIFORM1IPROC                 pglUniform1i = (PFUNCGLUNIFORM1IPROC) EmptyFunc;
-PFUNCGLUSEPROGRAMPROC                pglUseProgram = (PFUNCGLUSEPROGRAMPROC) EmptyFunc;
+PFUNCGLUSEPROGRAMPROC                pglUseProgram = (PFUNCGLUSEPROGRAMPROC) EmptyFunc;*/
 
 #define INIT_ENTRY_POINT(type, funcname) \
   p##funcname = (type) CoreVideo_GL_GetProcAddress(#funcname); \
@@ -66,7 +66,7 @@ PFUNCGLUSEPROGRAMPROC                pglUseProgram = (PFUNCGLUSEPROGRAMPROC) Emp
 
 void OGLExtensions_Init(void)
 {
-    INIT_ENTRY_POINT(PFUNCGLACTIVETEXTUREPROC,             glActiveTexture);
+    /*INIT_ENTRY_POINT(PFUNCGLACTIVETEXTUREPROC,             glActiveTexture);
     INIT_ENTRY_POINT(PFUNCGLPROGRAMSTRINGARBPROC,          glProgramStringARB);
     INIT_ENTRY_POINT(PFUNCGLBINDPROGRAMARBPROC,            glBindProgramARB);
     INIT_ENTRY_POINT(PFUNCGLGENPROGRAMSARBPROC,            glGenProgramsARB);
@@ -97,7 +97,7 @@ void OGLExtensions_Init(void)
     INIT_ENTRY_POINT(PFUNCGLUNIFORM2FPROC,                 glUniform2f);
     INIT_ENTRY_POINT(PFUNCGLUNIFORM1FPROC,                 glUniform1f);
     INIT_ENTRY_POINT(PFUNCGLUNIFORM1IPROC,                 glUniform1i);
-    INIT_ENTRY_POINT(PFUNCGLUSEPROGRAMPROC,                glUseProgram);
+    INIT_ENTRY_POINT(PFUNCGLUSEPROGRAMPROC,                glUseProgram);*/
 }
 
 
