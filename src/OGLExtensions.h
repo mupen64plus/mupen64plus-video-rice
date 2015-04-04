@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 /* This header file contains function pointers to some OpenGL functions */
 /* This is only necessary because Windows does not contain development support for OpenGL versions beyond 1.1 */
-
+#ifndef USE_GLES
 #if !defined(OGL_EXTENSIONS_H)
 #define OGL_EXTENSIONS_H
 
@@ -53,4 +53,4 @@ extern PFUNCGLFOGCOORDPOINTERPROC           pglFogCoordPointer;
 extern PFUNCGLCLIENTACTIVETEXTUREPROC       pglClientActiveTexture;
 
 #endif  // OGL_EXTENSIONS_H
-
+#endif  // USE_GLES
