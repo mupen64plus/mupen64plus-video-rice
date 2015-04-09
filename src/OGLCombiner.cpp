@@ -54,82 +54,79 @@ static uint32 DirectX_OGL_BlendFuncMaps [] =
 static char newFrgStr[4092]; // The main buffer for store fragment shader string
 
 static const char *vertexShaderStr =
-"#version " GLSL_VERSION                                   "\n"\
-"uniform vec2 uFogMinMax;                          \n"\
-"                                                           \n"\
-"attribute vec4 inPosition;                          \n"\
-"attribute vec2 inTexCoord0;                          \n"\
-"attribute vec2 inTexCoord1;                          \n"\
-"attribute float inFog;                          \n"\
-"attribute vec4 inShadeColor;                             \n"\
-"                                                           \n"\
-"varying vec2 vertexTexCoord0;                             \n"\
-"varying vec2 vertexTexCoord1;                             \n"\
-"varying float vertexFog;                             \n"\
-"varying vec4 vertexShadeColor;                             \n"\
-"                                                           \n"\
-"void main()                                                \n"\
-"{                                                          \n"\
-"gl_Position = inPosition;                                   \n"\
-"vertexTexCoord0 = inTexCoord0;                                      \n"\
-"vertexTexCoord1 = inTexCoord1;                                      \n"\
-"vertexFog = clamp( (uFogMinMax[1] - inFog) / (uFogMinMax[1] - uFogMinMax[0]), 0.0, 1.0); \n"\
-"vertexShadeColor = inShadeColor;                                      \n"\
-"}                                                          \n"\
-"                                                           \n";
+"#version " GLSL_VERSION "\n"
+"uniform vec2 uFogMinMax;\n"
+"\n"
+"attribute vec4 inPosition;\n"
+"attribute vec2 inTexCoord0;\n"
+"attribute vec2 inTexCoord1;\n"
+"attribute float inFog;\n"
+"attribute vec4 inShadeColor;\n"
+"\n"
+"varying vec2 vertexTexCoord0;\n"
+"varying vec2 vertexTexCoord1;\n"
+"varying float vertexFog;\n"
+"varying vec4 vertexShadeColor;\n"
+"\n"
+"void main()\n"
+"{\n"
+"gl_Position = inPosition;\n"
+"vertexTexCoord0 = inTexCoord0;\n"
+"vertexTexCoord1 = inTexCoord1;\n"
+"vertexFog = clamp((uFogMinMax[1] - inFog) / (uFogMinMax[1] - uFogMinMax[0]), 0.0, 1.0);\n"
+"vertexShadeColor = inShadeColor;\n"
+"}\n";
 
 static const char *fragmentShaderHeader =
-"#version " GLSL_VERSION                                   "\n"
-"precision lowp float;                              \n"\
-"uniform vec4 uBlendColor;                          \n"\
-"uniform vec4 uPrimColor;                          \n"\
-"uniform vec4 uEnvColor;                          \n"\
-"uniform vec3 uChromaKeyCenter;                   \n"\
-"uniform vec3 uChromaKeyScale;                    \n"\
-"uniform vec3 uChromaKeyWidth;                    \n"\
-"uniform float uLodFrac;                          \n"\
-"uniform float uPrimLodFrac;                          \n"\
-"uniform float uK5;                          \n"\
-"uniform float uK4;                          \n"\
-"uniform sampler2D uTex0;                          \n"\
-"uniform sampler2D uTex1;                          \n"\
-"uniform vec4 uFogColor;                          \n"\
-"                                                           \n"\
-"varying vec2 vertexTexCoord0;                          \n"\
-"varying vec2 vertexTexCoord1;                          \n"\
-"varying float vertexFog;                          \n"\
-"varying vec4 vertexShadeColor;                          \n"\
-"                                                           \n"\
-"                                                           \n"\
-"void main()                                                \n"\
-"{                                                          \n"\
-"vec4 outColor;                                             \n";
+"#version " GLSL_VERSION "\n"
+"precision lowp float;\n"
+"uniform vec4 uBlendColor;\n"
+"uniform vec4 uPrimColor;\n"
+"uniform vec4 uEnvColor;\n"
+"uniform vec3 uChromaKeyCenter;\n"
+"uniform vec3 uChromaKeyScale;\n"
+"uniform vec3 uChromaKeyWidth;\n"
+"uniform float uLodFrac;\n"
+"uniform float uPrimLodFrac;\n"
+"uniform float uK5;\n"
+"uniform float uK4;\n"
+"uniform sampler2D uTex0;\n"
+"uniform sampler2D uTex1;\n"
+"uniform vec4 uFogColor;\n"
+"\n"
+"varying vec2 vertexTexCoord0;\n"
+"varying vec2 vertexTexCoord1;\n"
+"varying float vertexFog;\n"
+"varying vec4 vertexShadeColor;\n"
+"\n"
+"void main()\n"
+"{\n"
+"vec4 outColor;\n";
 
 //Fragment shader for InitCycleCopy
 static const char *fragmentCopyHeader =
-"#version " GLSL_VERSION "\n"\
-"precision lowp float;                              \n"\
-"uniform vec4 uBlendColor;                          \n"\
-"uniform sampler2D uTex0;                                   \n"\
-"varying vec2 vertexTexCoord0;                              \n"\
-"void main()                                                \n"\
-"{                                                          \n"\
-"vec4 outColor = texture2D(uTex0,vertexTexCoord0);           \n";
+"#version " GLSL_VERSION "\n"
+"precision lowp float;\n"
+"uniform vec4 uBlendColor;\n"
+"uniform sampler2D uTex0;\n"
+"varying vec2 vertexTexCoord0;\n"
+"void main()\n"
+"{\n"
+"vec4 outColor = texture2D(uTex0,vertexTexCoord0);\n";
 
 //Fragment shader for InitCycleFill (the only self contain fragment shader)
 static const char *fragmentFill =
-"#version " GLSL_VERSION "\n"\
-"precision lowp float;                                      \n"\
-"uniform vec4 uFillColor;                                   \n"
-"void main()                                                \n"
-"{                                                          \n"
-"gl_FragColor = uFillColor;                                 \n"
-"}";
+"#version " GLSL_VERSION "\n"
+"precision lowp float;\n"
+"uniform vec4 uFillColor;\n"
+"void main()\n"
+"{\n"
+"gl_FragColor = uFillColor;\n"
+"}\n";
 
 static const char *fragmentShaderFooter =
-"    gl_FragColor = outColor;                               \n"\
-"}                                                          \n"\
-"                                                           \n";
+"gl_FragColor = outColor;\n"
+"}\n";
 
 static GLuint createShader( GLenum shaderType, const char* shaderSrc )
 {
