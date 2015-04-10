@@ -79,7 +79,14 @@ static const char *vertexShaderStr =
 
 static const char *fragmentShaderHeader =
 "#version " GLSL_VERSION "\n"
+"#ifdef GL_ES\n"
 "precision lowp float;\n"
+"#else\n"
+"#define lowp\n"
+"#define mediump\n"
+"#define highp\n"
+"#endif\n"
+"\n"
 "uniform vec4 uBlendColor;\n"
 "uniform vec4 uPrimColor;\n"
 "uniform vec4 uEnvColor;\n"
@@ -106,7 +113,14 @@ static const char *fragmentShaderHeader =
 //Fragment shader for InitCycleCopy
 static const char *fragmentCopyHeader =
 "#version " GLSL_VERSION "\n"
+"#ifdef GL_ES\n"
 "precision lowp float;\n"
+"#else\n"
+"#define lowp\n"
+"#define mediump\n"
+"#define highp\n"
+"#endif\n"
+"\n"
 "uniform vec4 uBlendColor;\n"
 "uniform sampler2D uTex0;\n"
 "varying vec2 vertexTexCoord0;\n"
@@ -117,7 +131,14 @@ static const char *fragmentCopyHeader =
 //Fragment shader for InitCycleFill (the only self contain fragment shader)
 static const char *fragmentFill =
 "#version " GLSL_VERSION "\n"
+"#ifdef GL_ES\n"
 "precision lowp float;\n"
+"#else\n"
+"#define lowp\n"
+"#define mediump\n"
+"#define highp\n"
+"#endif\n"
+"\n"
 "uniform vec4 uFillColor;\n"
 "void main()\n"
 "{\n"
