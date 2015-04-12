@@ -28,7 +28,7 @@
 #include <stdlib.h>
 
 #include "BMGUtils.h"
-#include "liblinux/../osal_preproc.h"
+#include "osal_preproc.h"
 #include "liblinux/BMGImage.h"
 
 #ifndef _WIN32
