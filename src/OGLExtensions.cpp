@@ -84,6 +84,7 @@ void OGLExtensions_Init(void)
     INIT_ENTRY_POINT(PFUNCGLLINKPROGRAMPROC,               glLinkProgram);
     INIT_ENTRY_POINT(PFUNCGLGETPROGRAMIVPROC,              glGetProgramiv);
     INIT_ENTRY_POINT(PFUNCGLGETPROGRAMINFOLOGPROC,         glGetProgramInfoLog);
+    INIT_ENTRY_POINT(PFUNCGLDETACHSHADERPROC,              glDetachShader);
     INIT_ENTRY_POINT(PFUNCGLGETUNIFORMLOCATIONPROC,        glGetUniformLocation);
     INIT_ENTRY_POINT(PFUNCGLDELETESHADERPROC,              glDeleteShader);
     INIT_ENTRY_POINT(PFUNCGLDELETEPROGRAMPROC,             glDeleteProgram);

@@ -31,7 +31,6 @@ void OGLExtensions_Init(void);
    mess up the SDL_opengl.h header, resulting in no function pointer typedefs at all, and thus compilation errors.
 */
 typedef void      (APIENTRYP PFUNCGLACTIVETEXTUREPROC) (GLenum texture);
-typedef void      (APIENTRYP PFUNCGLDELETEPROGRAMSARBPROC) (GLsizei n, const GLuint *programs);
 typedef void      (APIENTRYP PFUNCGLPROGRAMSTRINGARBPROC) (GLenum target, GLenum format, GLsizei len, const GLvoid *string);
 typedef void      (APIENTRYP PFUNCGLBINDPROGRAMARBPROC) (GLenum target, GLuint program);
 typedef void      (APIENTRYP PFUNCGLGENPROGRAMSARBPROC) (GLsizei n, GLuint *programs);
