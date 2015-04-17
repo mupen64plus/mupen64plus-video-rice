@@ -1825,8 +1825,10 @@ void CRender::UpdateScissorWithClipRatio()
     {
         w.clipping.needToClip = false;
     }
-    w.clipping.width = (uint32)((gRSP.real_clip_scissor_right-gRSP.real_clip_scissor_left+1)*windowSetting.fMultX);
-    w.clipping.height = (uint32)((gRSP.real_clip_scissor_bottom-gRSP.real_clip_scissor_top+1)*windowSetting.fMultY);
+    // CF63 return real_clip_scissor_left bigger than real_clip_scissor_right
+    // bringing to negative width. We use max to ensure the value is always 0+
+    w.clipping.width = (uint32)std::max((gRSP.real_clip_scissor_right-gRSP.real_clip_scissor_left+1)*windowSetting.fMultX, 0.0f);
+    w.clipping.height = (uint32)std::max((gRSP.real_clip_scissor_bottom-gRSP.real_clip_scissor_top+1)*windowSetting.fMultY, 0.0f);
 
     float halfx = gRSP.nVPWidthN/2.0f;
     float halfy = gRSP.nVPHeightN/2.0f;
