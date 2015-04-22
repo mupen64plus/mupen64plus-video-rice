@@ -30,11 +30,11 @@ void OGLExtensions_Init(void);
 /* The function pointer types are defined here because as of 2009 some OpenGL drivers under Linux do 'incorrect' things which
    mess up the SDL_opengl.h header, resulting in no function pointer typedefs at all, and thus compilation errors.
 */
-#ifndef USE_GLES
+/*#ifndef USE_GLES
 #if defined(WIN32)
 typedef void      (APIENTRYP PFNGLACTIVETEXTUREPROC) (GLenum texture);
 #endif
-/*typedef GLuint    (APIENTRYP PFNGLCREATESHADERPROC) (GLenum type);
+typedef GLuint    (APIENTRYP PFNGLCREATESHADERPROC) (GLenum type);
 typedef void      (APIENTRYP PFNGLSHADERSOURCEPROC) (GLuint shader, GLsizei count, const GLchar** strings, const GLint* lengths);
 typedef void      (APIENTRYP PFNGLCOMPILESHADERPROC) (GLuint shader);
 typedef void      (APIENTRYP PFNGLGETSHADERIVPROC) (GLuint shader, GLenum pname, GLint* param);
@@ -59,13 +59,16 @@ typedef void      (APIENTRYP PFNGLUNIFORM3FPROC) (GLint location, GLfloat v0, GL
 typedef void      (APIENTRYP PFNGLUNIFORM2FPROC) (GLint location, GLfloat v0, GLfloat v1);
 typedef void      (APIENTRYP PFNGLUNIFORM1FPROC) (GLint location, GLfloat v0);
 typedef void      (APIENTRYP PFNGLUNIFORM1IPROC) (GLint location, GLint v0);
-typedef void      (APIENTRYP PFNGLUSEPROGRAMPROC) (GLuint program);*/
-#endif /* not USE_GLES */
+typedef void      (APIENTRYP PFNGLUSEPROGRAMPROC) (GLuint program);
+#endif // not USE_GLES */
 
-#ifndef USE_GLES
-#ifdef WIN32
+// See OGLExtensions.cpp for #ifdef #else documentation
+#ifdef USE_GLES
+#else
+#if defined(WIN32)
 extern PFNGLACTIVETEXTUREPROC             glActiveTexture;
-#endif /* WIN32 */
+#elif defined(__APPLE__)
+#else
 extern PFNGLCREATESHADERPROC              glCreateShader;
 extern PFNGLSHADERSOURCEPROC              glShaderSource;
 extern PFNGLCOMPILESHADERPROC             glCompileShader;
@@ -92,8 +95,8 @@ extern PFNGLUNIFORM2FPROC                 glUniform2f;
 extern PFNGLUNIFORM1FPROC                 glUniform1f;
 extern PFNGLUNIFORM1IPROC                 glUniform1i;
 extern PFNGLUSEPROGRAMPROC                glUseProgram;
-extern PFNGLUSEPROGRAMPROC                glUseProgram;
-#endif /* not USE_GLES */
+#endif
+#endif
 
 
 #endif  // OGL_EXTENSIONS_H

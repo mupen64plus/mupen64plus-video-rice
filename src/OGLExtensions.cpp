@@ -25,10 +25,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 static void APIENTRY EmptyFunc(void) { return; }
 
-#ifndef USE_GLES
-#ifdef WIN32
-PFNGLACTIVETEXTUREPROC            glActiveTexture            = (PFNGLACTIVETEXTUREPROC) EmptyFunc;
-#endif
+#ifdef USE_GLES
+// OpenGL ES
+// OpenGL ES headers already load every functions so this place is reserved for
+// maybe future ES extensions.
+#else
+// Desktop OpenGL
+#if defined(WIN32)
+// Windows is OpenGL 1.1
+PFNGLACTIVETEXTUREPROC            glActiveTexture            = (PFNGLACTIVETEXTUREPROC) EmptyFunc; // Added in OpenGL 1.3
+#elif defined(__APPLE__)
+// OSX support OpenGL 2.1 function via ARB extensions. Only full core profile
+// allow apps to use  ARBless functions
+#else
+// Linux (OpenGL 1.3) and others
 PFNGLCREATESHADERPROC             glCreateShader             = (PFNGLCREATESHADERPROC) EmptyFunc;
 PFNGLSHADERSOURCEPROC             glShaderSource             = (PFNGLSHADERSOURCEPROC) EmptyFunc;
 PFNGLCOMPILESHADERPROC            glCompileShader            = (PFNGLCOMPILESHADERPROC) EmptyFunc;
@@ -55,7 +65,8 @@ PFNGLUNIFORM2FPROC                glUniform2f                = (PFNGLUNIFORM2FPR
 PFNGLUNIFORM1FPROC                glUniform1f                = (PFNGLUNIFORM1FPROC) EmptyFunc;
 PFNGLUNIFORM1IPROC                glUniform1i                = (PFNGLUNIFORM1IPROC) EmptyFunc;
 PFNGLUSEPROGRAMPROC               glUseProgram               = (PFNGLUSEPROGRAMPROC) EmptyFunc;
-#endif /* not USE_GLES */
+#endif // OS detections
+#endif // USE_GLES
 
 #define INIT_ENTRY_POINT(type, funcname) \
   p##funcname = (type) CoreVideo_GL_GetProcAddress(#funcname); \
@@ -64,10 +75,13 @@ PFNGLUSEPROGRAMPROC               glUseProgram               = (PFNGLUSEPROGRAMP
 
 void OGLExtensions_Init(void)
 {
-#ifndef USE_GLES
-#ifdef WIN32
+// See above for #ifdef #else documentation
+#ifdef USE_GLES
+#else
+#if defined(WIN32)
     glActiveTexture            = (PFNGLACTIVETEXTUREPROC)            CoreVideo_GL_GetProcAddress("glActiveTexture");
-#endif
+#elif defined(__APPLE__)
+#else
     glCreateShader             = (PFNGLCREATESHADERPROC)             CoreVideo_GL_GetProcAddress("glCreateShader");
     glShaderSource             = (PFNGLSHADERSOURCEPROC)             CoreVideo_GL_GetProcAddress("glShaderSource");
     glCompileShader            = (PFNGLCOMPILESHADERPROC)            CoreVideo_GL_GetProcAddress("glCompileShader");
@@ -94,6 +108,7 @@ void OGLExtensions_Init(void)
     glUniform1f                = (PFNGLUNIFORM1FPROC)                CoreVideo_GL_GetProcAddress("glUniform1f");
     glUniform1i                = (PFNGLUNIFORM1IPROC)                CoreVideo_GL_GetProcAddress("glUniform1i");
     glUseProgram               = (PFNGLUSEPROGRAMPROC)               CoreVideo_GL_GetProcAddress("glUseProgram");
+#endif /* not USE_GLES */
 #endif /* not USE_GLES */
 }
 
