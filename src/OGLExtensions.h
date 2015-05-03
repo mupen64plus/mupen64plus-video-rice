@@ -68,7 +68,7 @@ typedef void      (APIENTRYP PFNGLUSEPROGRAMPROC) (GLuint program);
 #if defined(WIN32)
 extern PFNGLACTIVETEXTUREPROC             glActiveTexture;
 #elif defined(__APPLE__)
-#else
+#endif
 extern PFNGLCREATESHADERPROC              glCreateShader;
 extern PFNGLSHADERSOURCEPROC              glShaderSource;
 extern PFNGLCOMPILESHADERPROC             glCompileShader;
@@ -95,7 +95,6 @@ extern PFNGLUNIFORM2FPROC                 glUniform2f;
 extern PFNGLUNIFORM1FPROC                 glUniform1f;
 extern PFNGLUNIFORM1IPROC                 glUniform1i;
 extern PFNGLUSEPROGRAMPROC                glUseProgram;
-#endif
 #endif
 
 

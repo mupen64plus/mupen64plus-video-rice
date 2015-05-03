@@ -37,7 +37,7 @@ PFNGLACTIVETEXTUREPROC            glActiveTexture            = (PFNGLACTIVETEXTU
 #elif defined(__APPLE__)
 // OSX support OpenGL 2.1 function via ARB extensions. Only full core profile
 // allow apps to use  ARBless functions
-#else
+#endif // OS specific
 // Linux (OpenGL 1.3) and others
 PFNGLCREATESHADERPROC             glCreateShader             = (PFNGLCREATESHADERPROC) EmptyFunc;
 PFNGLSHADERSOURCEPROC             glShaderSource             = (PFNGLSHADERSOURCEPROC) EmptyFunc;
@@ -65,7 +65,6 @@ PFNGLUNIFORM2FPROC                glUniform2f                = (PFNGLUNIFORM2FPR
 PFNGLUNIFORM1FPROC                glUniform1f                = (PFNGLUNIFORM1FPROC) EmptyFunc;
 PFNGLUNIFORM1IPROC                glUniform1i                = (PFNGLUNIFORM1IPROC) EmptyFunc;
 PFNGLUSEPROGRAMPROC               glUseProgram               = (PFNGLUSEPROGRAMPROC) EmptyFunc;
-#endif // OS detections
 #endif // USE_GLES
 
 #define INIT_ENTRY_POINT(type, funcname) \
@@ -81,7 +80,7 @@ void OGLExtensions_Init(void)
 #if defined(WIN32)
     glActiveTexture            = (PFNGLACTIVETEXTUREPROC)            CoreVideo_GL_GetProcAddress("glActiveTexture");
 #elif defined(__APPLE__)
-#else
+#endif
     glCreateShader             = (PFNGLCREATESHADERPROC)             CoreVideo_GL_GetProcAddress("glCreateShader");
     glShaderSource             = (PFNGLSHADERSOURCEPROC)             CoreVideo_GL_GetProcAddress("glShaderSource");
     glCompileShader            = (PFNGLCOMPILESHADERPROC)            CoreVideo_GL_GetProcAddress("glCompileShader");
@@ -108,7 +107,6 @@ void OGLExtensions_Init(void)
     glUniform1f                = (PFNGLUNIFORM1FPROC)                CoreVideo_GL_GetProcAddress("glUniform1f");
     glUniform1i                = (PFNGLUNIFORM1IPROC)                CoreVideo_GL_GetProcAddress("glUniform1i");
     glUseProgram               = (PFNGLUSEPROGRAMPROC)               CoreVideo_GL_GetProcAddress("glUseProgram");
-#endif /* not USE_GLES */
 #endif /* not USE_GLES */
 }
 
