@@ -133,7 +133,7 @@ bool COGLGraphicsContext::Initialize(uint32 dwWidth, uint32 dwHeight, BOOL bWind
     const unsigned char* versionStr = glGetString(GL_VERSION);
     const unsigned char* vendorStr  = glGetString(GL_VENDOR);
 
-    if (renderStr == NULL or versionStr == NULL or vendorStr == NULL)
+    if (renderStr == NULL || versionStr == NULL || vendorStr == NULL)
     {
         DebugMessage(M64MSG_ERROR, "Can't get OpenGL informations. It's maybe a problem with your driver.");
         CoreVideo_Quit();

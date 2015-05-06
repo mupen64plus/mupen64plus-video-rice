@@ -183,13 +183,14 @@ static GLuint createShader( GLenum shaderType, const char* shaderSrc )
 
         GLsizei infoLogLength = (GLsizei) param;
         assert( infoLogLength >= 0 );
-        GLchar infoLog[ infoLogLength ];
-        glGetShaderInfoLog(shader, infoLogLength, NULL, infoLog); OPENGL_CHECK_ERRORS
+        GLchar *pInfoLog = new GLchar[ infoLogLength+1 ];
+        glGetShaderInfoLog(shader, infoLogLength, NULL, pInfoLog); OPENGL_CHECK_ERRORS
 
-        printf("Info log:\n%s\n", infoLog);
+        printf("Info log:\n%s\n", pInfoLog);
         printf("GLSL code:\n%s\n", shaderSrc);
 
         glDeleteShader(shader); OPENGL_CHECK_ERRORS
+        delete[] pInfoLog;
     }
 
     return shader;
@@ -224,12 +225,13 @@ static GLuint createProgram(const GLuint vShader, GLuint fShader)
 
         GLsizei infoLogLength = (GLsizei) param;
         assert( infoLogLength >= 0 );
-        GLchar infoLog[ infoLogLength ];
+        GLchar *pInfoLog = new GLchar[ infoLogLength+1 ];
 
-        glGetProgramInfoLog(program, infoLogLength, NULL, infoLog); OPENGL_CHECK_ERRORS
-        printf("Info log:\n%s\n", infoLog);
+        glGetProgramInfoLog(program, infoLogLength, NULL, pInfoLog); OPENGL_CHECK_ERRORS
+        printf("Info log:\n%s\n", pInfoLog);
 
         glDeleteProgram(program); OPENGL_CHECK_ERRORS
+        delete[] pInfoLog;
     }
 
     glDetachShader(program, vShader); OPENGL_CHECK_ERRORS
