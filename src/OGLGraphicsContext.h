@@ -42,6 +42,7 @@ public:
     inline int  getMaxAnisotropicFiltering() { return m_maxAnisotropicFiltering; };
     inline int  getMaxTextureImageUnits() { return m_maxTextureImageUnits; };
     inline bool IsSupportTextureFormatBGRA() { return m_bSupportTextureFormatBGRA; };
+    inline bool IsSupportDepthClampNV() { return m_bSupportDepthClampNV; };
 
 protected:
     friend class OGLDeviceBuilder;
@@ -63,6 +64,7 @@ private:
     bool m_bSupportAnisotropicFiltering;
     int  m_maxAnisotropicFiltering;
     bool m_bSupportTextureFormatBGRA;
+    bool m_bSupportDepthClampNV;
 };
 
 #endif

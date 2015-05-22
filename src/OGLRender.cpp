@@ -66,18 +66,18 @@ void OGLRender::Initialize(void)
     OGLXUVFlagMaps[TEXTURE_UV_FLAG_MIRROR].realFlag = GL_MIRRORED_REPEAT;
     OGLXUVFlagMaps[TEXTURE_UV_FLAG_CLAMP].realFlag = GL_CLAMP_TO_EDGE;
 
-    pglVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][0]));
+    glVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][0]));
     OPENGL_CHECK_ERRORS;
 
-    pglVertexAttribPointer(VS_TEXCOORD0,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[0].u));
+    glVertexAttribPointer(VS_TEXCOORD0,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[0].u));
     OPENGL_CHECK_ERRORS;
-    pglVertexAttribPointer(VS_TEXCOORD1,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[1].u));
-    OPENGL_CHECK_ERRORS;
-
-    pglVertexAttribPointer(VS_FOG,1,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][4]));
+    glVertexAttribPointer(VS_TEXCOORD1,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[1].u));
     OPENGL_CHECK_ERRORS;
 
-    pglVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_TRUE, sizeof(uint8)*4, &(g_oglVtxColors[0][0]) );
+    glVertexAttribPointer(VS_FOG,1,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][4]));
+    OPENGL_CHECK_ERRORS;
+
+    glVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_TRUE, sizeof(uint8)*4, &(g_oglVtxColors[0][0]) );
     OPENGL_CHECK_ERRORS;
 
     // Initialize multitexture
@@ -94,6 +94,12 @@ void OGLRender::Initialize(void)
     }
     m_textureUnitMap[0] = 0;    // T0 is usually using texture unit 0
     m_textureUnitMap[1] = 1;    // T1 is usually using texture unit 1
+
+    if( COGLGraphicsContext::Get()->IsSupportDepthClampNV() )
+    {
+        glEnable(GL_DEPTH_CLAMP_NV);
+        OPENGL_CHECK_ERRORS;
+    }
 }
 //===================================================================
 TextureFilterMap OglTexFilterMap[2]=
@@ -148,7 +154,7 @@ void OGLRender::ApplyTextureFilter()
         if( mtex[i] != m_curBoundTex[i] )
         {
             mtex[i] = m_curBoundTex[i];
-            pglActiveTexture(GL_TEXTURE0+i);
+            glActiveTexture(GL_TEXTURE0+i);
             OPENGL_CHECK_ERRORS;
             minflag[i] = m_dwMinFilter;
             magflag[i] = m_dwMagFilter;
@@ -162,7 +168,7 @@ void OGLRender::ApplyTextureFilter()
             if( minflag[i] != (unsigned int)m_dwMinFilter )
             {
                 minflag[i] = m_dwMinFilter;
-                pglActiveTexture(GL_TEXTURE0+i);
+                glActiveTexture(GL_TEXTURE0+i);
                 OPENGL_CHECK_ERRORS;
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, iMinFilter);
                 OPENGL_CHECK_ERRORS;
@@ -170,7 +176,7 @@ void OGLRender::ApplyTextureFilter()
             if( magflag[i] != (unsigned int)m_dwMagFilter )
             {
                 magflag[i] = m_dwMagFilter;
-                pglActiveTexture(GL_TEXTURE0+i);
+                glActiveTexture(GL_TEXTURE0+i);
                 OPENGL_CHECK_ERRORS;
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, iMagFilter);
                 OPENGL_CHECK_ERRORS;
@@ -491,7 +497,7 @@ void OGLRender::SetTextureUFlag(TextureUVFlag dwFlag, uint32 dwTile)
     {
         if( m_textureUnitMap[textureNo] == tex )
         {
-            pglActiveTexture(GL_TEXTURE0+textureNo);
+            glActiveTexture(GL_TEXTURE0+textureNo);
             OPENGL_CHECK_ERRORS;
             COGLTexture* pTexture = g_textures[(gRSP.curTile+tex)&7].m_pCOGLTexture;
             if( pTexture ) 
@@ -581,19 +587,19 @@ bool OGLRender::RenderTexRect()
             -inv + g_texRectTVtx[0].x / w, inv - g_texRectTVtx[0].y / h, g_texRectTVtx[3].z, 1
     };
 
-    pglVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, &colour );
-    pglVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,0,&vertices);
-    pglVertexAttribPointer(VS_TEXCOORD0,2,GL_FLOAT,GL_FALSE, 0, &tex);
-    pglVertexAttribPointer(VS_TEXCOORD1,2,GL_FLOAT,GL_FALSE, 0, &tex2);
+    glVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, &colour );
+    glVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,0,&vertices);
+    glVertexAttribPointer(VS_TEXCOORD0,2,GL_FLOAT,GL_FALSE, 0, &tex);
+    glVertexAttribPointer(VS_TEXCOORD1,2,GL_FLOAT,GL_FALSE, 0, &tex2);
     OPENGL_CHECK_ERRORS;
     glDrawArrays(GL_TRIANGLE_FAN,0,4);
     OPENGL_CHECK_ERRORS;
 
     //Restore old pointers
-    pglVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_TRUE, sizeof(uint8)*4, &(g_oglVtxColors[0][0]) );
-    pglVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][0]));
-    pglVertexAttribPointer(VS_TEXCOORD0,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[0].u));
-    pglVertexAttribPointer(VS_TEXCOORD1,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[1].u));
+    glVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_TRUE, sizeof(uint8)*4, &(g_oglVtxColors[0][0]) );
+    glVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][0]));
+    glVertexAttribPointer(VS_TEXCOORD0,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[0].u));
+    glVertexAttribPointer(VS_TEXCOORD1,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[1].u));
 
     if( cullface ) glEnable(GL_CULL_FACE);
     OPENGL_CHECK_ERRORS;
@@ -629,19 +635,19 @@ bool OGLRender::RenderFillRect(uint32 dwColor, float depth)
             -inv + m_fillRectVtx[0].x / w, inv - m_fillRectVtx[0].y / h, depth, 1
     };
 
-    pglVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_FALSE, 0, &colour );
-    pglVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,0,&vertices);
-    pglDisableVertexAttribArray(VS_TEXCOORD0);
-    pglDisableVertexAttribArray(VS_TEXCOORD1);
+    glVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_FALSE, 0, &colour );
+    glVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,0,&vertices);
+    glDisableVertexAttribArray(VS_TEXCOORD0);
+    glDisableVertexAttribArray(VS_TEXCOORD1);
     OPENGL_CHECK_ERRORS;
     glDrawArrays(GL_TRIANGLE_FAN,0,4);
     OPENGL_CHECK_ERRORS;
 
     //Restore old pointers
-    pglVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_TRUE, sizeof(uint8)*4, &(g_oglVtxColors[0][0]) );
-    pglVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][0]));
-    pglEnableVertexAttribArray(VS_TEXCOORD0);
-    pglEnableVertexAttribArray(VS_TEXCOORD1);
+    glVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_TRUE, sizeof(uint8)*4, &(g_oglVtxColors[0][0]) );
+    glVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][0]));
+    glEnableVertexAttribArray(VS_TEXCOORD0);
+    glEnableVertexAttribArray(VS_TEXCOORD1);
 
     if( cullface ) glEnable(GL_CULL_FACE);
     OPENGL_CHECK_ERRORS;
@@ -697,22 +703,22 @@ bool OGLRender::RenderFlushTris()
         glVertexPointer( 4, GL_FLOAT, sizeof(float)*5, &(g_vtxProjected5Clipped[0][0]) );
         glEnableClientState( GL_VERTEX_ARRAY );
 
-        pglClientActiveTexture( GL_TEXTURE0 );
+        glActiveTexture( GL_TEXTURE0 );
         glTexCoordPointer( 2, GL_FLOAT, sizeof( TLITVERTEX ), &(g_clippedVtxBuffer[0].tcord[0].u) );
         glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 
-        pglClientActiveTexture( GL_TEXTURE1 );
+        glActiveTexture( GL_TEXTURE1 );
         glTexCoordPointer( 2, GL_FLOAT, sizeof( TLITVERTEX ), &(g_clippedVtxBuffer[0].tcord[1].u) );
         glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 
         glDrawElements( GL_TRIANGLES, gRSP.numVertices, GL_UNSIGNED_INT, g_vtxIndex );
 
         // Reset the array
-        pglClientActiveTexture( GL_TEXTURE0 );
+        glActiveTexture( GL_TEXTURE0 );
         glTexCoordPointer( 2, GL_FLOAT, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[0].u) );
         glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 
-        pglClientActiveTexture( GL_TEXTURE1 );
+        glActiveTexture( GL_TEXTURE1 );
         glTexCoordPointer( 2, GL_FLOAT, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[1].u) );
         glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 
@@ -783,19 +789,19 @@ void OGLRender::DrawSimple2DTexture(float x0, float y0, float x1, float y1, floa
             -inv + g_texRectTVtx[3].x/ w, inv - g_texRectTVtx[3].y/ h, -g_texRectTVtx[3].z,1
     };
 
-    pglVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_FALSE, 0, &colour );
-    pglVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,0,&vertices);
-    pglVertexAttribPointer(VS_TEXCOORD0,2,GL_FLOAT,GL_FALSE, 0, &tex);
-    pglVertexAttribPointer(VS_TEXCOORD1,2,GL_FLOAT,GL_FALSE, 0, &tex2);
+    glVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_FALSE, 0, &colour );
+    glVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,0,&vertices);
+    glVertexAttribPointer(VS_TEXCOORD0,2,GL_FLOAT,GL_FALSE, 0, &tex);
+    glVertexAttribPointer(VS_TEXCOORD1,2,GL_FLOAT,GL_FALSE, 0, &tex2);
     OPENGL_CHECK_ERRORS;
     glDrawArrays(GL_TRIANGLES,0,6);
     OPENGL_CHECK_ERRORS;
 
     //Restore old pointers
-    pglVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_TRUE, sizeof(uint8)*4, &(g_oglVtxColors[0][0]) );
-    pglVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][0]));
-    pglVertexAttribPointer(VS_TEXCOORD0,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[0].u));
-    pglVertexAttribPointer(VS_TEXCOORD1,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[1].u));
+    glVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_TRUE, sizeof(uint8)*4, &(g_oglVtxColors[0][0]) );
+    glVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][0]));
+    glVertexAttribPointer(VS_TEXCOORD0,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[0].u));
+    glVertexAttribPointer(VS_TEXCOORD1,2,GL_FLOAT,GL_FALSE, sizeof( TLITVERTEX ), &(g_vtxBuffer[0].tcord[1].u));
 
     if( cullface ) glEnable(GL_CULL_FACE);
     OPENGL_CHECK_ERRORS;
@@ -828,19 +834,19 @@ void OGLRender::DrawSimpleRect(int nX0, int nY0, int nX1, int nY1, uint32 dwColo
             -inv + m_simpleRectVtx[0].x / w, inv - m_simpleRectVtx[0].y / h, -depth, 1
     };
 
-    pglVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_FALSE, 0, &colour );
-    pglVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,0,&vertices);
-    pglDisableVertexAttribArray(VS_TEXCOORD0);
-    pglDisableVertexAttribArray(VS_TEXCOORD1);
+    glVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_FALSE, 0, &colour );
+    glVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,0,&vertices);
+    glDisableVertexAttribArray(VS_TEXCOORD0);
+    glDisableVertexAttribArray(VS_TEXCOORD1);
     OPENGL_CHECK_ERRORS;
     glDrawArrays(GL_TRIANGLE_FAN,0,4);
     OPENGL_CHECK_ERRORS;
 
     //Restore old pointers
-    pglVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_TRUE, sizeof(uint8)*4, &(g_oglVtxColors[0][0]) );
-    pglVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][0]));
-    pglEnableVertexAttribArray(VS_TEXCOORD0);
-    pglEnableVertexAttribArray(VS_TEXCOORD1);
+    glVertexAttribPointer(VS_COLOR, 4, GL_UNSIGNED_BYTE,GL_TRUE, sizeof(uint8)*4, &(g_oglVtxColors[0][0]) );
+    glVertexAttribPointer(VS_POSITION,4,GL_FLOAT,GL_FALSE,sizeof(float)*5,&(g_vtxProjected5[0][0]));
+    glEnableVertexAttribArray(VS_TEXCOORD0);
+    glEnableVertexAttribArray(VS_TEXCOORD1);
 
     if( cullface ) glEnable(GL_CULL_FACE);
     OPENGL_CHECK_ERRORS;
@@ -877,7 +883,7 @@ void OGLRender::BindTexture(GLuint texture, int unitno)
     {
         if( m_curBoundTex[unitno] != texture )
         {
-            pglActiveTexture(GL_TEXTURE0+unitno);
+            glActiveTexture(GL_TEXTURE0+unitno);
             OPENGL_CHECK_ERRORS;
             glBindTexture(GL_TEXTURE_2D,texture);
             OPENGL_CHECK_ERRORS;
@@ -888,7 +894,7 @@ void OGLRender::BindTexture(GLuint texture, int unitno)
 
 void OGLRender::DisBindTexture(GLuint texture, int unitno)
 {
-    pglActiveTexture(GL_TEXTURE0+unitno);
+    glActiveTexture(GL_TEXTURE0+unitno);
     OPENGL_CHECK_ERRORS;
     glBindTexture(GL_TEXTURE_2D, 0);    //Not to bind any texture
     OPENGL_CHECK_ERRORS;
@@ -903,7 +909,7 @@ void OGLRender::DisBindTexture(GLuint texture, int unitno)
 // scope at some places (in SetTextureUFlag for example) so we let it for now.
 void OGLRender::EnableTexUnit(int unitno, BOOL flag)
 {
-    pglActiveTexture(GL_TEXTURE0+unitno);
+    glActiveTexture(GL_TEXTURE0+unitno);
     OPENGL_CHECK_ERRORS;
 }
 

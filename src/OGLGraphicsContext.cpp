@@ -133,7 +133,7 @@ bool COGLGraphicsContext::Initialize(uint32 dwWidth, uint32 dwHeight, BOOL bWind
     const unsigned char* versionStr = glGetString(GL_VERSION);
     const unsigned char* vendorStr  = glGetString(GL_VENDOR);
 
-    if (renderStr == NULL or versionStr == NULL or vendorStr == NULL)
+    if (renderStr == NULL || versionStr == NULL || vendorStr == NULL)
     {
         DebugMessage(M64MSG_ERROR, "Can't get OpenGL informations. It's maybe a problem with your driver.");
         CoreVideo_Quit();
@@ -296,6 +296,7 @@ void COGLGraphicsContext::InitOGLExtension(void)
     }
 
     m_bSupportTextureFormatBGRA = IsExtensionSupported("GL_EXT_texture_format_BGRA8888");
+    m_bSupportDepthClampNV      = IsExtensionSupported("GL_NV_depth_clamp");
 }
 
 bool COGLGraphicsContext::IsExtensionSupported(const char* pExtName)

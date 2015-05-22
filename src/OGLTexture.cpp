@@ -68,9 +68,7 @@ COGLTexture::COGLTexture(uint32 dwWidth, uint32 dwHeight, TextureUsage usage) :
     m_glFmt = GL_BGRA;
     m_glType = GL_UNSIGNED_INT_8_8_8_8_REV;
     #else
-    // commented for now in favor of a more stable set.
-    //m_glFmt  = COGLGraphicsContext::Get()->IsSupportTextureFormatBGRA() ? GL_BGRA_EXT : GL_RGBA;
-    m_glInternalFmt = m_glFmt = GL_RGBA;
+    m_glInternalFmt = m_glFmt = COGLGraphicsContext::Get()->IsSupportTextureFormatBGRA() ? GL_BGRA_EXT : GL_RGBA;
     m_glType = GL_UNSIGNED_BYTE;
     #endif
 

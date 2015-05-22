@@ -30,73 +30,72 @@ void OGLExtensions_Init(void);
 /* The function pointer types are defined here because as of 2009 some OpenGL drivers under Linux do 'incorrect' things which
    mess up the SDL_opengl.h header, resulting in no function pointer typedefs at all, and thus compilation errors.
 */
-typedef void      (APIENTRYP PFUNCGLACTIVETEXTUREPROC) (GLenum texture);
-typedef void      (APIENTRYP PFUNCGLPROGRAMSTRINGARBPROC) (GLenum target, GLenum format, GLsizei len, const GLvoid *string);
-typedef void      (APIENTRYP PFUNCGLBINDPROGRAMARBPROC) (GLenum target, GLuint program);
-typedef void      (APIENTRYP PFUNCGLGENPROGRAMSARBPROC) (GLsizei n, GLuint *programs);
-typedef void      (APIENTRYP PFUNCGLPROGRAMENVPARAMETER4FVARBPROC) (GLenum target, GLuint index, const GLfloat *params);
-typedef void      (APIENTRYP PFUNCGLFOGCOORDPOINTERPROC) (GLenum type, GLsizei stride, const GLvoid *pointer);
-typedef void      (APIENTRYP PFUNCGLCLIENTACTIVETEXTUREPROC) (GLenum texture);
-typedef GLuint    (APIENTRYP PFUNCGLCREATESHADERPROC) (GLenum type);
-typedef void      (APIENTRYP PFUNCGLSHADERSOURCEPROC) (GLuint shader, GLsizei count, const GLchar** strings, const GLint* lengths);
-typedef void      (APIENTRYP PFUNCGLCOMPILESHADERPROC) (GLuint shader);
-typedef void      (APIENTRYP PFUNCGLGETSHADERIVPROC) (GLuint shader, GLenum pname, GLint* param);
-typedef void      (APIENTRYP PFUNCGLGETSHADERINFOLOGPROC) (GLuint shader, GLsizei bufSize, GLsizei* length, GLchar* infoLog);
-typedef GLuint    (APIENTRYP PFUNCGLCREATEPROGRAMPROC) (void);
-typedef void      (APIENTRYP PFUNCGLATTACHSHADERPROC) (GLuint program, GLuint shader);
-typedef void      (APIENTRYP PFUNCGLBINDATTRIBLOCATIONPROC) (GLuint program, GLuint index, const GLchar* name);
-typedef void      (APIENTRYP PFUNCGLLINKPROGRAMPROC) (GLuint program);
-typedef void      (APIENTRYP PFUNCGLGETPROGRAMIVPROC) (GLuint program, GLenum pname, GLint* param);
-typedef void      (APIENTRYP PFUNCGLGETPROGRAMINFOLOGPROC) (GLuint program, GLsizei bufSize, GLsizei* length, GLchar* infoLog);
-typedef void      (APIENTRYP PFUNCGLDETACHSHADERPROC) (GLuint program, GLuint shader);
-typedef GLint     (APIENTRYP PFUNCGLGETUNIFORMLOCATIONPROC) (GLuint program, const GLchar* name);
-typedef void      (APIENTRYP PFUNCGLDELETESHADERPROC) (GLuint shader);
-typedef void      (APIENTRYP PFUNCGLDELETEPROGRAMPROC) (GLuint program);
-typedef GLboolean (APIENTRYP PFUNCGLISSHADERPROC) (GLuint shader);
-typedef GLboolean (APIENTRYP PFUNCGLISPROGRAMPROC) (GLuint program);
-typedef void      (APIENTRYP PFUNCGLENABLEVERTEXATTRIBARRAYPROC) (GLuint);
-typedef void      (APIENTRYP PFUNCGLDISABLEVERTEXATTRIBARRAYPROC) (GLuint);
-typedef void      (APIENTRYP PFUNCGLVERTEXATTRIBPOINTERPROC) (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer);
-typedef void      (APIENTRYP PFUNCGLUNIFORM4FPROC) (GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3);
-typedef void      (APIENTRYP PFUNCGLUNIFORM3FPROC) (GLint location, GLfloat v0, GLfloat v1, GLfloat v2);
-typedef void      (APIENTRYP PFUNCGLUNIFORM2FPROC) (GLint location, GLfloat v0, GLfloat v1);
-typedef void      (APIENTRYP PFUNCGLUNIFORM1FPROC) (GLint location, GLfloat v0);
-typedef void      (APIENTRYP PFUNCGLUNIFORM1IPROC) (GLint location, GLint v0);
-typedef void      (APIENTRYP PFUNCGLUSEPROGRAMPROC) (GLuint program);
+/*#ifndef USE_GLES
+#if defined(WIN32)
+typedef void      (APIENTRYP PFNGLACTIVETEXTUREPROC) (GLenum texture);
+#endif
+typedef GLuint    (APIENTRYP PFNGLCREATESHADERPROC) (GLenum type);
+typedef void      (APIENTRYP PFNGLSHADERSOURCEPROC) (GLuint shader, GLsizei count, const GLchar** strings, const GLint* lengths);
+typedef void      (APIENTRYP PFNGLCOMPILESHADERPROC) (GLuint shader);
+typedef void      (APIENTRYP PFNGLGETSHADERIVPROC) (GLuint shader, GLenum pname, GLint* param);
+typedef void      (APIENTRYP PFNGLGETSHADERINFOLOGPROC) (GLuint shader, GLsizei bufSize, GLsizei* length, GLchar* infoLog);
+typedef GLuint    (APIENTRYP PFNGLCREATEPROGRAMPROC) (void);
+typedef void      (APIENTRYP PFNGLATTACHSHADERPROC) (GLuint program, GLuint shader);
+typedef void      (APIENTRYP PFNGLBINDATTRIBLOCATIONPROC) (GLuint program, GLuint index, const GLchar* name);
+typedef void      (APIENTRYP PFNGLLINKPROGRAMPROC) (GLuint program);
+typedef void      (APIENTRYP PFNGLGETPROGRAMIVPROC) (GLuint program, GLenum pname, GLint* param);
+typedef void      (APIENTRYP PFNGLGETPROGRAMINFOLOGPROC) (GLuint program, GLsizei bufSize, GLsizei* length, GLchar* infoLog);
+typedef void      (APIENTRYP PFNGLDETACHSHADERPROC) (GLuint program, GLuint shader);
+typedef GLint     (APIENTRYP PFNGLGETUNIFORMLOCATIONPROC) (GLuint program, const GLchar* name);
+typedef void      (APIENTRYP PFNGLDELETESHADERPROC) (GLuint shader);
+typedef void      (APIENTRYP PFNGLDELETEPROGRAMPROC) (GLuint program);
+typedef GLboolean (APIENTRYP PFNGLISSHADERPROC) (GLuint shader);
+typedef GLboolean (APIENTRYP PFNGLISPROGRAMPROC) (GLuint program);
+typedef void      (APIENTRYP PFNGLENABLEVERTEXATTRIBARRAYPROC) (GLuint);
+typedef void      (APIENTRYP PFNGLDISABLEVERTEXATTRIBARRAYPROC) (GLuint);
+typedef void      (APIENTRYP PFNGLVERTEXATTRIBPOINTERPROC) (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer);
+typedef void      (APIENTRYP PFNGLUNIFORM4FPROC) (GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3);
+typedef void      (APIENTRYP PFNGLUNIFORM3FPROC) (GLint location, GLfloat v0, GLfloat v1, GLfloat v2);
+typedef void      (APIENTRYP PFNGLUNIFORM2FPROC) (GLint location, GLfloat v0, GLfloat v1);
+typedef void      (APIENTRYP PFNGLUNIFORM1FPROC) (GLint location, GLfloat v0);
+typedef void      (APIENTRYP PFNGLUNIFORM1IPROC) (GLint location, GLint v0);
+typedef void      (APIENTRYP PFNGLUSEPROGRAMPROC) (GLuint program);
+#endif // not USE_GLES */
 
-extern PFUNCGLACTIVETEXTUREPROC             pglActiveTexture;
-extern PFUNCGLPROGRAMSTRINGARBPROC          pglProgramStringARB;
-extern PFUNCGLBINDPROGRAMARBPROC            pglBindProgramARB;
-extern PFUNCGLGENPROGRAMSARBPROC            pglGenProgramsARB;
-extern PFUNCGLPROGRAMENVPARAMETER4FVARBPROC pglProgramEnvParameter4fvARB;
-extern PFUNCGLFOGCOORDPOINTERPROC           pglFogCoordPointer;
-extern PFUNCGLCLIENTACTIVETEXTUREPROC       pglClientActiveTexture;
-extern PFUNCGLCREATESHADERPROC              pglCreateShader;
-extern PFUNCGLSHADERSOURCEPROC              pglShaderSource;
-extern PFUNCGLCOMPILESHADERPROC             pglCompileShader;
-extern PFUNCGLGETSHADERIVPROC               pglGetShaderiv;
-extern PFUNCGLGETSHADERINFOLOGPROC          pglGetShaderInfoLog;
-extern PFUNCGLCREATEPROGRAMPROC             pglCreateProgram;
-extern PFUNCGLATTACHSHADERPROC              pglAttachShader;
-extern PFUNCGLBINDATTRIBLOCATIONPROC        pglBindAttribLocation;
-extern PFUNCGLLINKPROGRAMPROC               pglLinkProgram;
-extern PFUNCGLGETPROGRAMIVPROC              pglGetProgramiv;
-extern PFUNCGLGETPROGRAMINFOLOGPROC         pglGetProgramInfoLog;
-extern PFUNCGLDETACHSHADERPROC              pglDetachShader;
-extern PFUNCGLGETUNIFORMLOCATIONPROC        pglGetUniformLocation;
-extern PFUNCGLDELETESHADERPROC              pglDeleteShader;
-extern PFUNCGLDELETEPROGRAMPROC             pglDeleteProgram;
-extern PFUNCGLISSHADERPROC                  pglIsShader;
-extern PFUNCGLISPROGRAMPROC                 pglIsProgram;
-extern PFUNCGLENABLEVERTEXATTRIBARRAYPROC   pglEnableVertexAttribArray;
-extern PFUNCGLDISABLEVERTEXATTRIBARRAYPROC  pglDisableVertexAttribArray;
-extern PFUNCGLVERTEXATTRIBPOINTERPROC       pglVertexAttribPointer;
-extern PFUNCGLUNIFORM4FPROC                 pglUniform4f;
-extern PFUNCGLUNIFORM3FPROC                 pglUniform3f;
-extern PFUNCGLUNIFORM2FPROC                 pglUniform2f;
-extern PFUNCGLUNIFORM1FPROC                 pglUniform1f;
-extern PFUNCGLUNIFORM1IPROC                 pglUniform1i;
-extern PFUNCGLUSEPROGRAMPROC                pglUseProgram;
+// See OGLExtensions.cpp for #ifdef #else documentation
+#ifdef USE_GLES
+#else
+#if defined(WIN32)
+extern PFNGLACTIVETEXTUREPROC             glActiveTexture;
+#elif defined(__APPLE__)
+#endif
+extern PFNGLCREATESHADERPROC              glCreateShader;
+extern PFNGLSHADERSOURCEPROC              glShaderSource;
+extern PFNGLCOMPILESHADERPROC             glCompileShader;
+extern PFNGLGETSHADERIVPROC               glGetShaderiv;
+extern PFNGLGETSHADERINFOLOGPROC          glGetShaderInfoLog;
+extern PFNGLCREATEPROGRAMPROC             glCreateProgram;
+extern PFNGLATTACHSHADERPROC              glAttachShader;
+extern PFNGLBINDATTRIBLOCATIONPROC        glBindAttribLocation;
+extern PFNGLLINKPROGRAMPROC               glLinkProgram;
+extern PFNGLGETPROGRAMIVPROC              glGetProgramiv;
+extern PFNGLGETPROGRAMINFOLOGPROC         glGetProgramInfoLog;
+extern PFNGLDETACHSHADERPROC              glDetachShader;
+extern PFNGLGETUNIFORMLOCATIONPROC        glGetUniformLocation;
+extern PFNGLDELETESHADERPROC              glDeleteShader;
+extern PFNGLDELETEPROGRAMPROC             glDeleteProgram;
+extern PFNGLISSHADERPROC                  glIsShader;
+extern PFNGLISPROGRAMPROC                 glIsProgram;
+extern PFNGLENABLEVERTEXATTRIBARRAYPROC   glEnableVertexAttribArray;
+extern PFNGLDISABLEVERTEXATTRIBARRAYPROC  glDisableVertexAttribArray;
+extern PFNGLVERTEXATTRIBPOINTERPROC       glVertexAttribPointer;
+extern PFNGLUNIFORM4FPROC                 glUniform4f;
+extern PFNGLUNIFORM3FPROC                 glUniform3f;
+extern PFNGLUNIFORM2FPROC                 glUniform2f;
+extern PFNGLUNIFORM1FPROC                 glUniform1f;
+extern PFNGLUNIFORM1IPROC                 glUniform1i;
+extern PFNGLUSEPROGRAMPROC                glUseProgram;
+#endif
 
 
 #endif  // OGL_EXTENSIONS_H
