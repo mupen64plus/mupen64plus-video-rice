@@ -296,6 +296,7 @@ void COGLGraphicsContext::InitOGLExtension(void)
     }
 
     m_bSupportTextureFormatBGRA = IsExtensionSupported("GL_EXT_texture_format_BGRA8888");
+    m_bSupportDepthClampNV      = IsExtensionSupported("GL_NV_depth_clamp");
 }
 
 bool COGLGraphicsContext::IsExtensionSupported(const char* pExtName)
