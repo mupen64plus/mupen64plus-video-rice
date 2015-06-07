@@ -16,8 +16,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-/* This source file contains code for assigning function pointers to some OpenGL functions */
-/* This is only necessary because Windows does not contain development support for OpenGL versions beyond 1.1 */
+/* This source file contains code for assigning function pointers to some
+OpenGL functions.
+*/
 
 #include "osal_opengl.h"
 #include "OGLExtensions.h"
@@ -25,52 +26,80 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 static void APIENTRY EmptyFunc(void) { return; }
 
+#define INIT_EMPTY_FUNC(type, funcname) type funcname = (type) EmptyFunc;
+
+// Handy macro to load gl functions
+#define INIT_GL_FUNC(type, funcname) \
+  funcname = (type) CoreVideo_GL_GetProcAddress(#funcname); \
+  if (funcname == NULL) { DebugMessage(M64MSG_WARNING, \
+  "Couldn't get address of OpenGL function: '%s'", #funcname); funcname = (type) EmptyFunc; }
+
 #ifdef USE_GLES
-// OpenGL ES
-// OpenGL ES headers already load every functions so this place is reserved for
-// maybe future ES extensions.
+    // OpenGL ES headers already load every functions so this place is reserved
+    // for maybe future ES extensions.
 #else
 // Desktop OpenGL
 #if defined(WIN32)
-// Windows is OpenGL 1.1
-PFNGLACTIVETEXTUREPROC            glActiveTexture            = (PFNGLACTIVETEXTUREPROC) EmptyFunc; // Added in OpenGL 1.3
+    // Windows is OpenGL 1.1
+    INIT_EMPTY_FUNC(PFNGLACTIVETEXTUREPROC,            glActiveTexture) // Added in OpenGL 1.3
+    INIT_EMPTY_FUNC(PFNGLCREATESHADERPROC,             glCreateShader)
+    INIT_EMPTY_FUNC(PFNGLSHADERSOURCEPROC,             glShaderSource)
+    INIT_EMPTY_FUNC(PFNGLCOMPILESHADERPROC,            glCompileShader)
+    INIT_EMPTY_FUNC(PFNGLGETSHADERIVPROC,              glGetShaderiv)
+    INIT_EMPTY_FUNC(PFNGLGETSHADERINFOLOGPROC,         glGetShaderInfoLog)
+    INIT_EMPTY_FUNC(PFNGLCREATEPROGRAMPROC,            glCreateProgram)
+    INIT_EMPTY_FUNC(PFNGLATTACHSHADERPROC,             glAttachShader)
+    INIT_EMPTY_FUNC(PFNGLBINDATTRIBLOCATIONPROC,       glBindAttribLocation)
+    INIT_EMPTY_FUNC(PFNGLLINKPROGRAMPROC,              glLinkProgram)
+    INIT_EMPTY_FUNC(PFNGLGETPROGRAMIVPROC,             glGetProgramiv)
+    INIT_EMPTY_FUNC(PFNGLGETPROGRAMINFOLOGPROC,        glGetProgramInfoLog)
+    INIT_EMPTY_FUNC(PFNGLDETACHSHADERPROC,             glDetachShader)
+    INIT_EMPTY_FUNC(PFNGLGETUNIFORMLOCATIONPROC,       glGetUniformLocation)
+    INIT_EMPTY_FUNC(PFNGLDELETESHADERPROC,             glDeleteShader)
+    INIT_EMPTY_FUNC(PFNGLDELETEPROGRAMPROC,            glDeleteProgram)
+    INIT_EMPTY_FUNC(PFNGLISSHADERPROC,                 glIsShader)
+    INIT_EMPTY_FUNC(PFNGLISPROGRAMPROC,                glIsProgram)
+    INIT_EMPTY_FUNC(PFNGLENABLEVERTEXATTRIBARRAYPROC,  glEnableVertexAttribArray)
+    INIT_EMPTY_FUNC(PFNGLDISABLEVERTEXATTRIBARRAYPROC, glDisableVertexAttribArray)
+    INIT_EMPTY_FUNC(PFNGLVERTEXATTRIBPOINTERPROC,      glVertexAttribPointer)
+    INIT_EMPTY_FUNC(PFNGLUNIFORM4FPROC,                glUniform4f)
+    INIT_EMPTY_FUNC(PFNGLUNIFORM3FPROC,                glUniform3f)
+    INIT_EMPTY_FUNC(PFNGLUNIFORM2FPROC,                glUniform2f)
+    INIT_EMPTY_FUNC(PFNGLUNIFORM1FPROC,                glUniform1f)
+    INIT_EMPTY_FUNC(PFNGLUNIFORM1IPROC,                glUniform1i)
+    INIT_EMPTY_FUNC(PFNGLUSEPROGRAMPROC,               glUseProgram)
 #elif defined(__APPLE__)
-// OSX support OpenGL 2.1 function via ARB extensions. Only full core profile
-// allow apps to use  ARBless functions
+    // OSX already support OpenGL 2.1 functions.
+#else
+    // Linux (OpenGL 1.3) and others
+    INIT_EMPTY_FUNC(PFNGLCREATESHADERPROC,             glCreateShader)
+    INIT_EMPTY_FUNC(PFNGLSHADERSOURCEPROC,             glShaderSource)
+    INIT_EMPTY_FUNC(PFNGLCOMPILESHADERPROC,            glCompileShader)
+    INIT_EMPTY_FUNC(PFNGLGETSHADERIVPROC,              glGetShaderiv)
+    INIT_EMPTY_FUNC(PFNGLGETSHADERINFOLOGPROC,         glGetShaderInfoLog)
+    INIT_EMPTY_FUNC(PFNGLCREATEPROGRAMPROC,            glCreateProgram)
+    INIT_EMPTY_FUNC(PFNGLATTACHSHADERPROC,             glAttachShader)
+    INIT_EMPTY_FUNC(PFNGLBINDATTRIBLOCATIONPROC,       glBindAttribLocation)
+    INIT_EMPTY_FUNC(PFNGLLINKPROGRAMPROC,              glLinkProgram)
+    INIT_EMPTY_FUNC(PFNGLGETPROGRAMIVPROC,             glGetProgramiv)
+    INIT_EMPTY_FUNC(PFNGLGETPROGRAMINFOLOGPROC,        glGetProgramInfoLog)
+    INIT_EMPTY_FUNC(PFNGLDETACHSHADERPROC,             glDetachShader)
+    INIT_EMPTY_FUNC(PFNGLGETUNIFORMLOCATIONPROC,       glGetUniformLocation)
+    INIT_EMPTY_FUNC(PFNGLDELETESHADERPROC,             glDeleteShader)
+    INIT_EMPTY_FUNC(PFNGLDELETEPROGRAMPROC,            glDeleteProgram)
+    INIT_EMPTY_FUNC(PFNGLISSHADERPROC,                 glIsShader)
+    INIT_EMPTY_FUNC(PFNGLISPROGRAMPROC,                glIsProgram)
+    INIT_EMPTY_FUNC(PFNGLENABLEVERTEXATTRIBARRAYPROC,  glEnableVertexAttribArray)
+    INIT_EMPTY_FUNC(PFNGLDISABLEVERTEXATTRIBARRAYPROC, glDisableVertexAttribArray)
+    INIT_EMPTY_FUNC(PFNGLVERTEXATTRIBPOINTERPROC,      glVertexAttribPointer)
+    INIT_EMPTY_FUNC(PFNGLUNIFORM4FPROC,                glUniform4f)
+    INIT_EMPTY_FUNC(PFNGLUNIFORM3FPROC,                glUniform3f)
+    INIT_EMPTY_FUNC(PFNGLUNIFORM2FPROC,                glUniform2f)
+    INIT_EMPTY_FUNC(PFNGLUNIFORM1FPROC,                glUniform1f)
+    INIT_EMPTY_FUNC(PFNGLUNIFORM1IPROC,                glUniform1i)
+    INIT_EMPTY_FUNC(PFNGLUSEPROGRAMPROC,               glUseProgram)
 #endif // OS specific
-// Linux (OpenGL 1.3) and others
-PFNGLCREATESHADERPROC             glCreateShader             = (PFNGLCREATESHADERPROC) EmptyFunc;
-PFNGLSHADERSOURCEPROC             glShaderSource             = (PFNGLSHADERSOURCEPROC) EmptyFunc;
-PFNGLCOMPILESHADERPROC            glCompileShader            = (PFNGLCOMPILESHADERPROC) EmptyFunc;
-PFNGLGETSHADERIVPROC              glGetShaderiv              = (PFNGLGETSHADERIVPROC) EmptyFunc;
-PFNGLGETSHADERINFOLOGPROC         glGetShaderInfoLog         = (PFNGLGETSHADERINFOLOGPROC) EmptyFunc;
-PFNGLCREATEPROGRAMPROC            glCreateProgram            = (PFNGLCREATEPROGRAMPROC) EmptyFunc;
-PFNGLATTACHSHADERPROC             glAttachShader             = (PFNGLATTACHSHADERPROC) EmptyFunc;
-PFNGLBINDATTRIBLOCATIONPROC       glBindAttribLocation       = (PFNGLBINDATTRIBLOCATIONPROC) EmptyFunc;
-PFNGLLINKPROGRAMPROC              glLinkProgram              = (PFNGLLINKPROGRAMPROC) EmptyFunc;
-PFNGLGETPROGRAMIVPROC             glGetProgramiv             = (PFNGLGETPROGRAMIVPROC) EmptyFunc;
-PFNGLGETPROGRAMINFOLOGPROC        glGetProgramInfoLog        = (PFNGLGETPROGRAMINFOLOGPROC) EmptyFunc;
-PFNGLDETACHSHADERPROC             glDetachShader             = (PFNGLDETACHSHADERPROC) EmptyFunc;
-PFNGLGETUNIFORMLOCATIONPROC       glGetUniformLocation       = (PFNGLGETUNIFORMLOCATIONPROC) EmptyFunc;
-PFNGLDELETESHADERPROC             glDeleteShader             = (PFNGLDELETESHADERPROC) EmptyFunc;
-PFNGLDELETEPROGRAMPROC            glDeleteProgram            = (PFNGLDELETEPROGRAMPROC) EmptyFunc;
-PFNGLISSHADERPROC                 glIsShader                 = (PFNGLISSHADERPROC) EmptyFunc;
-PFNGLISPROGRAMPROC                glIsProgram                = (PFNGLISPROGRAMPROC) EmptyFunc;
-PFNGLENABLEVERTEXATTRIBARRAYPROC  glEnableVertexAttribArray  = (PFNGLENABLEVERTEXATTRIBARRAYPROC) EmptyFunc;
-PFNGLDISABLEVERTEXATTRIBARRAYPROC glDisableVertexAttribArray = (PFNGLDISABLEVERTEXATTRIBARRAYPROC) EmptyFunc;
-PFNGLVERTEXATTRIBPOINTERPROC      glVertexAttribPointer      = (PFNGLVERTEXATTRIBPOINTERPROC) EmptyFunc;
-PFNGLUNIFORM4FPROC                glUniform4f                = (PFNGLUNIFORM4FPROC) EmptyFunc;
-PFNGLUNIFORM3FPROC                glUniform3f                = (PFNGLUNIFORM3FPROC) EmptyFunc;
-PFNGLUNIFORM2FPROC                glUniform2f                = (PFNGLUNIFORM2FPROC) EmptyFunc;
-PFNGLUNIFORM1FPROC                glUniform1f                = (PFNGLUNIFORM1FPROC) EmptyFunc;
-PFNGLUNIFORM1IPROC                glUniform1i                = (PFNGLUNIFORM1IPROC) EmptyFunc;
-PFNGLUSEPROGRAMPROC               glUseProgram               = (PFNGLUSEPROGRAMPROC) EmptyFunc;
 #endif // USE_GLES
-
-#define INIT_ENTRY_POINT(type, funcname) \
-  p##funcname = (type) CoreVideo_GL_GetProcAddress(#funcname); \
-  if (p##funcname == NULL) { DebugMessage(M64MSG_WARNING, \
-  "Couldn't get address of OpenGL function: '%s'", #funcname); p##funcname = (type) EmptyFunc; }
 
 void OGLExtensions_Init(void)
 {
@@ -78,36 +107,62 @@ void OGLExtensions_Init(void)
 #ifdef USE_GLES
 #else
 #if defined(WIN32)
-    glActiveTexture            = (PFNGLACTIVETEXTUREPROC)            CoreVideo_GL_GetProcAddress("glActiveTexture");
+    INIT_GL_FUNC(PFNGLACTIVETEXTUREPROC,            glActiveTexture)
+    INIT_GL_FUNC(PFNGLSHADERSOURCEPROC,             glShaderSource)
+    INIT_GL_FUNC(PFNGLCOMPILESHADERPROC,            glCompileShader)
+    INIT_GL_FUNC(PFNGLGETSHADERIVPROC,              glGetShaderiv)
+    INIT_GL_FUNC(PFNGLGETSHADERINFOLOGPROC,         glGetShaderInfoLog)
+    INIT_GL_FUNC(PFNGLCREATEPROGRAMPROC,            glCreateProgram)
+    INIT_GL_FUNC(PFNGLATTACHSHADERPROC,             glAttachShader)
+    INIT_GL_FUNC(PFNGLBINDATTRIBLOCATIONPROC,       glBindAttribLocation)
+    INIT_GL_FUNC(PFNGLLINKPROGRAMPROC,              glLinkProgram)
+    INIT_GL_FUNC(PFNGLGETPROGRAMIVPROC,             glGetProgramiv)
+    INIT_GL_FUNC(PFNGLGETPROGRAMINFOLOGPROC,        glGetProgramInfoLog)
+    INIT_GL_FUNC(PFNGLGETUNIFORMLOCATIONPROC,       glGetUniformLocation)
+    INIT_GL_FUNC(PFNGLDETACHSHADERPROC,             glDetachShader)
+    INIT_GL_FUNC(PFNGLDELETESHADERPROC,             glDeleteShader)
+    INIT_GL_FUNC(PFNGLDELETEPROGRAMPROC,            glDeleteProgram)
+    INIT_GL_FUNC(PFNGLISSHADERPROC,                 glIsShader)
+    INIT_GL_FUNC(PFNGLISPROGRAMPROC,                glIsProgram)
+    INIT_GL_FUNC(PFNGLENABLEVERTEXATTRIBARRAYPROC,  glEnableVertexAttribArray)
+    INIT_GL_FUNC(PFNGLDISABLEVERTEXATTRIBARRAYPROC, glDisableVertexAttribArray)
+    INIT_GL_FUNC(PFNGLVERTEXATTRIBPOINTERPROC,      glVertexAttribPointer)
+    INIT_GL_FUNC(PFNGLUNIFORM4FPROC,                glUniform4f)
+    INIT_GL_FUNC(PFNGLUNIFORM3FPROC,                glUniform3f)
+    INIT_GL_FUNC(PFNGLUNIFORM2FPROC,                glUniform2f)
+    INIT_GL_FUNC(PFNGLUNIFORM1FPROC,                glUniform1f)
+    INIT_GL_FUNC(PFNGLUNIFORM1IPROC,                glUniform1i)
+    INIT_GL_FUNC(PFNGLUSEPROGRAMPROC,               glUseProgram)
 #elif defined(__APPLE__)
-#endif
-    glCreateShader             = (PFNGLCREATESHADERPROC)             CoreVideo_GL_GetProcAddress("glCreateShader");
-    glShaderSource             = (PFNGLSHADERSOURCEPROC)             CoreVideo_GL_GetProcAddress("glShaderSource");
-    glCompileShader            = (PFNGLCOMPILESHADERPROC)            CoreVideo_GL_GetProcAddress("glCompileShader");
-    glGetShaderiv              = (PFNGLGETSHADERIVPROC)              CoreVideo_GL_GetProcAddress("glGetShaderiv");
-    glGetShaderInfoLog         = (PFNGLGETSHADERINFOLOGPROC)         CoreVideo_GL_GetProcAddress("glGetShaderInfoLog");
-    glCreateProgram            = (PFNGLCREATEPROGRAMPROC)            CoreVideo_GL_GetProcAddress("glCreateProgram");
-    glAttachShader             = (PFNGLATTACHSHADERPROC)             CoreVideo_GL_GetProcAddress("glAttachShader");
-    glBindAttribLocation       = (PFNGLBINDATTRIBLOCATIONPROC)       CoreVideo_GL_GetProcAddress("glBindAttribLocation");
-    glLinkProgram              = (PFNGLLINKPROGRAMPROC)              CoreVideo_GL_GetProcAddress("glLinkProgram");
-    glGetProgramiv             = (PFNGLGETPROGRAMIVPROC)             CoreVideo_GL_GetProcAddress("glGetProgramiv");
-    glGetProgramInfoLog        = (PFNGLGETPROGRAMINFOLOGPROC)        CoreVideo_GL_GetProcAddress("glGetProgramInfoLog");
-    glGetUniformLocation       = (PFNGLGETUNIFORMLOCATIONPROC)       CoreVideo_GL_GetProcAddress("glGetUniformLocation");
-    glDetachShader             = (PFNGLDETACHSHADERPROC)             CoreVideo_GL_GetProcAddress("glDetachShader");
-    glDeleteShader             = (PFNGLDELETESHADERPROC)             CoreVideo_GL_GetProcAddress("glDeleteShader");
-    glDeleteProgram            = (PFNGLDELETEPROGRAMPROC)            CoreVideo_GL_GetProcAddress("glDeleteProgram");
-    glIsShader                 = (PFNGLISSHADERPROC)                 CoreVideo_GL_GetProcAddress("glIsShader");
-    glIsProgram                = (PFNGLISPROGRAMPROC)                CoreVideo_GL_GetProcAddress("glIsProgram");
-    glEnableVertexAttribArray  = (PFNGLENABLEVERTEXATTRIBARRAYPROC)  CoreVideo_GL_GetProcAddress("glEnableVertexAttribArray");
-    glDisableVertexAttribArray = (PFNGLDISABLEVERTEXATTRIBARRAYPROC) CoreVideo_GL_GetProcAddress("glDisableVertexAttribArray");
-    glVertexAttribPointer      = (PFNGLVERTEXATTRIBPOINTERPROC)      CoreVideo_GL_GetProcAddress("glVertexAttribPointer");
-    glUniform4f                = (PFNGLUNIFORM4FPROC)                CoreVideo_GL_GetProcAddress("glUniform4f");
-    glUniform3f                = (PFNGLUNIFORM3FPROC)                CoreVideo_GL_GetProcAddress("glUniform3f");
-    glUniform2f                = (PFNGLUNIFORM2FPROC)                CoreVideo_GL_GetProcAddress("glUniform2f");
-    glUniform1f                = (PFNGLUNIFORM1FPROC)                CoreVideo_GL_GetProcAddress("glUniform1f");
-    glUniform1i                = (PFNGLUNIFORM1IPROC)                CoreVideo_GL_GetProcAddress("glUniform1i");
-    glUseProgram               = (PFNGLUSEPROGRAMPROC)               CoreVideo_GL_GetProcAddress("glUseProgram");
-#endif /* not USE_GLES */
+#else
+    INIT_GL_FUNC(PFNGLCREATESHADERPROC,             glCreateShader)
+    INIT_GL_FUNC(PFNGLSHADERSOURCEPROC,             glShaderSource)
+    INIT_GL_FUNC(PFNGLCOMPILESHADERPROC,            glCompileShader)
+    INIT_GL_FUNC(PFNGLGETSHADERIVPROC,              glGetShaderiv)
+    INIT_GL_FUNC(PFNGLGETSHADERINFOLOGPROC,         glGetShaderInfoLog)
+    INIT_GL_FUNC(PFNGLCREATEPROGRAMPROC,            glCreateProgram)
+    INIT_GL_FUNC(PFNGLATTACHSHADERPROC,             glAttachShader)
+    INIT_GL_FUNC(PFNGLBINDATTRIBLOCATIONPROC,       glBindAttribLocation)
+    INIT_GL_FUNC(PFNGLLINKPROGRAMPROC,              glLinkProgram)
+    INIT_GL_FUNC(PFNGLGETPROGRAMIVPROC,             glGetProgramiv)
+    INIT_GL_FUNC(PFNGLGETPROGRAMINFOLOGPROC,        glGetProgramInfoLog)
+    INIT_GL_FUNC(PFNGLGETUNIFORMLOCATIONPROC,       glGetUniformLocation)
+    INIT_GL_FUNC(PFNGLDETACHSHADERPROC,             glDetachShader)
+    INIT_GL_FUNC(PFNGLDELETESHADERPROC,             glDeleteShader)
+    INIT_GL_FUNC(PFNGLDELETEPROGRAMPROC,            glDeleteProgram)
+    INIT_GL_FUNC(PFNGLISSHADERPROC,                 glIsShader)
+    INIT_GL_FUNC(PFNGLISPROGRAMPROC,                glIsProgram)
+    INIT_GL_FUNC(PFNGLENABLEVERTEXATTRIBARRAYPROC,  glEnableVertexAttribArray)
+    INIT_GL_FUNC(PFNGLDISABLEVERTEXATTRIBARRAYPROC, glDisableVertexAttribArray)
+    INIT_GL_FUNC(PFNGLVERTEXATTRIBPOINTERPROC,      glVertexAttribPointer)
+    INIT_GL_FUNC(PFNGLUNIFORM4FPROC,                glUniform4f)
+    INIT_GL_FUNC(PFNGLUNIFORM3FPROC,                glUniform3f)
+    INIT_GL_FUNC(PFNGLUNIFORM2FPROC,                glUniform2f)
+    INIT_GL_FUNC(PFNGLUNIFORM1FPROC,                glUniform1f)
+    INIT_GL_FUNC(PFNGLUNIFORM1IPROC,                glUniform1i)
+    INIT_GL_FUNC(PFNGLUSEPROGRAMPROC,               glUseProgram)
+#endif // OS specific
+#endif // USE_GLES
 }
 
 
