@@ -105,9 +105,11 @@ void OGLExtensions_Init(void)
 {
 // See above for #ifdef #else documentation
 #ifdef USE_GLES
+    // empty
 #else
 #if defined(WIN32)
     INIT_GL_FUNC(PFNGLACTIVETEXTUREPROC,            glActiveTexture)
+    INIT_GL_FUNC(PFNGLCREATESHADERPROC,             glCreateShader)
     INIT_GL_FUNC(PFNGLSHADERSOURCEPROC,             glShaderSource)
     INIT_GL_FUNC(PFNGLCOMPILESHADERPROC,            glCompileShader)
     INIT_GL_FUNC(PFNGLGETSHADERIVPROC,              glGetShaderiv)
@@ -134,6 +136,7 @@ void OGLExtensions_Init(void)
     INIT_GL_FUNC(PFNGLUNIFORM1IPROC,                glUniform1i)
     INIT_GL_FUNC(PFNGLUSEPROGRAMPROC,               glUseProgram)
 #elif defined(__APPLE__)
+    // empty
 #else
     INIT_GL_FUNC(PFNGLCREATESHADERPROC,             glCreateShader)
     INIT_GL_FUNC(PFNGLSHADERSOURCEPROC,             glShaderSource)
