@@ -394,7 +394,17 @@ void COGLGraphicsContext::UpdateFrame(bool swaponly)
    
    // if emulator defined a render callback function, call it before buffer swap
    if(renderCallback)
+   {
+       // For OGLFT (used by OSD) to work, we need to disable shaders
+       // (which implicitly passe OpenGL in fixed pipeline mode)
+       GLint program;
+       glGetIntegerv(GL_CURRENT_PROGRAM ,&program);
+       glUseProgram(0);
+
        (*renderCallback)(status.bScreenIsDrawn);
+
+       glUseProgram(program);
+   }
 
    CoreVideo_GL_SwapBuffers();
    
