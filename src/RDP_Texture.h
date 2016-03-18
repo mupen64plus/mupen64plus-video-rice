@@ -24,6 +24,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "Render.h"
 
+#undef min
+#undef max
+
 uint32 g_TmemFlag[16];
 void SetTmemFlag(uint32 tmemAddr, uint32 size);
 bool IsTmemFlagValid(uint32 tmemAddr);

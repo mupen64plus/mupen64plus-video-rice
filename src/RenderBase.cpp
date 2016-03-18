@@ -38,6 +38,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "osal_preproc.h"
 #include "typedefs.h"
 
+#undef min
+#undef max
+
 extern FiddledVtx * g_pVtxBase;
 
 #define ENABLE_CLIP_TRI

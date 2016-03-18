@@ -36,6 +36,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "Video.h"
 #include "m64p_plugin.h"
 
+#undef min
+#undef max
+
 extern TMEMLoadMapInfo g_tmemLoadAddrMap[0x200];    // Totally 4KB TMEM;
 
 // 0 keeps the most recent CI info
