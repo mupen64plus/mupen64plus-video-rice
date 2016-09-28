@@ -31,6 +31,8 @@
 #define VS_TEXCOORD1            3
 #define VS_FOG                  4
 
+#define GL_DEPTH_CLAMP_NV       0x864F
+
 #ifndef USE_GLES
 
 #ifndef SDL_VIDEO_OPENGL
