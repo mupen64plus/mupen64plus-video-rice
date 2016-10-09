@@ -106,11 +106,13 @@ void OGLRender::Initialize(void)
     m_textureUnitMap[0] = 0;    // T0 is usually using texture unit 0
     m_textureUnitMap[1] = 1;    // T1 is usually using texture unit 1
 
+#ifndef USE_GLES
     if( COGLGraphicsContext::Get()->IsSupportDepthClampNV() )
     {
         glEnable(GL_DEPTH_CLAMP_NV);
         OPENGL_CHECK_ERRORS;
     }
+#endif
 }
 //===================================================================
 TextureFilterMap OglTexFilterMap[2]=
