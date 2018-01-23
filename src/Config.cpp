@@ -56,41 +56,6 @@ const char *frameBufferSettings[] =
 "With Emulator Write Only",
 };
 
-const int resolutions[][2] =
-{
-{320, 240},
-{400, 300},
-{480, 360},
-{512, 384},
-{640, 480},
-{800, 600},
-{1024, 768},
-{1152, 864},
-{1280, 960},
-{1400, 1050},
-{1600, 1200},
-{1920, 1440},
-{2048, 1536},
-};
-const int numberOfResolutions = sizeof(resolutions)/sizeof(int)/2;
-
-const char* resolutionsS[] =
-{
-"320 x 240",
-"400 x 300",
-"480 x 360",
-"512 x 384",
-"640 x 480",
-"800 x 600",
-"1024 x 768",
-"1152 x 864",
-"1280 x 960",
-"1400 x 1050",
-"1600 x 1200",
-"1920 x 1440",
-"2048 x 1536"
-};
-
 const char *frameBufferWriteBackControlSettings[] =
 {
 "Every Frame (default)",
@@ -998,7 +963,7 @@ BOOL ReadIniFile()
         if (readinfo[0] == '/')
             continue;
 
-        if (!strcasecmp(readinfo,"")==0)
+        if (strlen(readinfo) > 0)
         {
             if (readinfo[0] == '{') //if a section heading
             {
