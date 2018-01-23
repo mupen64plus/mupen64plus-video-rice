@@ -31,17 +31,7 @@
 #define VS_TEXCOORD1            3
 #define VS_FOG                  4
 
-#ifndef USE_GLES
-
-#ifndef SDL_VIDEO_OPENGL
-#error SDL is not build with OpenGL support. Try USE_GLES=1
-#endif
-
-#include <SDL_opengl.h>
-
-#define GLSL_VERSION "120"
-
-#else // !USE_GLES
+#ifdef USE_GLES
 
 #ifndef SDL_VIDEO_OPENGL_ES2
 #error SDL is not build with OpenGL ES2 support. Try USE_GLES=0
@@ -72,6 +62,22 @@
 #define glLoadIdentity()
 #define glReadBuffer(x)
 #define glTexEnvi(x,y,z)
+
+#else // !USE_GLES
+
+#ifndef SDL_VIDEO_OPENGL
+#error SDL is not build with OpenGL support. Try USE_GLES=1
+#endif
+
+#if defined(__APPLE__)
+    #include <OpenGL/gl.h>
+    #include <OpenGL/glext.h>
+    #define APIENTRY
+#endif
+
+#include <SDL_opengl.h>
+
+#define GLSL_VERSION "120"
 
 #endif // !USE_GLES
 
