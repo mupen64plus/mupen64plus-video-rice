@@ -164,7 +164,6 @@ extern unsigned char *g_pRDRAMu8;
 extern ptr_ConfigListSections     ConfigListSections;
 extern ptr_ConfigOpenSection      ConfigOpenSection;
 extern ptr_ConfigListParameters   ConfigListParameters;
-extern ptr_ConfigSaveFile         ConfigSaveFile;
 extern ptr_ConfigSetParameter     ConfigSetParameter;
 extern ptr_ConfigSetParameterHelp ConfigSetParameterHelp;
 extern ptr_ConfigGetParameter     ConfigGetParameter;
