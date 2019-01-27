@@ -304,7 +304,7 @@ BOOL InitConfiguration(void)
     }
 
     /* Set default config parameters */
-    ConfigSetDefaultBool(l_ConfigVideoGeneral, "Fullscreen", 0, "Use fullscreen mode if True, or windowed mode if False ");
+    ConfigSetDefaultBool(l_ConfigVideoGeneral, "Fullscreen", 0, "Use fullscreen mode if True, or windowed mode if False");
     ConfigSetDefaultInt(l_ConfigVideoGeneral, "ScreenWidth", 640, "Width of output window or fullscreen width");
     ConfigSetDefaultInt(l_ConfigVideoGeneral, "ScreenHeight", 480, "Height of output window or fullscreen height");
     ConfigSetDefaultBool(l_ConfigVideoGeneral, "VerticalSync", 0, "If true, activate the SDL_GL_SWAP_CONTROL attribute");
