@@ -301,42 +301,6 @@ static void hq2x_32_def(uint32* dst0, uint32* dst1, const uint32* src0, const ui
         if (hq2x_interp_32_diff(c[8], c[4]))
             mask |= 1 << 7;
 
-#define P0 dst0[0]
-#define P1 dst0[1]
-#define P2 dst1[0]
-#define P3 dst1[1]
-#define HQ2X_MUR hq2x_interp_32_diff(c[1], c[5])
-#define HQ2X_MDR hq2x_interp_32_diff(c[5], c[7])
-#define HQ2X_MDL hq2x_interp_32_diff(c[7], c[3])
-#define HQ2X_MUL hq2x_interp_32_diff(c[3], c[1])
-#define IC(p0) c[p0]
-
-        switch (mask) {
-        }
-
-#undef P0
-#undef P1
-#undef P2
-#undef P3
-#undef HQ2X_MUR
-#undef HQ2X_MDR
-#undef HQ2X_MDL
-#undef HQ2X_MUL
-#undef IC
-#undef I11
-#undef I211
-#undef I31
-#undef I332
-#undef I431
-#undef I521
-#undef I53
-#undef I611
-#undef I71
-#undef I772
-#undef I97
-#undef I1411
-#undef I151
-
         src0 += 1;
         src1 += 1;
         src2 += 1;
@@ -506,42 +470,6 @@ static void lq2x_32_def(uint32* dst0, uint32* dst1, const uint32* src0, const ui
             mask |= 1 << 6;
         if (c[8] != c[4])
             mask |= 1 << 7;
-
-#define P0 dst0[0]
-#define P1 dst0[1]
-#define P2 dst1[0]
-#define P3 dst1[1]
-#define HQ2X_MUR (c[1] != c[5])
-#define HQ2X_MDR (c[5] != c[7])
-#define HQ2X_MDL (c[7] != c[3])
-#define HQ2X_MUL (c[3] != c[1])
-#define IC(p0) c[p0]
-
-        switch (mask) {
-        }
-
-#undef P0
-#undef P1
-#undef P2
-#undef P3
-#undef HQ2X_MUR
-#undef HQ2X_MDR
-#undef HQ2X_MDL
-#undef HQ2X_MUL
-#undef IC
-#undef I11
-#undef I211
-#undef I31
-#undef I332
-#undef I431
-#undef I521
-#undef I53
-#undef I611
-#undef I71
-#undef I772
-#undef I97
-#undef I1411
-#undef I151
 
         src0 += 1;
         src1 += 1;
