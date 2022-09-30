@@ -187,12 +187,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - toolset: v142
+          - toolset: v143
             platform: x64
+            vs: 2022
           - toolset: v141_xp
             platform: x86
+            vs: 2019
     name: Windows / MSVC ${{ matrix.toolset }} / ${{ matrix.platform }}
-    runs-on: windows-2019
+    runs-on: windows-${{ matrix.vs }}
     defaults:
       run:
         shell: cmd
@@ -224,9 +226,8 @@ jobs:
           cd pkg
           xcopy "..\backup" .
           xcopy "..\data" .
-          copy "..\..\mupen64plus-win32-deps\libpng-1.6.37\lib\${{ matrix.platform }}\*.dll" .
-          copy "..\..\mupen64plus-win32-deps\SDL2-2.0.10\lib\${{ matrix.platform }}\*.dll" .
-          copy "..\..\mupen64plus-win32-deps\zlib-1.2.11\lib\${{ matrix.platform }}\*.dll" .
+          copy "..\..\mupen64plus-win32-deps\libpng-1.6.38\lib\${{ matrix.platform }}\*.dll" .
+          copy "..\..\mupen64plus-win32-deps\SDL2-2.24.0\lib\${{ matrix.platform }}\*.dll" .
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
