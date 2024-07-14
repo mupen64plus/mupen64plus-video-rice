@@ -200,7 +200,7 @@ ifeq ($(OS), OSX)
       LDFLAGS += -bundle
       LDLIBS += -ldl
     else
-      CFLAGS += -pipe -mmmx -msse -fomit-frame-pointer -arch i686 -mmacosx-version-min=10.6 -isysroot $(OSX_SDK_PATH)
+      CFLAGS += -pipe -mmmx -msse -fomit-frame-pointer -arch i686 -mmacosx-version-min=10.9 -isysroot $(OSX_SDK_PATH)
       LDFLAGS += -bundle
       LDLIBS += -ldl
     endif
