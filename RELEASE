@@ -1,9 +1,71 @@
 Mupen64Plus-Video-Rice RELEASE
 ------------------------------
 
-Mupen64Plus-Video-Rice v2.5.9 - February 10, 2019
--------------------------------------------------
- - *** BETA RELEASE *** For Testing Only ***
+-----------------------------------------------
+# Mupen64Plus-Video-Rice v2.6.0 - July 14, 2024
+
+## Merged PRs
+
+* [110](https://github.com/mupen64plus/mupen64plus-video-rice/pull/110): CI/CD: Update to generic scripts, independent schedule, etc
+* [108](https://github.com/mupen64plus/mupen64plus-video-rice/pull/108): CI/CD: Fixes Ubuntu i386 builds, among other changes
+* [106](https://github.com/mupen64plus/mupen64plus-video-rice/pull/106): CI/CD: Integrate scheduled builds and other...
+* [104](https://github.com/mupen64plus/mupen64plus-video-rice/pull/104): CI/CD: Update MSVC
+* [103](https://github.com/mupen64plus/mupen64plus-video-rice/pull/103): CI/CD: Update
+* [100](https://github.com/mupen64plus/mupen64plus-video-rice/pull/100): CI/CD: Implement GitHub Actions and public nightly builds
+* [99](https://github.com/mupen64plus/mupen64plus-video-rice/pull/99): Add RISC-V Support
+* [96](https://github.com/mupen64plus/mupen64plus-video-rice/pull/96): build: Allow out of tree builds.
+* [95](https://github.com/mupen64plus/mupen64plus-video-rice/pull/95): Add fix for PAL & JPN roms of Mystical Ninja
+* [92](https://github.com/mupen64plus/mupen64plus-video-rice/pull/92): Allow non-default compilers without resorting to symbolic links
+* [91](https://github.com/mupen64plus/mupen64plus-video-rice/pull/91): Allow to set custom platform toolset from commands
+* [90](https://github.com/mupen64plus/mupen64plus-video-rice/pull/90): Add build support for aarch64
+* [89](https://github.com/mupen64plus/mupen64plus-video-rice/pull/89): AppVeyor with artifact packaging
+* [87](https://github.com/mupen64plus/mupen64plus-video-rice/pull/87): Changes to have more generic project files
+* [84](https://github.com/mupen64plus/mupen64plus-video-rice/pull/84): Add ppc64le support
+* [83](https://github.com/mupen64plus/mupen64plus-video-rice/pull/83): Drop C++ 'register' specifier.
+
+
+## Closed Issues
+
+* [109](https://github.com/mupen64plus/mupen64plus-video-rice/issues/109): Use `GL_NUM_EXTENSIONS` and `glGetStringi` to check OpenGL extensions
+* [102](https://github.com/mupen64plus/mupen64plus-video-rice/issues/102): Depth issue with ANGLE
+* [94](https://github.com/mupen64plus/mupen64plus-video-rice/issues/94): Mystical Ninja PAL & NTSC-JP versions need options in RiceVideoLinux.ini
+* [85](https://github.com/mupen64plus/mupen64plus-video-rice/issues/85): build: Unable to build on aarch64
+
+
+## Top Contributors (2 or more commits)
+1. Jj0YzL5nvJ
+2. richard42
+3. Gillou68310
+
+
+---------------------------------------------------
+# Mupen64Plus-Video-Rice v2.5.9 - February 10, 2019
+
+## Merged PRs
+
+* [82](https://github.com/mupen64plus/mupen64plus-video-rice/pull/82): Remove trailing space on parameter description.
+* [81](https://github.com/mupen64plus/mupen64plus-video-rice/pull/81): Remove unused reference to ConfigSaveFile
+* [78](https://github.com/mupen64plus/mupen64plus-video-rice/pull/78): Update homepage links
+* [77](https://github.com/mupen64plus/mupen64plus-video-rice/pull/77): Use faster container based Travis CI
+* [65](https://github.com/mupen64plus/mupen64plus-video-rice/pull/65): Use Ubuntu Trusty as base system for Travis CI
+* [58](https://github.com/mupen64plus/mupen64plus-video-rice/pull/58): Added x64 configuration to VisualStudio2013 project file
+* [56](https://github.com/mupen64plus/mupen64plus-video-rice/pull/56): Remove unnecessary OpenBSD warning.
+* [31](https://github.com/mupen64plus/mupen64plus-video-rice/pull/31): [WIP] Color Combiner Refactoring
+
+
+## Closed Issues
+
+* [51](https://github.com/mupen64plus/mupen64plus-video-rice/issues/51): HarvestMoon 64 - Screen is cropped to approx 1/4 of expected size
+* [64](https://github.com/mupen64plus/mupen64plus-video-rice/issues/64): Everything renders with the same textures
+* [41](https://github.com/mupen64plus/mupen64plus-video-rice/issues/41): Black screen on real OpenGL ES device
+* [27](https://github.com/mupen64plus/mupen64plus-video-rice/issues/27): Remove pgl prefix for gl ones investigation
+* [61](https://github.com/mupen64plus/mupen64plus-video-rice/issues/61): naming / version conflict
+* [66](https://github.com/mupen64plus/mupen64plus-video-rice/issues/66): Broken compilation with GLES headers
+* [45](https://github.com/mupen64plus/mupen64plus-video-rice/issues/45): Possible memory leak in texture SSB
+* [28](https://github.com/mupen64plus/mupen64plus-video-rice/issues/28): Flashing textures in Zelda
+* [60](https://github.com/mupen64plus/mupen64plus-video-rice/issues/60): Dump and load audio.
+* [57](https://github.com/mupen64plus/mupen64plus-video-rice/issues/57): Remove processDList() from code
+
 
 Mupen64Plus-Video-Rice v2.5 - April 26, 2015
 --------------------------------------------
