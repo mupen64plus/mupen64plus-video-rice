@@ -305,26 +305,35 @@ void ObjMtxTranslate(float &x, float &y)
 
 void RSP_S2DEX_SPObjLoadTxtr(Gfx *gfx)
 {
-    gObjTxtr = (uObjTxtr*)(g_pRDRAMu8+(RSPSegmentAddr((gfx->words.w1))&(g_dwRamSize-1)));
+    uint32 txtrAddr = RSPSegmentAddr((gfx->words.w1)) & (g_dwRamSize - 1);
+    if( txtrAddr > g_dwRamSize || sizeof(uObjTxtr) > g_dwRamSize - txtrAddr )
+        return;
+
+    gObjTxtr = (uObjTxtr*)(g_pRDRAMu8 + txtrAddr);
     if( gObjTxtr->block.type == S2DEX_OBJLT_TLUT )
     {
         gObjTlut = (uObjTxtrTLUT*)gObjTxtr;
         gObjTlutAddr = (uint32)(RSPSegmentAddr(gObjTlut->image));
         
         // Copy tlut
-        int size = gObjTlut->pnum+1;
-        int offset = gObjTlut->phead-0x100;
+        if( gObjTlut->phead < 0x100 || gObjTlut->phead >= 0x200 )
+            return;
 
-        if( offset+size>0x100)
-        {
+        uint32 size = gObjTlut->pnum + 1;
+        uint32 offset = gObjTlut->phead - 0x100;
+
+        if( size > 0x100 - offset )
             size = 0x100 - offset;
-        }
 
         uint32 addr = (gObjTlutAddr);//&0xFFFFFFFC);
         //if( addr & 3 ) addr = (addr&0xFFFFFFF0)+8;;
         //uint16 *srcPal = (uint16*)(g_pRDRAMu8 + (addr& (g_dwRamSize-1)) );
 
-        for( int i=offset; i<offset+size; i++ )
+        if( (addr & 1) != 0 || addr > g_dwRamSize ||
+            size > (g_dwRamSize - addr) / sizeof(uint16) )
+            return;
+
+        for( uint32 i=offset; i<offset+size; i++ )
         {
             g_wRDPTlut[i^1] = RDRAM_UHALF(addr);
             addr += 2;
@@ -570,4 +579,3 @@ void RSP_S2DEX_OBJ_RECTANGLE_R(Gfx *gfx)
         }
     );
 }
-
