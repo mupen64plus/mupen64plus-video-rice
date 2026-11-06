@@ -42,6 +42,7 @@ enum FillMode
 };
 
 enum { MAX_VERTS = 80 };        // F3DLP.Rej supports up to 80 verts!
+enum { MAX_RENDER_VERTS = 1000 };
 
 void myVec3Transform(float *vecout, float *vecin, float* m);
 
@@ -49,7 +50,7 @@ void myVec3Transform(float *vecout, float *vecin, float* m);
 // to be accessed in faster speed
 extern ALIGN(16, XVECTOR4 g_vtxTransformed[MAX_VERTS])
 extern ALIGN(16, XVECTOR4 g_vecProjected[MAX_VERTS])
-extern float        g_vtxProjected5[1000][5];
+extern float        g_vtxProjected5[MAX_RENDER_VERTS][5];
 extern float        g_vtxProjected5Clipped[2000][5];
 extern VECTOR2      g_fVtxTxtCoords[MAX_VERTS];
 extern uint32       g_dwVtxDifColor[MAX_VERTS];
@@ -57,13 +58,13 @@ extern uint32       g_dwVtxDifColor[MAX_VERTS];
 
 extern RenderTexture g_textures[MAX_TEXTURES];
 
-extern TLITVERTEX       g_vtxBuffer[1000];
-extern unsigned short   g_vtxIndex[1000];
+extern TLITVERTEX       g_vtxBuffer[MAX_RENDER_VERTS];
+extern unsigned short   g_vtxIndex[MAX_RENDER_VERTS];
 
 extern TLITVERTEX       g_clippedVtxBuffer[2000];
 extern int              g_clippedVtxCount;
 
-extern uint8            g_oglVtxColors[1000][4];
+extern uint8            g_oglVtxColors[MAX_RENDER_VERTS][4];
 extern uint32           g_clipFlag[MAX_VERTS];
 extern uint32           g_clipFlag2[MAX_VERTS];
 extern float            g_fFogCoord[MAX_VERTS];

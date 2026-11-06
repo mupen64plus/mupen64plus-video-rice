@@ -431,6 +431,10 @@ bool CRender::FillRect(int nX0, int nY0, int nX1, int nY1, uint32 dwColor)
 bool CRender::Line3D(uint32 dwV0, uint32 dwV1, uint32 dwWidth)
 {
     LOG_UCODE("Line3D: Vtx0=%d, Vtx1=%d, Width=%d", dwV0, dwV1, dwWidth);
+
+    if (dwV0 >= MAX_VERTS || dwV1 >= MAX_VERTS)
+        return false;
+
     if( !status.bCIBufferIsRendered ) g_pFrameBufferManager->ActiveTextureBuffer();
 
     m_line3DVtx[0].z = (g_vecProjected[dwV0].z + 1.0f) * 0.5f;

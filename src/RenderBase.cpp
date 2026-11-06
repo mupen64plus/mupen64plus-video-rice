@@ -133,7 +133,7 @@ ALIGN(16,XVECTOR4 g_vtxNonTransformed[MAX_VERTS])
 ALIGN(16,XVECTOR4 g_vecProjected[MAX_VERTS])
 ALIGN(16,XVECTOR4 g_vtxTransformed[MAX_VERTS])
 
-float       g_vtxProjected5[1000][5];
+float       g_vtxProjected5[MAX_RENDER_VERTS][5];
 float       g_vtxProjected5Clipped[2000][5];
 
 //uint32        g_dwVtxFlags[MAX_VERTS];            // Z_POS Z_NEG etc
@@ -146,12 +146,12 @@ float       g_fFogCoord[MAX_VERTS];
 
 EXTERNAL_VERTEX g_vtxForExternal[MAX_VERTS];
 
-TLITVERTEX          g_vtxBuffer[1000];
+TLITVERTEX          g_vtxBuffer[MAX_RENDER_VERTS];
 TLITVERTEX          g_clippedVtxBuffer[2000];
-uint8               g_oglVtxColors[1000][4];
+uint8               g_oglVtxColors[MAX_RENDER_VERTS][4];
 int                 g_clippedVtxCount=0;
 TLITVERTEX          g_texRectTVtx[4];
-unsigned short      g_vtxIndex[1000];
+unsigned short      g_vtxIndex[MAX_RENDER_VERTS];
 unsigned int        g_minIndex, g_maxIndex;
 
 float               gRSPfFogMin;
@@ -1489,6 +1489,12 @@ bool PrepareTriangle(uint32 dwV0, uint32 dwV1, uint32 dwV2)
 {
     SP_Timing(SP_Each_Triangle);
 
+    if( gRSP.numVertices > MAX_RENDER_VERTS - 3 )
+    {
+        CRender::g_pRender->SetCombinerAndBlender();
+        CRender::g_pRender->DrawTriangles();
+    }
+
     bool textureFlag = (CRender::g_pRender->IsTextureEnabled() || gRSP.ucode == 6 );
 
     InitVertex(dwV0, gRSP.numVertices, textureFlag);
@@ -1509,13 +1515,11 @@ bool IsTriangleVisible(uint32 dwV0, uint32 dwV1, uint32 dwV2)
 {
     //return true;  //fix me
 
-    DEBUGGER_ONLY_IF( (!debuggerEnableTestTris || !debuggerEnableCullFace), {return TRUE;});
-    
-#ifdef DEBUGGER
     // Check vertices are valid!
     if (dwV0 >= MAX_VERTS || dwV1 >= MAX_VERTS || dwV2 >= MAX_VERTS)
         return false;
-#endif
+
+    DEBUGGER_ONLY_IF( (!debuggerEnableTestTris || !debuggerEnableCullFace), {return TRUE;});
 
     // Here we AND all the flags. If any of the bits is set for all
     // 3 vertices, it means that all three x, y or z lie outside of
