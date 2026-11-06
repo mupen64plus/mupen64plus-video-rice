@@ -96,6 +96,9 @@ inline uint32 ReverseDXT(uint32 val, uint32 lrs, uint32 width, uint32 size)
 
 inline void UnswapCopy( void *src, void *dest, uint32 numBytes )
 {
+    if (numBytes == 0)
+        return;
+
 #if !defined(__GNUC__) && !defined(NO_ASM)
     __asm
     {
@@ -285,6 +288,9 @@ Done:
 
 inline void DWordInterleave( void *mem, uint32 numDWords )
 {
+    if (numDWords == 0)
+        return;
+
 #if !defined(__GNUC__) && !defined(NO_ASM)
     __asm {
         mov     esi, dword ptr [mem]
@@ -303,8 +309,8 @@ DWordInterleaveLoop:
 #elif defined(__GNUC__) && defined(__x86_64__) && !defined(NO_ASM)
   asm volatile("0:                                 \n"
                " movl     (%0),     %%eax          \n"
-               " movl    8(%0),     %%ebx          \n"
-               " movl    %%eax,     8(%0)          \n"
+               " movl    4(%0),     %%ebx          \n"
+               " movl    %%eax,     4(%0)          \n"
                " movl    %%ebx,      (%0)          \n"
                " add        $8,        %0          \n"
                " decl      %k1                     \n"
@@ -338,6 +344,9 @@ DWordInterleaveLoop:
 
 inline void QWordInterleave( void *mem, uint32 numDWords )
 {
+    if (numDWords < 2)
+        return;
+
 #if !defined(__GNUC__) && !defined(NO_ASM)
     __asm
     {
@@ -1335,12 +1344,16 @@ void DLParser_LoadBlock(Gfx *gfx)
     if( options.bUseFullTMEM )
     {
         uint32 bytes = (lrs + 1) << tile.dwSize >> 1;
-        uint32 address = g_TI.dwAddr + ult * g_TI.bpl + (uls << g_TI.dwSize >> 1);
-        if ((bytes == 0) || ((address + bytes) > g_dwRamSize) || (((tile.dwTMem << 3) + bytes) > 4096))
+        uint64 address = (uint64)g_TI.dwAddr + (uint64)ult * g_TI.bpl +
+                         ((uint64)uls << tile.dwSize >> 1);
+        uint64 tmemAddress = (uint64)tile.dwTMem << 3;
+        if (bytes == 0 || address > g_dwRamSize || bytes > g_dwRamSize - address ||
+            tmemAddress > sizeof(g_Tmem.g_Tmem8bit) ||
+            bytes > sizeof(g_Tmem.g_Tmem8bit) - tmemAddress)
         {
             return;
         }
-        uint64* src = (uint64*)(g_pRDRAMu8+address);
+        uint64* src = (uint64*)(g_pRDRAMu8+(uint32)address);
         uint64* dest = &g_Tmem.g_Tmem64bit[tile.dwTMem];
 
         if( dxt > 0)
@@ -1415,13 +1428,10 @@ void DLParser_LoadTile(Gfx *gfx)
     uint32 line = tile.dwLine;
     if (tile.dwSize == TXT_SIZE_32b) line <<= 1;
 
-    if (((tile.dwTMem << 3) + line * height) > 4096)  // check destination ending point (TMEM is 4k bytes)
-        return;
-
     if( options.bUseFullTMEM )
     {
         void (*Interleave)( void *mem, uint32 numDWords );
-        uint32 address, y;
+        uint32 y;
         uint64 *dest;
         uint8 *src;
 
@@ -1437,14 +1447,40 @@ void DLParser_LoadTile(Gfx *gfx)
             }
         }
 
-        address = g_TI.dwAddr + tile.tl * g_TI.bpl + (tile.sl << g_TI.dwSize >> 1);
-        src = &g_pRDRAMu8[address];
-        dest = &g_Tmem.g_Tmem64bit[tile.dwTMem];
+        if( tile.dwLine == 0 )
+        {
+            //tile.dwLine = 1;
+            return;
+        }
 
-        if ((address + height * bpl) > g_dwRamSize) // check source ending point
+        uint64 tmemAddress = (uint64)tile.dwTMem << 3;
+        uint64 tmemStride = (uint64)line << 3;
+        uint64 tmemEnd = tmemAddress + (uint64)(height - 1) * tmemStride + bpl;
+
+        if (height > 1)
+        {
+            uint32 lastOddRow = (height - 1) | 1;
+            if (lastOddRow >= height)
+                lastOddRow -= 2;
+
+            uint64 interleaveEnd = tmemAddress + (uint64)(lastOddRow + 1) * tmemStride;
+            if (interleaveEnd > tmemEnd)
+                tmemEnd = interleaveEnd;
+        }
+
+        if (tmemEnd > sizeof(g_Tmem.g_Tmem8bit))
+            return;
+
+        uint64 sourceAddress = (uint64)g_TI.dwAddr + (uint64)tile.tl * g_TI.bpl +
+                               ((uint64)tile.sl << g_TI.dwSize >> 1);
+        uint64 sourceEnd = sourceAddress + (uint64)(height - 1) * g_TI.bpl + bpl;
+        if (sourceAddress > g_dwRamSize || sourceEnd > g_dwRamSize)
         {
             return;
         }
+
+        src = &g_pRDRAMu8[(uint32)sourceAddress];
+        dest = &g_Tmem.g_Tmem64bit[tile.dwTMem];
 
         // Line given for 32-bit is half what it seems it should since they split the
         // high and low words. I'm cheating by putting them together.
@@ -1455,12 +1491,6 @@ void DLParser_LoadTile(Gfx *gfx)
         else
         {
             Interleave = DWordInterleave;
-        }
-
-        if( tile.dwLine == 0 )
-        {
-            //tile.dwLine = 1;
-            return;
         }
 
         for (y = 0; y < height; y++)
@@ -2123,9 +2153,12 @@ uint32 TMEM_GetRdramAddr(uint32 tmemstart, uint32 length)
 
 bool IsTmemFlagValid(uint32 tmemAddr)
 {
+    if (tmemAddr >= 0x200)
+        return false;
+
     uint32 index = tmemAddr>>5;
     uint32 bitIndex = (tmemAddr&0x1F);
-    return ((g_TmemFlag[index] & (1<<bitIndex))!=0);
+    return ((g_TmemFlag[index] & (1U<<bitIndex))!=0);
 }
 
 uint32 GetValidTmemInfoIndex(uint32 tmemAddr)
@@ -2161,16 +2194,14 @@ uint32 GetValidTmemInfoIndex(uint32 tmemAddr)
 
 void SetTmemFlag(uint32 tmemAddr, uint32 size)
 {
+    if (tmemAddr >= 0x200)
+        return;
+
+    if (size > 0x200 - tmemAddr)
+        size = 0x200 - tmemAddr;
+
     uint32 index = tmemAddr>>5;
     uint32 bitIndex = (tmemAddr&0x1F);
-
-#ifdef DEBUGGER
-    if( size > 0x200 )
-    {
-        DebuggerAppendMsg("Check me: tmemaddr=%X, size=%x", tmemAddr, size);
-        size = 0x200-tmemAddr;
-    }
-#endif
 
     if( bitIndex == 0 )
     {
@@ -2183,7 +2214,7 @@ void SetTmemFlag(uint32 tmemAddr, uint32 size)
         if( (size&0x1F) != 0 )
         {
             //ErrorMsg("Check me: tmemaddr=%X, size=%x", tmemAddr, size);
-            g_TmemFlag[index+i] &= ~((1<<(size&0x1F))-1);
+            g_TmemFlag[index+i] &= ~((1U<<(size&0x1F))-1);
         }
 
         g_TmemFlag[index] |= 1;
@@ -2193,19 +2224,19 @@ void SetTmemFlag(uint32 tmemAddr, uint32 size)
         if( bitIndex + size <= 0x1F )
         {
             uint32 val = g_TmemFlag[index];
-            uint32 mask = (1<<(bitIndex))-1;
-            mask |= ~((1<<(bitIndex + size))-1);
+            uint32 mask = (1U<<(bitIndex))-1;
+            mask |= ~((1U<<(bitIndex + size))-1);
             val &= mask;
-            val |= (1<<bitIndex);
+            val |= (1U<<bitIndex);
             g_TmemFlag[index] = val;
         }
         else
         {
             //ErrorMsg("Check me: tmemaddr=%X, size=%x", tmemAddr, size);
             uint32 val = g_TmemFlag[index];
-            uint32 mask = (1<<bitIndex)-1;
+            uint32 mask = (1U<<bitIndex)-1;
             val &= mask;
-            val |= (1<<bitIndex);
+            val |= (1U<<bitIndex);
             g_TmemFlag[index] = val;
             index++;
             size -= (0x20-bitIndex);
@@ -2219,7 +2250,7 @@ void SetTmemFlag(uint32 tmemAddr, uint32 size)
             if( (size&0x1F) != 0 )
             {
                 //ErrorMsg("Check me: tmemaddr=%X, size=%x", tmemAddr, size);
-                g_TmemFlag[index+i] &= ~((1<<(size&0x1F))-1);
+                g_TmemFlag[index+i] &= ~((1U<<(size&0x1F))-1);
             }
         }
     }
