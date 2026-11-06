@@ -704,22 +704,24 @@ uint32 DLParser_CheckUcode(uint32 ucStart, uint32 ucDStart, uint32 ucSize, uint3
     }
 
     uint32 base = ucDStart & 0x1fffffff;
-    unsigned char str[300] = "";
-    if( base < g_dwRamSize+0x1000 )
+    unsigned char str[sizeof(UsedUcodes[0].rspstr)] = "";
+    if( base < g_dwRamSize )
     {
-        for ( uint32 i = 0; i < 0x1000; i++ )
+        uint32 scanSize = std::min<uint32>(0x1000, g_dwRamSize - base) & ~3U;
+        for ( uint32 i = 0; i + 2 < scanSize; i++ )
         {
             if ( g_pRDRAMs8[ base + ((i+0) ^ 3) ] == 'R' &&
                  g_pRDRAMs8[ base + ((i+1) ^ 3) ] == 'S' &&
                  g_pRDRAMs8[ base + ((i+2) ^ 3) ] == 'P' )
             {
-                unsigned char * p = str;
-                while ( g_pRDRAMs8[ base + (i ^ 3) ] >= ' ')
+                uint32 length = 0;
+                while ( i < scanSize && length + 1 < sizeof(str) &&
+                        g_pRDRAMs8[ base + (i ^ 3) ] >= ' ' )
                 {
-                    *p++ = g_pRDRAMs8[ base + (i ^ 3) ];
+                    str[length++] = g_pRDRAMs8[ base + (i ^ 3) ];
                     i++;
                 }
-                *p++ = 0;
+                str[length] = 0;
                 break;
             }
         }
@@ -771,7 +773,7 @@ uint32 DLParser_CheckUcode(uint32 ucStart, uint32 ucDStart, uint32 ucSize, uint3
             }
         }
 #endif
-        strcpy( (char*)gLastMicrocodeString, (char*)str );
+        memcpy( gLastMicrocodeString, str, sizeof(str) );
 
         if( usedUcodeIndex >= MAX_UCODE_INFO )
         {
@@ -786,7 +788,7 @@ uint32 DLParser_CheckUcode(uint32 ucStart, uint32 ucDStart, uint32 ucSize, uint3
         UsedUcodes[usedUcodeIndex].crc_800 = crc_800;
         UsedUcodes[usedUcodeIndex].crc_size = crc_size;
         UsedUcodes[usedUcodeIndex].used = true;
-        strcpy( UsedUcodes[usedUcodeIndex].rspstr, (char*)str );
+        memcpy( UsedUcodes[usedUcodeIndex].rspstr, str, sizeof(str) );
 
         TRACE2("New ucode has been detected:\n%s, ucode=%d", str, ucode);
     
@@ -1824,4 +1826,3 @@ void LoadMatrix(uint32 addr)
         matToLoad.m[3][0], matToLoad.m[3][1], matToLoad.m[3][2], matToLoad.m[3][3]);
 #endif // DEBUGGER
 }
-
