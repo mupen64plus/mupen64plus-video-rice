@@ -802,6 +802,34 @@ void RSP_Vtx_Conker(Gfx *gfx)
 
     LOG_UCODE("    Vtx: Address 0x%08x, vEnd: %d, v0: %d, Num: %d", dwAddr, dwVEnd, dwV0, dwN);
 
+    if( dwN > dwVEnd || dwVEnd > MAX_VERTS ||
+        dwAddr > g_dwRamSize || dwN > (g_dwRamSize - dwAddr) / sizeof(FiddledVtx) )
+    {
+        RSP_RDP_NOIMPL("RSP_Vtx_Conker: Invalid vertex range: %d - %d", dwV0, dwVEnd);
+        return;
+    }
+
+    if( dwN != 0 && gRSP.bTextureGen && gRSP.bLightingEnable )
+    {
+        uint32 maxNormalOffset = 0;
+        for( uint32 i = dwV0; i < dwVEnd; i++ )
+        {
+            for( uint32 component = 0; component < 3; component++ )
+            {
+                uint32 offset = (((i << 1) + component) ^ 3);
+                if( offset > maxNormalOffset )
+                    maxNormalOffset = offset;
+            }
+        }
+
+        if( dwConkerVtxZAddr >= g_dwRamSize ||
+            maxNormalOffset >= g_dwRamSize - dwConkerVtxZAddr )
+        {
+            RSP_RDP_NOIMPL("RSP_Vtx_Conker: Invalid normal address: %08X", dwConkerVtxZAddr, 0);
+            return;
+        }
+    }
+
     ProcessVertexDataConker(dwAddr, dwV0, dwN);
     status.dwNumVertices += dwN;
     DisplayVertexInfo(dwAddr, dwV0, dwN);
@@ -1717,4 +1745,3 @@ void DLParser_TexRect_Last_Legion(Gfx *gfx)
 
     ForceMainTextureIndex(curTile);
 }
-

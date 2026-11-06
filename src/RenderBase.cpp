@@ -1601,6 +1601,9 @@ void SetVertexXYZ(uint32 vertex, float x, float y, float z)
 
 void ModifyVertexInfo(uint32 where, uint32 vertex, uint32 val)
 {
+    if (vertex >= MAX_VERTS)
+        return;
+
     switch (where)
     {
     case RSP_MV_WORD_OFFSET_POINT_RGBA:     // Modify RGBA
@@ -2324,4 +2327,3 @@ void UpdateCombinedMatrix()
     //  gRSP.bLightIsUpdated = false;
     //}
 }
-

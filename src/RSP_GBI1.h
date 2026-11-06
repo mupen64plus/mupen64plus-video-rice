@@ -60,7 +60,7 @@ void RSP_GBI1_ModifyVtx(Gfx *gfx)
         uint32 dwVert   = (((gfx->words.w0)      ) & 0xFFFF) / 2;
         uint32 dwValue  = (gfx->words.w1);
 
-        if( dwVert > 80 )
+        if( dwVert >= MAX_VERTS )
         {
             RSP_RDP_NOIMPL("RSP_GBI1_ModifyVtx: Invalid vertex number: %d", dwVert, 0);
             return;
@@ -394,4 +394,3 @@ void RSP_S2DEX_SPObjLoadTxtr_Ucode1(Gfx *gfx)
 
     RSP_S2DEX_SPObjLoadTxtr(gfx);
 }
-
